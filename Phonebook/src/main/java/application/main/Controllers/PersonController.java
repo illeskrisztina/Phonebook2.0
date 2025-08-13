@@ -1,6 +1,7 @@
 package application.main.Controllers;
 
 import application.main.Entities.Address;
+import application.main.Entities.DTOs.SimplePersonDTO;
 import application.main.Entities.Person;
 import application.main.Services.Interfaces.IPersonService;
 import application.main.Services.PersonService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -34,11 +36,11 @@ public class PersonController
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Person> getPerson(@PathVariable("id") int id)
+  public ResponseEntity<SimplePersonDTO> getPerson(@PathVariable("id") int id)
   {
     try
     {
-      Person person = personService.getPerson(id);
+      SimplePersonDTO person = personService.getPerson(id);
       return new ResponseEntity<>(person, HttpStatus.OK);
     }
     catch (NoSuchElementException f)
@@ -54,11 +56,11 @@ public class PersonController
   }
 
   @GetMapping
-  public ResponseEntity<ArrayList<Person>> getAllPeople()
+  public ResponseEntity<List<SimplePersonDTO>> getAllPeople()
   {
     try
     {
-      ArrayList<Person> allPeople = personService.getAllPeople();
+      List<SimplePersonDTO> allPeople = personService.getAllPeople();
       return new ResponseEntity<>(allPeople, HttpStatus.OK);
     }
     catch (Exception e)

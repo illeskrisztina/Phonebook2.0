@@ -4,142 +4,87 @@ import application.main.Database.DAOs.AddressDAO;
 import application.main.Database.DAOs.ContactInfoDAO;
 import application.main.Database.DAOs.PersonDAO;
 import application.main.Entities.Address;
-import application.main.Entities.ContactInfo;
 import application.main.Entities.DTOs.SimplePersonDTO;
 import application.main.Entities.Person;
 import application.main.Services.Interfaces.IPersonService;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
-public class PersonService implements IPersonService
-{
-  private PersonDAO personDAO = PersonDAO.getInstance();
-  private AddressDAO addressDAO = AddressDAO.getInstance();
-  private ContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
-  @Override public Person createPerson(Person person)
-  {
-    return personDAO.createPerson(person);
-  }
+public class PersonService implements IPersonService {
+    private PersonDAO personDAO = PersonDAO.getInstance();
+    private AddressDAO addressDAO = AddressDAO.getInstance();
+    private ContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
 
-  @Override public Person getPerson(int Id)
-  {
-    ArrayList<Address> addresses = addressDAO.getAllAddressesForPerson(Id);
-    SimplePersonDTO person = personDAO.getPerson(Id);
-
-    if (person == null)
-    {
-      throw new NoSuchElementException("The person under id " + Id + " does not exist");
+    @Override
+    public Person createPerson(Person person) {
+        return personDAO.createPerson(person);
     }
 
-    Person fetched = new Person();
-    fetched.setName(person.getName());
-    fetched.setAge(person.getAge());
-    fetched.setId(person.getId());
+    @Override
+    public SimplePersonDTO getPerson(int Id) {
+        SimplePersonDTO person = personDAO.getPerson(Id);
 
-    for (int i = 0; i < addresses.size(); i++)
-    {
-      Address address = addresses.get(i);
-      address.setContacts(contactInfoDAO.getAllContactInfoForAddress(addresses.get(i).getAddressId()));
-
-      if(addresses.get(i).getType().equals("permanent"))
-      {
-        fetched.setPermanentAddress(addresses.get(i));
-      }
-      else
-      {
-        fetched.setTemporaryAddress(addresses.get(i));
-      }
-    }
-    return fetched;
-  }
-
-  @Override public ArrayList<Person> getAllPeople()
-  {
-    ArrayList<SimplePersonDTO> allPeopleDTO = personDAO.getAllPeople();
-    ArrayList<Person> allPeople = new ArrayList<>();
-
-    for (int i = 0; i < allPeopleDTO.size(); i++)
-    {
-      ArrayList<Address> addresses = addressDAO.getAllAddressesForPerson(allPeopleDTO.get(i).getId());
-      SimplePersonDTO person = personDAO.getPerson(allPeopleDTO.get(i).getId());
-
-      Person fetched = new Person();
-      fetched.setName(person.getName());
-      fetched.setAge(person.getAge());
-      fetched.setId(person.getId());
-
-      for (int j = 0; j < addresses.size(); j++)
-      {
-        Address address = addresses.get(j);
-        address.setContacts(contactInfoDAO.getAllContactInfoForAddress(addresses.get(i).getAddressId()));
-
-        if(addresses.get(j).getType().equals("permanent"))
-        {
-          fetched.setPermanentAddress(addresses.get(j));
+        if (person == null) {
+            throw new NoSuchElementException("The person under id " + Id + " does not exist");
         }
-        else
-        {
-          fetched.setTemporaryAddress(addresses.get(j));
+
+        return person;
+    }
+
+    @Override
+    public List<SimplePersonDTO> getAllPeople() {
+        return personDAO.getAllPeople();
+    }
+
+    @Override
+    public Person updatePerson(Person person) {
+        Person updated = personDAO.updatePerson(person);
+
+        if (updated == null) {
+            throw new NoSuchElementException("The person under id " + person.getId() + " does not exist");
         }
-      }
 
-      allPeople.add(fetched);
-    }
-    return allPeople;
-  }
-
-  @Override public Person updatePerson(Person person)
-  {
-    Person updated = personDAO.updatePerson(person);
-
-    if(updated == null)
-    {
-      throw new NoSuchElementException("The person under id " + person.getId() + " does not exist");
+        return updated;
     }
 
-    return updated;
-  }
+    @Override
+    public Person deletePerson(int Id) {
 
-  @Override public Person deletePerson(int Id)
-  {
-    //Deleting a person means addresses and contacts need to be deleted too
-    ArrayList<Address> addresses = addressDAO.getAllAddressesForPerson(Id);
+        Person deleted = new Person();
 
-    Person deleted = new Person();
+        //Deleting a person means addresses and contacts need to be deleted too
+        List<Address> addresses = addressDAO.getAllAddressesForPerson(Id).stream().map(address -> {
+            contactInfoDAO.getAllContactInfoForAddress(address.getAddressId()).stream().forEach(contact ->
+            {
+                //Delete contacts
+                contactInfoDAO.deleteContactInfo(contact.getContact(), address.getAddressId());
+                address.addContact(contact);
+            });
 
+            switch (address.getType()){
+                case "permanent":
+                    deleted.setPermanentAddress(address);
+                    break;
+                case "temporary":
+                    deleted.setTemporaryAddress(address);
+                    break;
+                default:
+                    throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
+            }
 
-    for (int i = 0; i < addresses.size(); i++)
-    {
-      Address address = addresses.get(i);
+            addressDAO.deleteAddress(address.getAddressId());
+            return address;
+        }).collect(Collectors.toList());
 
-      //Delete contacts
-      ArrayList<ContactInfo> contactsList = contactInfoDAO.getAllContactInfoForAddress(address.getAddressId());
+        //Lastly, delete the person
+        SimplePersonDTO person = personDAO.deletePerson(Id);
 
-      for (int j = 0; j < contactsList.size(); j++)
-      {
-        contactInfoDAO.deleteContactInfo(contactsList.get(j).getContact(), address.getAddressId());
-      }
+        deleted.setId(person.getId());
+        deleted.setName(person.getName());
+        deleted.setAge(person.getAge());
 
-      if(addresses.get(i).getType().equals("permanent"))
-      {
-        deleted.setPermanentAddress(addresses.get(i));
-      }
-      else
-      {
-        deleted.setTemporaryAddress(addresses.get(i));
-      }
-
-      addressDAO.deleteAddress(address.getAddressId());
+        return deleted;
     }
-
-    //Lastly, delete the person
-    SimplePersonDTO person = personDAO.deletePerson(Id);
-
-    deleted.setId(person.getId());
-    deleted.setName(person.getName());
-    deleted.setAge(person.getAge());
-
-    return deleted;
-  }
 }
