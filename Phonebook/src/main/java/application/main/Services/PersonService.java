@@ -4,12 +4,10 @@ import application.main.Database.DAOs.AddressDAO;
 import application.main.Database.DAOs.ContactInfoDAO;
 import application.main.Database.DAOs.PersonDAO;
 import application.main.Entities.Address;
-import application.main.Entities.ContactInfo;
 import application.main.Entities.DTOs.SimplePersonDTO;
 import application.main.Entities.Person;
 import application.main.Services.Interfaces.IPersonService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
