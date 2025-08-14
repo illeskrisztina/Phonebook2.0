@@ -1,19 +1,13 @@
 package application.main.Controllers;
 
-import application.main.Entities.Address;
 import application.main.Entities.DTOs.SimplePersonDTO;
 import application.main.Entities.Person;
-import application.main.Model.Interfaces.IModel;
-import application.main.Model.Model;
-import application.main.Services.Interfaces.IPersonService;
-import application.main.Services.PersonService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import application.main.Model.Interfaces.IDispatcher;
+import application.main.Model.Dispatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,7 +15,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/people")
 public class PersonController
 {
-  IModel dispatcher = new Model();
+  IDispatcher dispatcher = new Dispatcher();
 
   @PostMapping
   public ResponseEntity<Person> createPerson(@RequestBody Person person)

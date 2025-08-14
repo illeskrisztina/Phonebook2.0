@@ -7,7 +7,7 @@ import application.main.Entities.Person;
 
 import java.util.List;
 
-public interface IModel {
+public interface IDispatcher {
     public Address createAddress(int personId, Address address);
 
     public Address getAddress(int id);

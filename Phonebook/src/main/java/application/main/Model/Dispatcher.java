@@ -4,7 +4,7 @@ import application.main.Entities.Address;
 import application.main.Entities.ContactInfo;
 import application.main.Entities.DTOs.SimplePersonDTO;
 import application.main.Entities.Person;
-import application.main.Model.Interfaces.IModel;
+import application.main.Model.Interfaces.IDispatcher;
 import application.main.Services.AddressService;
 import application.main.Services.ContactService;
 import application.main.Services.Interfaces.IAddressService;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-public class Model implements IModel {
+public class Dispatcher implements IDispatcher {
     private final IPersonService personService = new PersonService();
     private final IAddressService addressService = new AddressService();
     private final IContactService contactService = new ContactService();
