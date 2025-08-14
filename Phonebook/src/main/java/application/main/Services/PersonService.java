@@ -16,9 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class PersonService implements IPersonService {
-    private IPersonDAO personDAO = PersonDAO.getInstance();
-    private IAddressDAO addressDAO = AddressDAO.getInstance();
-    private IContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
+    private final IPersonDAO personDAO = PersonDAO.getInstance();
 
     @Override
     public Person createPerson(Person person) {
