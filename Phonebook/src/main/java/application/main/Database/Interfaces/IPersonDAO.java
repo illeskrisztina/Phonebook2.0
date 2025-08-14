@@ -14,5 +14,5 @@ public interface IPersonDAO {
 
     public Person updatePerson(Person person);
 
-    public SimplePersonDTO deletePerson(int Id);
+    public Person deletePerson(int Id);
 }

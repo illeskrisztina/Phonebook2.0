@@ -105,14 +105,14 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
     }
 
     @Override
-    public synchronized SimplePersonDTO deletePerson(int Id) {
+    public synchronized Person deletePerson(int Id) {
         try (Connection connection = super.establishConnection()) {
             SimplePersonDTO deleted = getPerson(Id);
             PreparedStatement statement = connection.prepareStatement("delete from phonebook.people where id = ?;");
             statement.setInt(1, Id);
             statement.executeUpdate();
 
-            return deleted;
+            return new Person(deleted);
         } catch (SQLException e) {
             throw new RuntimeException("Something went wrong while deleting person with id " + Id + " from the database: " + e.getMessage());
         }
