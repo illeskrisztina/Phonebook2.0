@@ -49,7 +49,7 @@ public class Model implements IModel {
 
     @Override
     public ContactInfo addContact(ContactInfo contact, int addressId) {
-        return null;
+        return contactService.addContact(contact, addressId);
     }
 
     @Override
@@ -59,12 +59,12 @@ public class Model implements IModel {
 
     @Override
     public List<ContactInfo> getAllContacts(Integer addressId) {
-        return List.of();
+        return contactService.getAllContacts(addressId);
     }
 
     @Override
     public ContactInfo deleteContact(String contact, int addressId) {
-        return null;
+        return contactService.deleteContact(contact, addressId);
     }
 
     @Override
