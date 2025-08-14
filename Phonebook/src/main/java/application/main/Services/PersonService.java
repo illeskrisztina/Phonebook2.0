@@ -3,6 +3,9 @@ package application.main.Services;
 import application.main.Database.DAOs.AddressDAO;
 import application.main.Database.DAOs.ContactInfoDAO;
 import application.main.Database.DAOs.PersonDAO;
+import application.main.Database.Interfaces.IAddressDAO;
+import application.main.Database.Interfaces.IContactInfoDAO;
+import application.main.Database.Interfaces.IPersonDAO;
 import application.main.Entities.Address;
 import application.main.Entities.DTOs.SimplePersonDTO;
 import application.main.Entities.Person;
@@ -13,9 +16,9 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class PersonService implements IPersonService {
-    private PersonDAO personDAO = PersonDAO.getInstance();
-    private AddressDAO addressDAO = AddressDAO.getInstance();
-    private ContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
+    private IPersonDAO personDAO = PersonDAO.getInstance();
+    private IAddressDAO addressDAO = AddressDAO.getInstance();
+    private IContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
 
     @Override
     public Person createPerson(Person person) {
