@@ -1,5 +1,7 @@
 package application.main.Entities;
 
+import application.main.Entities.DTOs.SimplePersonDTO;
+
 public class Person
 {
   private String name;
@@ -10,6 +12,13 @@ public class Person
 
   public Person()
   {
+  }
+
+  public Person(SimplePersonDTO personDTO)
+  {
+      this.name = personDTO.getName();
+      this.age = personDTO.getAge();
+      this.Id = personDTO.getId();
   }
 
   public Person(String name, int age, int Id, Address permanent)
