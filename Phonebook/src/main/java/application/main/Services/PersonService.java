@@ -54,40 +54,6 @@ public class PersonService implements IPersonService {
 
     @Override
     public Person deletePerson(int Id) {
-
-        Person deleted = new Person();
-
-        //Deleting a person means addresses and contacts need to be deleted too
-        List<Address> addresses = addressDAO.getAllAddressesForPerson(Id).stream().map(address -> {
-            contactInfoDAO.getAllContactInfoForAddress(address.getAddressId()).stream().forEach(contact ->
-            {
-                //Delete contacts
-                contactInfoDAO.deleteContactInfo(contact.getContact(), address.getAddressId());
-                address.addContact(contact);
-            });
-
-            switch (address.getType()){
-                case "permanent":
-                    deleted.setPermanentAddress(address);
-                    break;
-                case "temporary":
-                    deleted.setTemporaryAddress(address);
-                    break;
-                default:
-                    throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
-            }
-
-            addressDAO.deleteAddress(address.getAddressId());
-            return address;
-        }).collect(Collectors.toList());
-
-        //Lastly, delete the person
-        SimplePersonDTO person = personDAO.deletePerson(Id);
-
-        deleted.setId(person.getId());
-        deleted.setName(person.getName());
-        deleted.setAge(person.getAge());
-
-        return deleted;
+        return personDAO.deletePerson(Id);
     }
 }
