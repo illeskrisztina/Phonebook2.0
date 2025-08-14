@@ -24,27 +24,27 @@ public class Model implements IModel {
 
     @Override
     public Address createAddress(int personId, Address address) {
-        return null;
+        return addressService.createAddress(personId, address);
     }
 
     @Override
     public Address getAddress(int id) {
-        return null;
+        return addressService.getAddress(id);
     }
 
     @Override
     public List<Address> getAllAddress(Integer personId) {
-        return List.of();
+        return addressService.getAllAddress(personId);
     }
 
     @Override
     public Address updateAddress(Address address) {
-        return null;
+        return addressService.updateAddress(address);
     }
 
     @Override
     public Address deleteAddress(int id) {
-        return null;
+        return addressService.deleteAddress(id);
     }
 
     @Override
