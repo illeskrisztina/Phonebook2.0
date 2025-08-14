@@ -1,0 +1,37 @@
+package application.main.Services;
+
+import application.main.Database.DAOs.ContactInfoDAO;
+import application.main.Database.Interfaces.IContactInfoDAO;
+import application.main.Entities.ContactInfo;
+import application.main.Services.Interfaces.IContactService;
+
+import java.util.List;
+
+public class ContactService implements IContactService {
+    private final IContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
+
+    @Override
+    public ContactInfo addContact(ContactInfo contact, int addressId) {
+        return contactInfoDAO.createContactInfo(contact, addressId);
+    }
+
+    @Override
+    public ContactInfo getContact(String contact) {
+        return contactInfoDAO.getContactInfo(contact);
+    }
+
+    @Override
+    public List<ContactInfo> getAllContacts(Integer addressId) {
+        if (addressId == null) {
+            return contactInfoDAO.getAllContactInfo();
+        }
+        else {
+            return contactInfoDAO.getAllContactInfoForAddress(addressId);
+        }
+    }
+
+    @Override
+    public ContactInfo deleteContact(String contact, int addressId) {
+        return contactInfoDAO.deleteContactInfo(contact, addressId);
+    }
+}
