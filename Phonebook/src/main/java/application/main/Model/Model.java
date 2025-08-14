@@ -12,7 +12,10 @@ import application.main.Services.Interfaces.IContactService;
 import application.main.Services.Interfaces.IPersonService;
 import application.main.Services.PersonService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class Model implements IModel {
     private final IPersonService personService = new PersonService();
@@ -66,26 +69,57 @@ public class Model implements IModel {
 
     @Override
     public Person createPerson(Person person) {
-        return null;
+        return personService.createPerson(person);
     }
 
     @Override
     public SimplePersonDTO getPerson(int Id) {
-        return null;
+        return personService.getPerson(Id);
     }
 
     @Override
     public List<SimplePersonDTO> getAllPeople() {
-        return List.of();
+        return personService.getAllPeople();
     }
 
     @Override
     public Person updatePerson(Person person) {
-        return null;
+        return personService.updatePerson(person);
     }
 
     @Override
     public Person deletePerson(int Id) {
-        return null;
+        Person person = new Person();
+
+        List<Address> addresses = addressService.getAllAddress(Id).stream().map(address ->
+        {
+            addressService.deleteAddress(address.getAddressId());
+
+            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
+            {
+                return contactService.deleteContact(contactInfo.getContact(),  address.getAddressId());
+            }).collect(Collectors.toList())));
+
+            switch (address.getType()){
+                case "permanent":
+                    person.setPermanentAddress(address);
+                    break;
+                case "temporary":
+                    person.setTemporaryAddress(address);
+                    break;
+                default:
+                    throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
+            }
+
+            return address;
+        }).collect(Collectors.toList());
+
+        Person deleted = personService.deletePerson(Id);
+
+        person.setName(deleted.getName());
+        person.setAge(deleted.getAge());
+        person.setId(deleted.getId());
+
+        return person;
     }
 }
