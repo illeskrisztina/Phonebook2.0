@@ -1,8 +1,8 @@
-package application.main.Services;
+package application.main.Service;
 
-import application.main.Database.DAOs.AddressDAO;
-import application.main.Entities.Address;
-import application.main.Services.Interfaces.IAddressService;
+import application.main.Model.Database.DAOs.AddressDAO;
+import application.main.Model.Entity.Address;
+import application.main.Service.Interfaces.IAddressService;
 
 import java.util.List;
 

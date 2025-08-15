@@ -1,4 +1,4 @@
-import application.main.Entities.ContactInfo;
+import application.main.Model.Entity.ContactInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

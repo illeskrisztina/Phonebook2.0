@@ -1,4 +1,4 @@
-package application.main.Entities;
+package application.main.Model.Entity;
 
 public class ContactInfo
 {

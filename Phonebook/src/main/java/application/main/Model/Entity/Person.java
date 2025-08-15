@@ -1,6 +1,6 @@
-package application.main.Entities;
+package application.main.Model.Entity;
 
-import application.main.Entities.DTOs.SimplePersonDTO;
+import application.main.Model.Entity.DTOs.SimplePersonDTO;
 
 public class Person
 {

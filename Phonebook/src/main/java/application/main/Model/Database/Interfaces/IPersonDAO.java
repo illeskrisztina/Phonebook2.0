@@ -1,12 +1,11 @@
-package application.main.Services.Interfaces;
+package application.main.Model.Database.Interfaces;
 
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
+import application.main.Model.Entity.DTOs.SimplePersonDTO;
+import application.main.Model.Entity.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public interface IPersonService {
+public interface IPersonDAO {
     public Person createPerson(Person person);
 
     public SimplePersonDTO getPerson(int Id);

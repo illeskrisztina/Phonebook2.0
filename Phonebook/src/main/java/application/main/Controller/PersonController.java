@@ -1,9 +1,9 @@
-package application.main.Controllers;
+package application.main.Controller;
 
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
-import application.main.Model.Interfaces.IDispatcher;
-import application.main.Model.Dispatcher;
+import application.main.Model.Entity.DTOs.SimplePersonDTO;
+import application.main.Model.Entity.Person;
+import application.main.Service.Interfaces.IDispatcher;
+import application.main.Service.Dispatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

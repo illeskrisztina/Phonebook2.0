@@ -1,16 +1,13 @@
-package application.main.Model;
+package application.main.Service;
 
-import application.main.Entities.Address;
-import application.main.Entities.ContactInfo;
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
-import application.main.Model.Interfaces.IDispatcher;
-import application.main.Services.AddressService;
-import application.main.Services.ContactService;
-import application.main.Services.Interfaces.IAddressService;
-import application.main.Services.Interfaces.IContactService;
-import application.main.Services.Interfaces.IPersonService;
-import application.main.Services.PersonService;
+import application.main.Model.Entity.Address;
+import application.main.Model.Entity.ContactInfo;
+import application.main.Model.Entity.DTOs.SimplePersonDTO;
+import application.main.Model.Entity.Person;
+import application.main.Service.Interfaces.IDispatcher;
+import application.main.Service.Interfaces.IAddressService;
+import application.main.Service.Interfaces.IContactService;
+import application.main.Service.Interfaces.IPersonService;
 
 import java.util.ArrayList;
 import java.util.List;

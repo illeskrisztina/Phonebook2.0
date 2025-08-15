@@ -1,9 +1,9 @@
-package application.main.Model.Interfaces;
+package application.main.Service.Interfaces;
 
-import application.main.Entities.Address;
-import application.main.Entities.ContactInfo;
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
+import application.main.Model.Entity.Address;
+import application.main.Model.Entity.ContactInfo;
+import application.main.Model.Entity.DTOs.SimplePersonDTO;
+import application.main.Model.Entity.Person;
 
 import java.util.List;
 

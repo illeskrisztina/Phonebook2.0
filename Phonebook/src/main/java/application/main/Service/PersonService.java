@@ -1,19 +1,13 @@
-package application.main.Services;
+package application.main.Service;
 
-import application.main.Database.DAOs.AddressDAO;
-import application.main.Database.DAOs.ContactInfoDAO;
-import application.main.Database.DAOs.PersonDAO;
-import application.main.Database.Interfaces.IAddressDAO;
-import application.main.Database.Interfaces.IContactInfoDAO;
-import application.main.Database.Interfaces.IPersonDAO;
-import application.main.Entities.Address;
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
-import application.main.Services.Interfaces.IPersonService;
+import application.main.Model.Database.DAOs.PersonDAO;
+import application.main.Model.Database.Interfaces.IPersonDAO;
+import application.main.Model.Entity.DTOs.SimplePersonDTO;
+import application.main.Model.Entity.Person;
+import application.main.Service.Interfaces.IPersonService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public class PersonService implements IPersonService {
     private final IPersonDAO personDAO = PersonDAO.getInstance();

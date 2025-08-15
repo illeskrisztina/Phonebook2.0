@@ -1,6 +1,6 @@
-package application.main.Controllers;
+package application.main.Controller;
 
-import application.main.Entities.Address;
+import application.main.Model.Entity.Address;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
