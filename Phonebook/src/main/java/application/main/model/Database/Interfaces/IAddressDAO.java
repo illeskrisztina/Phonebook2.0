@@ -1,6 +1,6 @@
-package application.main.Model.Database.Interfaces;
+package application.main.model.Database.Interfaces;
 
-import application.main.Model.Entity.Address;
+import application.main.model.Entity.Address;
 
 import java.util.ArrayList;
 

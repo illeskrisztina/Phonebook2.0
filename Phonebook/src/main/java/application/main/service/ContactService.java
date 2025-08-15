@@ -1,9 +1,9 @@
-package application.main.Service;
+package application.main.service;
 
-import application.main.Model.Database.DAOs.ContactInfoDAO;
-import application.main.Model.Database.Interfaces.IContactInfoDAO;
-import application.main.Model.Entity.ContactInfo;
-import application.main.Service.Interfaces.IContactService;
+import application.main.model.Database.DAOs.ContactInfoDAO;
+import application.main.model.Database.Interfaces.IContactInfoDAO;
+import application.main.model.Entity.ContactInfo;
+import application.main.service.Interfaces.IContactService;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package application.main.Service.Interfaces;
+package application.main.service.Interfaces;
 
-import application.main.Model.Entity.Address;
+import application.main.model.Entity.Address;
 
 import java.util.List;
 

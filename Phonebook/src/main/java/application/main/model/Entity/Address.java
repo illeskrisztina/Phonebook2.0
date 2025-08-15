@@ -1,4 +1,4 @@
-package application.main.Model.Entity;
+package application.main.model.Entity;
 
 import java.util.ArrayList;
 

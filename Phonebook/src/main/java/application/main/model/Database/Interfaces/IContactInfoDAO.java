@@ -1,6 +1,6 @@
-package application.main.Model.Database.Interfaces;
+package application.main.model.Database.Interfaces;
 
-import application.main.Model.Entity.ContactInfo;
+import application.main.model.Entity.ContactInfo;
 
 import java.util.ArrayList;
 

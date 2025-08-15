@@ -1,10 +1,10 @@
-package application.main.Service;
+package application.main.service;
 
-import application.main.Model.Database.DAOs.PersonDAO;
-import application.main.Model.Database.Interfaces.IPersonDAO;
-import application.main.Model.Entity.DTOs.SimplePersonDTO;
-import application.main.Model.Entity.Person;
-import application.main.Service.Interfaces.IPersonService;
+import application.main.model.Database.DAOs.PersonDAO;
+import application.main.model.Database.Interfaces.IPersonDAO;
+import application.main.model.Entity.DTOs.SimplePersonDTO;
+import application.main.model.Entity.Person;
+import application.main.service.Interfaces.IPersonService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
