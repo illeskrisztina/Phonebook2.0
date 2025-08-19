@@ -11,7 +11,7 @@ public class AddressTest {
 
     @BeforeEach
     public void setUp() {
-        addressTest = new Address("Hungary, Budapest, XIX. district");
+        addressTest = new Address().setAddress("Hungary, Budapest, XIX. district");
     }
 
     @Test
@@ -110,7 +110,7 @@ public class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address("Hungary, Budapest, XIX. district");
+        Address other = new Address().setAddress("Hungary, Budapest, XIX. district");
 
         other.addContact(new ContactInfo().setType("hi").setContact("hello"));
         other.addContact(new ContactInfo().setType("hoi").setContact("heio"));
@@ -129,7 +129,7 @@ public class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address("some address");
+        Address other = new Address().setAddress("some address");
 
         other.addContact(new ContactInfo().setType("hi").setContact("hello"));
 

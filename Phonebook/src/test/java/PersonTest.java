@@ -11,7 +11,7 @@ public class PersonTest
   @BeforeEach
   public void setUp()
   {
-      personTest = new Person().setAge(25).setName("Melanie").setId(1).setPermanentAddress(new Address("Denmark, Aarhus"));
+      personTest = new Person().setAge(25).setName("Melanie").setId(1).setPermanentAddress(new Address().setAddress("Denmark, Aarhus"));
   }
 
   @Test
@@ -57,9 +57,9 @@ public class PersonTest
   @Test
   public void permanent_address_can_be_set()
   {
-    personTest.setPermanentAddress(new Address("new address"));
+    personTest.setPermanentAddress(new Address().setAddress("new address"));
 
-    Assertions.assertEquals(new Address("new address"), personTest.getPermanentAddress());
+    Assertions.assertEquals(new Address().setAddress("new address"), personTest.getPermanentAddress());
   }
 
   @Test
@@ -80,8 +80,8 @@ public class PersonTest
 
   public void temporary_address_can_be_set()
   {
-    personTest.setTemporaryAddress(new Address("new temporary address"));
+    personTest.setTemporaryAddress(new Address().setAddress("new temporary address"));
 
-    Assertions.assertEquals(new Address("new temporary address"), personTest.getTemporaryAddress());
+    Assertions.assertEquals(new Address().setAddress("new temporary address"), personTest.getTemporaryAddress());
   }
 }
