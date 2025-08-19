@@ -12,36 +12,25 @@ public class Person
   {
   }
 
-  public Person(String name, int age, int Id, Address permanent)
+  public Person setName(String name)
   {
     this.name = name;
-    this.age = age;
-    this.Id = Id;
-
-    //Everyone needs at least one address, temporary is not necessary
-    if(permanent == null)
-    {
-      throw new NullPointerException("Permanent address cannot be null");
-    }
-    this.permanent = permanent;
+    return this;
   }
 
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  public void setAge(int age)
+  public Person setAge(int age)
   {
     this.age = age;
+    return this;
   }
 
-  public void setId(int Id)
+  public Person setId(int Id)
   {
     this.Id = Id;
+    return this;
   }
 
-  public void setPermanentAddress(Address permanent)
+  public Person setPermanentAddress(Address permanent)
   {
     //Everyone needs at least one address
     if(permanent == null)
@@ -49,11 +38,13 @@ public class Person
       throw new NullPointerException("Permanent address cannot be null");
     }
     this.permanent = permanent;
+    return this;
   }
 
-  public void setTemporaryAddress(Address temporary)
+  public Person setTemporaryAddress(Address temporary)
   {
     this.temporary = temporary;
+    return this;
   }
 
   public String getName()

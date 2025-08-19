@@ -11,7 +11,7 @@ public class PersonTest
   @BeforeEach
   public void setUp()
   {
-    personTest = new Person("Melanie", 25, 1, new Address("Denmark, Aarhus"));
+      personTest = new Person().setAge(25).setName("Melanie").setId(1).setPermanentAddress(new Address("Denmark, Aarhus"));
   }
 
   @Test
@@ -19,8 +19,7 @@ public class PersonTest
   {
     try
     {
-      new Person("Kate", 34, 2, null);
-
+      new Person().setPermanentAddress(null);
       //Lambdas not supported before Java 8, so roundabout method had to be used
       //If the previous code does not throw, this line fails the test
       Assertions.assertEquals(false, true);
