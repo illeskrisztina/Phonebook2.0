@@ -3,14 +3,18 @@ package application.main.model.database.dao;
 import application.main.model.database.DatabaseHandlerFactory;
 import application.main.model.database.interfaces.IContactInfoDAO;
 import application.main.model.entity.ContactInfo;
+import application.main.model.exception.DatabaseConnectionException;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactInfoDAO
 {
   private static ContactInfoDAO instance;
+
+  private static final String CONTACT = "contact";
 
   private ContactInfoDAO() throws SQLException
   {
@@ -29,7 +33,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Issue getting singleton instance of ContactInfoDAO: " + e.getMessage());
+      throw new DatabaseConnectionException("Issue getting singleton instance of ContactInfoDAO: " + e.getMessage());
     }
   }
   @Override public synchronized ContactInfo createContactInfo(ContactInfo contactInfo, int addressId)
@@ -50,7 +54,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while creating a contact info in the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while creating a contact info in the database: " + e.getMessage());
     }
   }
 
@@ -66,7 +70,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       while (rs.next())
       {
         fetched = new ContactInfo()
-                .setContact(rs.getString("contact"))
+                .setContact(rs.getString(CONTACT))
                 .setType(rs.getString("type"));
       }
 
@@ -74,11 +78,11 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while getting a contact info from the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while getting a contact info from the database: " + e.getMessage());
     }
   }
 
-  @Override public ArrayList<ContactInfo> getAllContactInfo()
+  @Override public List<ContactInfo> getAllContactInfo()
   {
     try(Connection connection = super.establishConnection())
     {
@@ -91,18 +95,18 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       {
         allContacts.add(new ContactInfo()
                 .setType(rs.getString("type"))
-                .setContact(rs.getString("contact")));
+                .setContact(rs.getString(CONTACT)));
       }
 
       return allContacts;
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while getting all contact information from the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while getting all contact information from the database: " + e.getMessage());
     }
   }
 
-  public ArrayList<ContactInfo> getAllContactInfoForAddress(int addressId)
+  public List<ContactInfo> getAllContactInfoForAddress(int addressId)
   {
     try(Connection connection = super.establishConnection())
     {
@@ -115,14 +119,14 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
 
       while (rs.next())
       {
-        allContacts.add(getContactInfo(rs.getString("contact")));
+        allContacts.add(getContactInfo(rs.getString(CONTACT)));
       }
 
       return allContacts;
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while getting all contact information for address with id " + addressId + ": " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while getting all contact information for address with id " + addressId + ": " + e.getMessage());
     }
   }
 
@@ -145,7 +149,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while deleting a contact information from the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while deleting a contact information from the database: " + e.getMessage());
     }
   }
 }

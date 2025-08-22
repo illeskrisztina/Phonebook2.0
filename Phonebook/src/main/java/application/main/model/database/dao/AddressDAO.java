@@ -3,13 +3,16 @@ package application.main.model.database.dao;
 import application.main.model.database.DatabaseHandlerFactory;
 import application.main.model.database.interfaces.IAddressDAO;
 import application.main.model.entity.Address;
+import application.main.model.exception.DatabaseConnectionException;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
     private static AddressDAO instance;
+  private static final String ADDRESS = "address";
 
     private AddressDAO() throws SQLException {
         DriverManager.registerDriver(new SQLServerDriver());
@@ -22,7 +25,7 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
             }
             return instance;
         } catch (SQLException e) {
-            throw new RuntimeException("Issue getting singleton instance of AddressDAO");
+            throw new DatabaseConnectionException("Issue getting singleton instance of AddressDAO");
         }
     }
 
@@ -39,38 +42,38 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
             if (generatedKeys.next()) {
                 address.setAddressId(generatedKeys.getInt(1));
             } else {
-                throw new RuntimeException("No keys were generated.");
+                throw new DatabaseConnectionException("No keys were generated.");
             }
 
             return address;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while creating an address: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while creating an address: " + e.getMessage());
         }
     }
 
     @Override
-    public Address getAddress(int Id) {
+    public Address getAddress(int id) {
         try (Connection connection = super.establishConnection()) {
             PreparedStatement statement = connection.prepareStatement("select address.address, address.type, address.address_id from phonebook.address where address_id = ?;");
-            statement.setInt(1, Id);
+            statement.setInt(1, id);
 
             ResultSet rs = statement.executeQuery();
             Address fetched = null;
             while (rs.next()) {
                 fetched = new Address()
-                        .setAddress(rs.getString("address"))
+                        .setResidence(rs.getString(ADDRESS))
                         .setType(rs.getString("type"))
-                        .setAddressId(Id);
+                        .setAddressId(id);
             }
 
             return fetched;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while getting an address from the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while getting an address from the database: " + e.getMessage());
         }
     }
 
     @Override
-    public ArrayList<Address> getAllAddresses() {
+    public List<Address> getAllAddresses() {
         try (Connection connection = super.establishConnection()) {
             ArrayList<Address> allAddresses = new ArrayList<>();
 
@@ -79,19 +82,19 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
 
             while (rs.next()) {
                 allAddresses.add(new Address()
-                        .setAddress(rs.getString("address"))
+                        .setResidence(rs.getString(ADDRESS))
                         .setType(rs.getString("type"))
                         .setAddressId(rs.getInt("address_id")));
             }
 
             return allAddresses;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while fetching all addresses from the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while fetching all addresses from the database: " + e.getMessage());
         }
     }
 
     @Override
-    public ArrayList<Address> getAllAddressesForPerson(int personId) {
+    public List<Address> getAllAddressesForPerson(int personId) {
         try (Connection connection = super.establishConnection()) {
             ArrayList<Address> allAddresses = new ArrayList<>();
 
@@ -101,14 +104,14 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
 
             while (rs.next()) {
                 allAddresses.add(new Address()
-                        .setAddress(rs.getString("address"))
+                        .setResidence(rs.getString(ADDRESS))
                         .setType(rs.getString("type"))
                         .setAddressId(rs.getInt("address_id")));
             }
 
             return allAddresses;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while fetching all addresses from the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while fetching all addresses from the database: " + e.getMessage());
         }
     }
 
@@ -123,7 +126,7 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
 
             return address;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while updating an address in the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while updating an address in the database: " + e.getMessage());
         }
     }
 
@@ -138,7 +141,7 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
 
             return deleted;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while deleting an address from the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while deleting an address from the database: " + e.getMessage());
         }
     }
 }
