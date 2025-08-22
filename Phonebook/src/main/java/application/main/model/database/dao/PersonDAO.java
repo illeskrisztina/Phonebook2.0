@@ -4,6 +4,7 @@ import application.main.model.database.DatabaseHandlerFactory;
 import application.main.model.database.interfaces.IPersonDAO;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
+import application.main.model.exception.DatabaseConnectionException;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
@@ -24,7 +25,7 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
             }
             return instance;
         } catch (SQLException e) {
-            throw new RuntimeException("Issue getting singleton instance of PersonDAO: " + e.getMessage());
+            throw new DatabaseConnectionException("Issue getting singleton instance of PersonDAO: " + e.getMessage());
         }
     }
 
@@ -40,20 +41,20 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
             if (generatedKeys.next()) {
                 person.setId(generatedKeys.getInt(1));
             } else {
-                throw new RuntimeException("No keys were generated.");
+                throw new DatabaseConnectionException("No keys were generated.");
             }
             return person;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while creating an entry for a person in the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while creating an entry for a person in the database: " + e.getMessage());
         }
     }
 
     @Override
-    public SimplePersonDTO getPerson(int Id) {
+    public SimplePersonDTO getPerson(int id) {
         try (Connection connection = super.establishConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id\n"
                     + "FROM phonebook.people\n" + "WHERE people.id = ?;");
-            statement.setInt(1, Id);
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
 
             SimplePersonDTO fetched = null;
@@ -64,7 +65,7 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
 
             return fetched;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while fetching the data of the person with id " + Id + ": " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while fetching the data of the person with id " + id + ": " + e.getMessage());
         }
     }
 
@@ -79,13 +80,13 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
             while (rs.next()) {
                 String name = rs.getString("name");
                 int age = rs.getInt("age");
-                int Id = rs.getInt("id");
-                allPeople.add(new SimplePersonDTO(name, age, Id));
+                int id = rs.getInt("id");
+                allPeople.add(new SimplePersonDTO(name, age, id));
             }
 
             return allPeople;
         } catch (SQLException e) {
-            throw new RuntimeException("Could not connect to database while retrieving information for people stored in the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Could not connect to database while retrieving information for people stored in the database: " + e.getMessage());
         }
     }
 
@@ -100,21 +101,21 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
 
             return person;
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while trying to update the information of a person with id " + person.getId() + ": " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while trying to update the information of a person with id " + person.getId() + ": " + e.getMessage());
         }
     }
 
     @Override
-    public synchronized Person deletePerson(int Id) {
+    public synchronized Person deletePerson(int id) {
         try (Connection connection = super.establishConnection()) {
-            SimplePersonDTO deleted = getPerson(Id);
+            SimplePersonDTO deleted = getPerson(id);
             PreparedStatement statement = connection.prepareStatement("delete from phonebook.people where id = ?;");
-            statement.setInt(1, Id);
+            statement.setInt(1, id);
             statement.executeUpdate();
 
             return new Person(deleted);
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong while deleting person with id " + Id + " from the database: " + e.getMessage());
+            throw new DatabaseConnectionException("Something went wrong while deleting person with id " + id + " from the database: " + e.getMessage());
         }
     }
 }
