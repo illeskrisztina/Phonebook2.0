@@ -2,7 +2,7 @@ package application.main.controller;
 
 import application.main.model.Entity.DTOs.SimplePersonDTO;
 import application.main.model.Entity.Person;
-import application.main.service.Interfaces.IDispatcher;
+import application.main.service.interfaces.IDispatcher;
 import application.main.service.Dispatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package application.main.service.Interfaces;
+package application.main.service.interfaces;
 
 import application.main.model.Entity.DTOs.SimplePersonDTO;
 import application.main.model.Entity.Person;
