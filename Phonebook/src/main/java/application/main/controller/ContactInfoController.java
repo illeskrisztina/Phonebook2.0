@@ -34,4 +34,13 @@ public class ContactInfoController {
     public ResponseEntity<List<ContactInfo>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
         return new ResponseEntity<>(dispatcher.getAllContacts(addressId),  HttpStatus.OK);
     }
+
+    @DeleteMapping("/address/{addressId}/contact/{contactId}")
+    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable int addressId, @PathVariable String contactId) {
+        ContactInfo deleted = dispatcher.deleteContact(contactId, addressId);
+        if(deleted == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
+    }
 }
