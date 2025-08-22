@@ -1,7 +1,7 @@
 package application.main.service;
 
-import application.main.model.Database.DAOs.ContactInfoDAO;
-import application.main.model.Database.Interfaces.IContactInfoDAO;
+import application.main.model.database.dao.ContactInfoDAO;
+import application.main.model.database.interfaces.IContactInfoDAO;
 import application.main.model.entity.ContactInfo;
 import application.main.service.interfaces.IContactService;
 

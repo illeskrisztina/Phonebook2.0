@@ -1,6 +1,6 @@
 package application.main.service;
 
-import application.main.model.Database.DAOs.AddressDAO;
+import application.main.model.database.dao.AddressDAO;
 import application.main.model.entity.Address;
 import application.main.service.interfaces.IAddressService;
 
