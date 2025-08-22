@@ -1,7 +1,7 @@
 package application.main.service;
 
-import application.main.model.Database.DAOs.PersonDAO;
-import application.main.model.Database.Interfaces.IPersonDAO;
+import application.main.model.database.dao.PersonDAO;
+import application.main.model.database.interfaces.IPersonDAO;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
 import application.main.service.interfaces.IPersonService;

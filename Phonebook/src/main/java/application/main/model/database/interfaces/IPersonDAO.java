@@ -1,4 +1,4 @@
-package application.main.model.Database.Interfaces;
+package application.main.model.database.interfaces;
 
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
