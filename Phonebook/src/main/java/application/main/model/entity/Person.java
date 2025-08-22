@@ -1,10 +1,12 @@
 package application.main.model.entity;
 
+import java.util.Objects;
+
 public class Person
 {
   private String name;
   private int age;
-  private int Id;
+  private int id;
   private Address permanent;
   private Address temporary;
 
@@ -24,9 +26,9 @@ public class Person
     return this;
   }
 
-  public Person setId(int Id)
+  public Person setId(int id)
   {
-    this.Id = Id;
+    this.id = id;
     return this;
   }
 
@@ -47,55 +49,50 @@ public class Person
     return this;
   }
 
-  public String getName()
-  {
-    return name;
-  }
-
-  public int getAge()
-  {
-    return age;
-  }
-
-  public int getId()
-  {
-    return Id;
-  }
-
-  public Address getPermanentAddress()
-  {
-    return permanent;
-  }
-
-  public Address getTemporaryAddress()
-  {
-    return temporary;
-  }
-
-  public boolean equals(Object obj)
-  {
-    if (obj == this)
-    {
-      return true;
-    }
-    if (obj == null || obj.getClass() != this.getClass())
-    {
-      return false;
+    public String getName() {
+        return name;
     }
 
-    Person other = (Person) obj;
-
-    return other.name.equals(this.name) && other.age == this.age
-        && other.Id == this.Id && other.permanent.equals(this.permanent)
-        && other.temporary.equals(this.temporary);
-  }
-
-  public String toString()
-  {
-    if(temporary == null)
-    {
-      return "Name: " + name + "\nAge: " + age + "\nPermanent residence:\n" + permanent.toString();
+    public int getAge() {
+        return age;
     }
-    return "Name: " + name + "\nAge: " + age + "\nPermanent residence:\n" + permanent.toString() + "\nTemporary residence:\n" + temporary.toString();
-  }
+
+    public int getId() {
+        return id;
+    }
+
+    public Address getPermanentAddress() {
+        return permanent;
+    }
+
+    public Address getTemporaryAddress() {
+        return temporary;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, id, permanent, temporary);
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Person other = (Person) obj;
+
+        return other.name.equals(this.name) && other.age == this.age
+                && other.id == this.id && other.permanent.equals(this.permanent)
+                && other.temporary.equals(this.temporary);
+    }
+
+    public String toString() {
+        if (temporary == null) {
+            return "Name: " + name + "\nAge: " + age + "\nPermanent residence:\n" + permanent.toString();
+        }
+        return "Name: " + name + "\nAge: " + age + "\nPermanent residence:\n" + permanent.toString() + "\nTemporary residence:\n" + temporary.toString();
+    }
 }

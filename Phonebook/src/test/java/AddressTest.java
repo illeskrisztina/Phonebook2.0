@@ -15,10 +15,11 @@ public class AddressTest {
                 .setAddress("Hungary, Budapest, XIX. district");
     }
 
-    @Test
-    public void created_object_has_correct_address() {
-        Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getAddress());
-    }
+  @Test
+  public void created_object_has_correct_address()
+  {
+    Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getResidence());
+  }
 
     @Test
     public void created_object_has_empty_list() {
@@ -38,9 +39,9 @@ public class AddressTest {
 
     @Test
     public void address_can_be_set() {
-        addressTest.setAddress("new address");
+        addressTest.setResidence("new address");
 
-        Assertions.assertEquals("new address", addressTest.getAddress());
+        Assertions.assertEquals("new address", addressTest.getResidence());
     }
 
     @Test
