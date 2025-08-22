@@ -17,23 +17,24 @@ public class AddressController {
     @PostMapping("/people/{personId}/addresses")
     public ResponseEntity<Address> addAddress(@PathVariable("personId") int personId, @RequestBody Address address) {
         Address created = dispatcher.createAddress(personId, address);
-        if(created == null)
-        {
+        if (created == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(created,HttpStatus.CREATED);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @GetMapping("/people/{personId}/addresses/{addressId}")
-    public ResponseEntity<Address> getAddress(@PathVariable("personId") int personId, @PathVariable("addressId") int addressId) {
-        //TODO
-        return null;
+    @GetMapping("addresses/{addressId}")
+    public ResponseEntity<Address> getAddress(@PathVariable("addressId") int addressId) {
+        Address fetched = dispatcher.getAddress(addressId);
+        if (fetched == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(fetched, HttpStatus.OK);
     }
 
     @GetMapping("/addresses")
     public ResponseEntity<List<Address>> getAddresses(@RequestParam(name = "personId", required = false) Integer personId) {
-        //TODO
-        return null;
+        return new ResponseEntity<>(dispatcher.getAllAddress(personId), HttpStatus.OK);
     }
 
     @PutMapping("/addresses")
