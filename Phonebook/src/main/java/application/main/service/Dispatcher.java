@@ -4,10 +4,10 @@ import application.main.model.Entity.Address;
 import application.main.model.Entity.ContactInfo;
 import application.main.model.Entity.DTOs.SimplePersonDTO;
 import application.main.model.Entity.Person;
-import application.main.service.Interfaces.IDispatcher;
-import application.main.service.Interfaces.IAddressService;
-import application.main.service.Interfaces.IContactService;
-import application.main.service.Interfaces.IPersonService;
+import application.main.service.interfaces.IDispatcher;
+import application.main.service.interfaces.IAddressService;
+import application.main.service.interfaces.IContactService;
+import application.main.service.interfaces.IPersonService;
 
 import java.util.ArrayList;
 import java.util.List;
