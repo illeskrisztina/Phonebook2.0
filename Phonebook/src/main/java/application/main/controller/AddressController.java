@@ -39,8 +39,11 @@ public class AddressController {
 
     @PutMapping("/addresses")
     public ResponseEntity<Address> updateAddress(@RequestBody Address address) {
-        //TODO
-        return null;
+        Address updated = dispatcher.updateAddress(address);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @DeleteMapping("/addresses/{addressId}")
