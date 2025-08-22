@@ -1,6 +1,6 @@
 package application.main.controller;
 
-import application.main.model.Entity.ContactInfo;
+import application.main.model.entity.ContactInfo;
 import application.main.service.Dispatcher;
 import application.main.service.Interfaces.IDispatcher;
 import org.springframework.http.HttpStatus;

@@ -2,7 +2,7 @@ package application.main.model.Database.DAOs;
 
 import application.main.model.Database.DatabaseHandlerFactory;
 import application.main.model.Database.Interfaces.IContactInfoDAO;
-import application.main.model.Entity.ContactInfo;
+import application.main.model.entity.ContactInfo;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;

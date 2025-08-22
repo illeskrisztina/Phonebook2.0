@@ -2,7 +2,7 @@ package application.main.model.Database.DAOs;
 
 import application.main.model.Database.DatabaseHandlerFactory;
 import application.main.model.Database.Interfaces.IAddressDAO;
-import application.main.model.Entity.Address;
+import application.main.model.entity.Address;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
