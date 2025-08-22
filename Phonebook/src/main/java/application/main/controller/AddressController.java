@@ -29,7 +29,7 @@ public class AddressController {
         if (fetched == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(fetched, HttpStatus.OK);
+        return new ResponseEntity<>(fetched, HttpStatus.FOUND);
     }
 
     @GetMapping("/addresses")
@@ -48,7 +48,10 @@ public class AddressController {
 
     @DeleteMapping("/addresses/{addressId}")
     public ResponseEntity<Address> deleteAddress(@PathVariable("addressId") int addressId) {
-        //TODO
-        return null;
+        Address deleted = dispatcher.deleteAddress(addressId);
+        if (deleted == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 }
