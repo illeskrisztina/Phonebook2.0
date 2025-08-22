@@ -1,5 +1,5 @@
-import application.main.model.Entity.Address;
-import application.main.model.Entity.ContactInfo;
+import application.main.model.entity.Address;
+import application.main.model.entity.ContactInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ public class AddressTest
   @Test
   public void created_object_has_correct_address()
   {
-    Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getAddress());
+    Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getResidence());
   }
 
   @Test
@@ -40,9 +40,9 @@ public class AddressTest
   @Test
   public void address_can_be_set()
   {
-    addressTest.setAddress("new address");
+    addressTest.setResidence("new address");
 
-    Assertions.assertEquals("new address", addressTest.getAddress());
+    Assertions.assertEquals("new address", addressTest.getResidence());
   }
 
   @Test

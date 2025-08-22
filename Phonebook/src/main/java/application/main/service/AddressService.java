@@ -1,7 +1,7 @@
 package application.main.service;
 
 import application.main.model.Database.DAOs.AddressDAO;
-import application.main.model.Entity.Address;
+import application.main.model.entity.Address;
 import application.main.service.interfaces.IAddressService;
 
 import java.util.List;

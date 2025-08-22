@@ -1,4 +1,6 @@
-package application.main.model.Entity;
+package application.main.model.entity;
+
+import java.util.Objects;
 
 public class ContactInfo
 {
@@ -34,7 +36,12 @@ public class ContactInfo
     return contact;
   }
 
-  public boolean equals(Object obj)
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, contact);
+    }
+
+    public boolean equals(Object obj)
   {
     if(obj == this)
     {

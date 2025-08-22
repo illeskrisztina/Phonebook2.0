@@ -1,7 +1,7 @@
 package application.main.service.interfaces;
 
-import application.main.model.Entity.DTOs.SimplePersonDTO;
-import application.main.model.Entity.Person;
+import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.Person;
 
 import java.util.List;
 

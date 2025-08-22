@@ -1,4 +1,4 @@
-package application.main.model.Entity.DTOs;
+package application.main.model.entity.dto;
 
 public class SimplePersonDTO
 {

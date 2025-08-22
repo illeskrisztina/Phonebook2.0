@@ -2,7 +2,7 @@ package application.main.model.Database.DAOs;
 
 import application.main.model.Database.DatabaseHandlerFactory;
 import application.main.model.Database.Interfaces.IAddressDAO;
-import application.main.model.Entity.Address;
+import application.main.model.entity.Address;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
@@ -37,7 +37,7 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
     try(Connection connection = super.establishConnection())
     {
       PreparedStatement statement = connection.prepareStatement("insert into phonebook.address(address, person_id, type) values (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
-      statement.setString(1, address.getAddress());
+      statement.setString(1, address.getResidence());
       statement.setInt(2, personId);
       statement.setString(3, address.getType());
       statement.executeUpdate();
@@ -134,7 +134,7 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
     try(Connection connection = super.establishConnection())
     {
       PreparedStatement statement = connection.prepareStatement("update phonebook.address set address.address = ?, address.type = ? where address.address_id = ?;");
-      statement.setString(1, address.getAddress());
+      statement.setString(1, address.getResidence());
       statement.setString(2, address.getType());
       statement.setInt(3, address.getAddressId());
       statement.executeUpdate();

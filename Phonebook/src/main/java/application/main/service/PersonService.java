@@ -2,8 +2,8 @@ package application.main.service;
 
 import application.main.model.Database.DAOs.PersonDAO;
 import application.main.model.Database.Interfaces.IPersonDAO;
-import application.main.model.Entity.DTOs.SimplePersonDTO;
-import application.main.model.Entity.Person;
+import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.Person;
 import application.main.service.interfaces.IPersonService;
 
 import java.util.List;
