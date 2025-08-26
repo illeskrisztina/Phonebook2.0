@@ -1,9 +1,8 @@
-package application.main.Services.Interfaces;
+package application.main.service.Interfaces;
 
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
+import application.main.model.Entity.DTOs.SimplePersonDTO;
+import application.main.model.Entity.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IPersonService {

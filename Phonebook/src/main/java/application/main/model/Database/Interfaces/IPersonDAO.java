@@ -1,7 +1,7 @@
-package application.main.Database.Interfaces;
+package application.main.model.Database.Interfaces;
 
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
+import application.main.model.Entity.DTOs.SimplePersonDTO;
+import application.main.model.Entity.Person;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface IPersonDAO {
 
     public Person updatePerson(Person person);
 
-    public SimplePersonDTO deletePerson(int Id);
+    public Person deletePerson(int Id);
 }

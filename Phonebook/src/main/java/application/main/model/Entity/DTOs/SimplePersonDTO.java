@@ -1,7 +1,4 @@
-package application.main.Entities.DTOs;
-
-import application.main.Entities.Address;
-import application.main.Entities.Person;
+package application.main.model.Entity.DTOs;
 
 public class SimplePersonDTO
 {

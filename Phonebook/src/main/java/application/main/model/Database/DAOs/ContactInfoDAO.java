@@ -1,8 +1,8 @@
-package application.main.Database.DAOs;
+package application.main.model.Database.DAOs;
 
-import application.main.Database.DatabaseHandlerFactory;
-import application.main.Database.Interfaces.IContactInfoDAO;
-import application.main.Entities.ContactInfo;
+import application.main.model.Database.DatabaseHandlerFactory;
+import application.main.model.Database.Interfaces.IContactInfoDAO;
+import application.main.model.Entity.ContactInfo;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
