@@ -1,8 +1,8 @@
-package application.main.Database.DAOs;
+package application.main.model.Database.DAOs;
 
-import application.main.Database.DatabaseHandlerFactory;
-import application.main.Database.Interfaces.IAddressDAO;
-import application.main.Entities.Address;
+import application.main.model.Database.DatabaseHandlerFactory;
+import application.main.model.Database.Interfaces.IAddressDAO;
+import application.main.model.Entity.Address;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;

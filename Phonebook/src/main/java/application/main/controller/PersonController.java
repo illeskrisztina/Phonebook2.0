@@ -1,17 +1,13 @@
-package application.main.Controllers;
+package application.main.controller;
 
-import application.main.Entities.Address;
-import application.main.Entities.DTOs.SimplePersonDTO;
-import application.main.Entities.Person;
-import application.main.Services.Interfaces.IPersonService;
-import application.main.Services.PersonService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import application.main.model.Entity.DTOs.SimplePersonDTO;
+import application.main.model.Entity.Person;
+import application.main.service.Interfaces.IDispatcher;
+import application.main.service.Dispatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -19,13 +15,14 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/people")
 public class PersonController
 {
-  IPersonService personService = new PersonService();
+  IDispatcher dispatcher = new Dispatcher();
+
   @PostMapping
   public ResponseEntity<Person> createPerson(@RequestBody Person person)
   {
     try
     {
-      Person created = personService.createPerson(person);
+      Person created = dispatcher.createPerson(person);
       return new ResponseEntity<>(person, HttpStatus.CREATED);
     }
     catch (Exception e)
@@ -40,7 +37,7 @@ public class PersonController
   {
     try
     {
-      SimplePersonDTO person = personService.getPerson(id);
+      SimplePersonDTO person = dispatcher.getPerson(id);
       return new ResponseEntity<>(person, HttpStatus.OK);
     }
     catch (NoSuchElementException f)
@@ -60,7 +57,7 @@ public class PersonController
   {
     try
     {
-      List<SimplePersonDTO> allPeople = personService.getAllPeople();
+      List<SimplePersonDTO> allPeople = dispatcher.getAllPeople();
       return new ResponseEntity<>(allPeople, HttpStatus.OK);
     }
     catch (Exception e)
@@ -75,7 +72,7 @@ public class PersonController
   {
     try
     {
-      Person updated = personService.updatePerson(person);
+      Person updated = dispatcher.updatePerson(person);
       return new ResponseEntity<>(updated, HttpStatus.OK);
     }
     catch (NoSuchElementException f)
@@ -95,7 +92,7 @@ public class PersonController
   {
     try
     {
-      Person deleted = personService.deletePerson(id);
+      Person deleted = dispatcher.deletePerson(id);
       return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
     catch (Exception e)
