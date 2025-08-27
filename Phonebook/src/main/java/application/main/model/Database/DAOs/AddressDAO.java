@@ -57,7 +57,10 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
             ResultSet rs = statement.executeQuery();
             Address fetched = null;
             while (rs.next()) {
-                fetched = new Address().setAddress(rs.getString("address")).setType(rs.getString("type")).setAddressId(Id);
+                fetched = new Address()
+                        .setAddress(rs.getString("address"))
+                        .setType(rs.getString("type"))
+                        .setAddressId(Id);
             }
 
             return fetched;
@@ -75,7 +78,10 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                allAddresses.add(new Address().setAddress(rs.getString("address")).setType(rs.getString("type")).setAddressId(rs.getInt("address_id")));
+                allAddresses.add(new Address()
+                        .setAddress(rs.getString("address"))
+                        .setType(rs.getString("type"))
+                        .setAddressId(rs.getInt("address_id")));
             }
 
             return allAddresses;
