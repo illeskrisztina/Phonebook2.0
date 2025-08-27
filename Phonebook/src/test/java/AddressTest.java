@@ -27,7 +27,9 @@ public class AddressTest {
     @Test
     public void adding_contact_increases_list_size_by_one() {
         Assertions.assertEquals(0, addressTest.getContacts().size());
-        ContactInfo contact = new ContactInfo().setType("hi").setContact("hello");
+        ContactInfo contact = new ContactInfo()
+                .setType("hi")
+                .setContact("hello");
         addressTest.addContact(contact);
 
         Assertions.assertEquals(1, addressTest.getContacts().size());
@@ -43,9 +45,15 @@ public class AddressTest {
     @Test
     public void contact_list_can_be_set() {
         ArrayList<ContactInfo> newList = new ArrayList<>();
-        newList.add(new ContactInfo().setType("hi").setContact("hello"));
-        newList.add(new ContactInfo().setType("hoi").setContact("heio"));
-        newList.add(new ContactInfo().setType("morning").setContact("good morning"));
+        newList.add(new ContactInfo()
+                .setType("hi")
+                .setContact("hello"));
+        newList.add(new ContactInfo()
+                .setType("hoi")
+                .setContact("heio"));
+        newList.add(new ContactInfo()
+                .setType("morning")
+                .setContact("good morning"));
 
         addressTest.setContacts(newList);
 
@@ -55,46 +63,70 @@ public class AddressTest {
 
     @Test
     public void removing_contact_removes_right_contact() {
-        ContactInfo contact1 = new ContactInfo().setType("hi").setContact("hello");
-        ContactInfo contact2 = new ContactInfo().setType("hoi").setContact("heio");
-        ContactInfo contact3 = new ContactInfo().setType("morning").setContact("good morning");
+        ContactInfo contact1 = new ContactInfo()
+                .setType("hi")
+                .setContact("hello");
+        ContactInfo contact2 = new ContactInfo()
+                .setType("hoi")
+                .setContact("heio");
+        ContactInfo contact3 = new ContactInfo()
+                .setType("morning")
+                .setContact("good morning");
 
         addressTest.addContact(contact1);
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
         //New one to ensure it doesn't just check for reference variables
-        ContactInfo removed = addressTest.removeContact(new ContactInfo().setType("hoi").setContact("heio"));
+        ContactInfo removed = addressTest.removeContact(new ContactInfo()
+                .setType("hoi")
+                .setContact("heio"));
 
         Assertions.assertEquals(contact2, removed);
     }
 
     @Test
     public void removing_contact_decreases_size_of_list() {
-        ContactInfo contact1 = new ContactInfo().setType("hi").setContact("hello");
-        ContactInfo contact2 = new ContactInfo().setType("hoi").setContact("heio");
-        ContactInfo contact3 = new ContactInfo().setType("morning").setContact("good morning");
+        ContactInfo contact1 = new ContactInfo()
+                .setType("hi")
+                .setContact("hello");
+        ContactInfo contact2 = new ContactInfo()
+                .setType("hoi")
+                .setContact("heio");
+        ContactInfo contact3 = new ContactInfo()
+                .setType("morning")
+                .setContact("good morning");
 
         addressTest.addContact(contact1);
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        addressTest.removeContact(new ContactInfo().setType("hoi").setContact("heio"));
+        addressTest.removeContact(new ContactInfo()
+                .setType("hoi")
+                .setContact("heio"));
 
         Assertions.assertEquals(2, addressTest.getContacts().size());
     }
 
     @Test
     public void removing_contact_leaves_right_ones_behind() {
-        ContactInfo contact1 = new ContactInfo().setType("hi").setContact("hello");
-        ContactInfo contact2 = new ContactInfo().setType("hoi").setContact("heio");
-        ContactInfo contact3 = new ContactInfo().setType("morning").setContact("good morning");
+        ContactInfo contact1 = new ContactInfo()
+                .setType("hi")
+                .setContact("hello");
+        ContactInfo contact2 = new ContactInfo()
+                .setType("hoi")
+                .setContact("heio");
+        ContactInfo contact3 = new ContactInfo()
+                .setType("morning")
+                .setContact("good morning");
 
         addressTest.addContact(contact1);
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        addressTest.removeContact(new ContactInfo().setType("hoi").setContact("heio"));
+        addressTest.removeContact(new ContactInfo()
+                .setType("hoi")
+                .setContact("heio"));
 
         Assertions.assertEquals(contact1, addressTest.getContacts().get(0));
         Assertions.assertEquals(contact3, addressTest.getContacts().get(1));
@@ -102,9 +134,15 @@ public class AddressTest {
 
     @Test
     public void constructing_same_contacts_list_still_returns_equal() {
-        ContactInfo contact1 = new ContactInfo().setType("hi").setContact("hello");
-        ContactInfo contact2 = new ContactInfo().setType("hoi").setContact("heio");
-        ContactInfo contact3 = new ContactInfo().setType("morning").setContact("good morning");
+        ContactInfo contact1 = new ContactInfo()
+                .setType("hi")
+                .setContact("hello");
+        ContactInfo contact2 = new ContactInfo()
+                .setType("hoi")
+                .setContact("heio");
+        ContactInfo contact3 = new ContactInfo()
+                .setType("morning")
+                .setContact("good morning");
 
         addressTest.addContact(contact1);
         addressTest.addContact(contact2);
@@ -112,18 +150,30 @@ public class AddressTest {
 
         Address other = new Address().setAddress("Hungary, Budapest, XIX. district");
 
-        other.addContact(new ContactInfo().setType("hi").setContact("hello"));
-        other.addContact(new ContactInfo().setType("hoi").setContact("heio"));
-        other.addContact(new ContactInfo().setType("morning").setContact("good morning"));
+        other.addContact(new ContactInfo()
+                .setType("hi")
+                .setContact("hello"));
+        other.addContact(new ContactInfo()
+                .setType("hoi")
+                .setContact("heio"));
+        other.addContact(new ContactInfo()
+                .setType("morning")
+                .setContact("good morning"));
 
         Assertions.assertEquals(true, other.equals(addressTest));
     }
 
     @Test
     public void address_with_different_attributes_not_equal() {
-        ContactInfo contact1 = new ContactInfo().setType("hi").setContact("hello");
-        ContactInfo contact2 = new ContactInfo().setType("hoi").setContact("heio");
-        ContactInfo contact3 = new ContactInfo().setType("morning").setContact("good morning");
+        ContactInfo contact1 = new ContactInfo()
+                .setType("hi")
+                .setContact("hello");
+        ContactInfo contact2 = new ContactInfo()
+                .setType("hoi")
+                .setContact("heio");
+        ContactInfo contact3 = new ContactInfo()
+                .setType("morning")
+                .setContact("good morning");
 
         addressTest.addContact(contact1);
         addressTest.addContact(contact2);
@@ -131,7 +181,9 @@ public class AddressTest {
 
         Address other = new Address().setAddress("some address");
 
-        other.addContact(new ContactInfo().setType("hi").setContact("hello"));
+        other.addContact(new ContactInfo()
+                .setType("hi")
+                .setContact("hello"));
 
         Assertions.assertEquals(false, other.equals(addressTest));
     }

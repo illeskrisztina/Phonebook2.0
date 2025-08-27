@@ -8,7 +8,9 @@ public class ContactInfoTest {
 
     @BeforeEach
     public void setUp() {
-        contactTest = new ContactInfo().setType("mobile phone").setContact("+36 1 234 5678");
+        contactTest = new ContactInfo()
+                .setType("mobile phone")
+                .setContact("+36 1 234 5678");
     }
 
     @Test
@@ -42,14 +44,18 @@ public class ContactInfoTest {
 
     @Test
     public void different_objects_same_attributes_are_equal() {
-        ContactInfo other = new ContactInfo().setType("mobile phone").setContact("+36 1 234 5678");
+        ContactInfo other = new ContactInfo()
+                .setType("mobile phone")
+                .setContact("+36 1 234 5678");
 
         Assertions.assertEquals(true, other.equals(contactTest));
     }
 
     @Test
     public void different_objects_different_attributes_not_equal() {
-        ContactInfo other = new ContactInfo().setType("email").setContact("hi@gmail.com");
+        ContactInfo other = new ContactInfo()
+                .setType("email")
+                .setContact("hi@gmail.com");
 
         Assertions.assertEquals(false, other.equals(contactTest));
     }
