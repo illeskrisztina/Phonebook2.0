@@ -18,7 +18,7 @@ public interface IDispatcher {
 
     public Address deleteAddress(int id);
 
-    public ContactInfo addContact(ContactInfo contact, int addressId);
+    public ContactInfo addContact(ContactInfo contact, Integer addressId);
 
     public ContactInfo getContact(String contact);
 

@@ -45,7 +45,7 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public ContactInfo addContact(ContactInfo contact, int addressId) {
+    public ContactInfo addContact(ContactInfo contact, Integer addressId) {
         return contactService.addContact(contact, addressId);
     }
 
