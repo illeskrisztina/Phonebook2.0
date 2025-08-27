@@ -11,7 +11,12 @@ public class PersonTest
   @BeforeEach
   public void setUp()
   {
-      personTest = new Person().setAge(25).setName("Melanie").setId(1).setPermanentAddress(new Address().setAddress("Denmark, Aarhus"));
+      personTest = new Person()
+              .setAge(25)
+              .setName("Melanie")
+              .setId(1)
+              .setPermanentAddress(new Address()
+                      .setAddress("Denmark, Aarhus"));
   }
 
   @Test
