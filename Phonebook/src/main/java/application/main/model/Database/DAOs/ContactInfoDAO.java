@@ -3,6 +3,7 @@ package application.main.model.Database.DAOs;
 import application.main.model.Database.DatabaseHandlerFactory;
 import application.main.model.Database.Interfaces.IContactInfoDAO;
 import application.main.model.Entity.ContactInfo;
+import application.main.model.exception.DatabaseConnectionException;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
@@ -32,7 +33,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       throw new RuntimeException("Issue getting singleton instance of ContactInfoDAO: " + e.getMessage());
     }
   }
-  @Override public synchronized ContactInfo createContactInfo(ContactInfo contactInfo, int addressId)
+  @Override public synchronized ContactInfo createContactInfo(ContactInfo contactInfo)
   {
     try(Connection connection = super.establishConnection())
     {
@@ -41,17 +42,26 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       statement.setString(2, contactInfo.getContact());
       statement.executeUpdate();
 
-      statement = connection.prepareStatement("insert into phonebook.address_contacts(contact, address_id) values (?, ?);");
-      statement.setString(1, contactInfo.getContact());
-      statement.setInt(2, addressId);
-      statement.executeUpdate();
-
       return contactInfo;
     }
     catch (SQLException e)
     {
       throw new RuntimeException("Something went wrong while creating a contact info in the database: " + e.getMessage());
     }
+  }
+
+  @Override public void addContactInfoToAddress(String contactInfo, int addressId){
+      try(Connection connection = super.establishConnection())
+      {
+          PreparedStatement statement = connection.prepareStatement("insert into phonebook.address_contacts(contact, address_id) values (?, ?);");
+          statement.setString(1, contactInfo);
+          statement.setInt(2, addressId);
+          statement.executeUpdate();
+      }
+      catch (SQLException e)
+      {
+          throw new DatabaseConnectionException("Something went wrong while adding a contact to an address in the database: " +  e.getMessage());
+      }
   }
 
   @Override public ContactInfo getContactInfo(String contact)
