@@ -4,6 +4,8 @@ import application.main.model.Entity.ContactInfo;
 import application.main.service.Dispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +14,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 public class App {
+    Logger logger = LoggerFactory.getLogger(App.class);
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
@@ -24,11 +27,11 @@ public class App {
         try{
             ContactInfo contact = mapper.readValue(new File(System.getProperty("user.dir") + "/Phonebook/src/main/resources/contact.json"), ContactInfo.class);
 
-            //Contact and address needs to be separated
+            dispatcher.addContact(contact, null);
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }
