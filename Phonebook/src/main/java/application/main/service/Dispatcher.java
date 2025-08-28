@@ -113,9 +113,9 @@ public class Dispatcher implements IDispatcher {
 
         Person deleted = personService.deletePerson(Id);
 
-        person.setName(deleted.getName());
-        person.setAge(deleted.getAge());
-        person.setId(deleted.getId());
+        person.setName(deleted.getName())
+                .setAge(deleted.getAge())
+                .setId(deleted.getId());
 
         return person;
     }

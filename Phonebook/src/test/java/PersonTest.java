@@ -11,7 +11,12 @@ public class PersonTest
   @BeforeEach
   public void setUp()
   {
-    personTest = new Person("Melanie", 25, 1, new Address("Denmark, Aarhus"));
+      personTest = new Person()
+              .setAge(25)
+              .setName("Melanie")
+              .setId(1)
+              .setPermanentAddress(new Address()
+                      .setAddress("Denmark, Aarhus"));
   }
 
   @Test
@@ -19,8 +24,7 @@ public class PersonTest
   {
     try
     {
-      new Person("Kate", 34, 2, null);
-
+      new Person().setPermanentAddress(null);
       //Lambdas not supported before Java 8, so roundabout method had to be used
       //If the previous code does not throw, this line fails the test
       Assertions.assertEquals(false, true);
@@ -58,9 +62,11 @@ public class PersonTest
   @Test
   public void permanent_address_can_be_set()
   {
-    personTest.setPermanentAddress(new Address("new address"));
+    personTest.setPermanentAddress(new Address()
+            .setAddress("new address"));
 
-    Assertions.assertEquals(new Address("new address"), personTest.getPermanentAddress());
+    Assertions.assertEquals(new Address()
+            .setAddress("new address"), personTest.getPermanentAddress());
   }
 
   @Test
@@ -81,8 +87,10 @@ public class PersonTest
 
   public void temporary_address_can_be_set()
   {
-    personTest.setTemporaryAddress(new Address("new temporary address"));
+    personTest.setTemporaryAddress(new Address()
+            .setAddress("new temporary address"));
 
-    Assertions.assertEquals(new Address("new temporary address"), personTest.getTemporaryAddress());
+    Assertions.assertEquals(new Address()
+            .setAddress("new temporary address"), personTest.getTemporaryAddress());
   }
 }
