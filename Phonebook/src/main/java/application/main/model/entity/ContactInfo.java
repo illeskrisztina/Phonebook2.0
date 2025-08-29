@@ -10,20 +10,16 @@ public class ContactInfo
 
   public ContactInfo(){}
 
-  public ContactInfo(String type, String contact)
+  public ContactInfo setType(String type)
   {
     this.type = type;
-    this.contact = contact;
+    return this;
   }
 
-  public void setType(String type)
-  {
-    this.type = type;
-  }
-
-  public void setContact(String contact)
+  public ContactInfo setContact(String contact)
   {
     this.contact = contact;
+    return this;
   }
 
   public String getType()

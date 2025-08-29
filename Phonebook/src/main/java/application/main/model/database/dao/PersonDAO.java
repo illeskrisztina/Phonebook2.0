@@ -113,7 +113,10 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
             statement.setInt(1, id);
             statement.executeUpdate();
 
-            return new Person(deleted);
+            return new Person()
+                    .setId(deleted.getId())
+                    .setName(deleted.getName())
+                    .setAge(deleted.getAge());
         } catch (SQLException e) {
             throw new DatabaseConnectionException("Something went wrong while deleting person with id " + id + " from the database: " + e.getMessage());
         }

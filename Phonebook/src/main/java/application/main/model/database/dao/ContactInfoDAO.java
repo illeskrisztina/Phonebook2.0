@@ -1,4 +1,4 @@
-package application.main.model.database.dao;
+package application.main.model.Database.DAOs;
 
 import application.main.model.database.DatabaseHandlerFactory;
 import application.main.model.database.interfaces.IContactInfoDAO;
@@ -69,8 +69,9 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       ContactInfo fetched = null;
       while (rs.next())
       {
-        fetched = new ContactInfo(rs.getString("type"),
-            rs.getString(CONTACT));
+        fetched = new ContactInfo()
+                .setContact(rs.getString(CONTACT))
+                .setType(rs.getString("type"));
       }
 
       return fetched;
@@ -92,7 +93,9 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
 
       while (rs.next())
       {
-        allContacts.add(new ContactInfo(rs.getString("type"), rs.getString(CONTACT)));
+        allContacts.add(new ContactInfo()
+                .setType(rs.getString("type"))
+                .setContact(rs.getString(CONTACT)));
       }
 
       return allContacts;

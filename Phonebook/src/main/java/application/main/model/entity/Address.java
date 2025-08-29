@@ -29,24 +29,28 @@ public class Address
     this.contacts = new ArrayList<>();
   }
 
-  public void setResidence(String residence)
+  public Address setResidence(String residence)
   {
     this.residence = residence;
+    return this;
   }
 
-  public void setType(String type)
+  public Address setType(String type)
   {
     this.type = type;
+    return this;
   }
 
-  public void setAddressId(int addressId)
+  public Address setAddressId(int addressId)
   {
     this.addressId = addressId;
+    return this;
   }
 
-  public void setContacts(List<ContactInfo> contacts)
+  public Address setContacts(List<ContactInfo> contacts)
   {
     this.contacts = new ArrayList<>(contacts);
+    return this;
   }
 
   public void addContact(ContactInfo contact)

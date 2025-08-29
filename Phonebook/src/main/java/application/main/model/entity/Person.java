@@ -11,50 +11,44 @@ public class Person {
     private Address permanent;
     private Address temporary;
 
-    public Person() {
-    }
+  public Person()
+  {
+  }
 
-    public Person(SimplePersonDTO personDTO) {
-        this.name = personDTO.getName();
-        this.age = personDTO.getAge();
-        this.id = personDTO.getId();
-    }
+  public Person setName(String name)
+  {
+    this.name = name;
+    return this;
+  }
 
-    public Person(String name, int age, int id, Address permanent) {
-        this.name = name;
-        this.age = age;
-        this.id = id;
+  public Person setAge(int age)
+  {
+    this.age = age;
+    return this;
+  }
 
-        //Everyone needs at least one address, temporary is not necessary
-        if (permanent == null) {
-            throw new NullPointerException("Permanent address cannot be null");
-        }
-        this.permanent = permanent;
-    }
+  public Person setId(int id)
+  {
+    this.id = id;
+    return this;
+  }
 
-    public void setName(String name) {
-        this.name = name;
+  public Person setPermanentAddress(Address permanent)
+  {
+    //Everyone needs at least one address
+    if(permanent == null)
+    {
+      throw new NullPointerException("Permanent address cannot be null");
     }
+    this.permanent = permanent;
+    return this;
+  }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setPermanentAddress(Address permanent) {
-        //Everyone needs at least one address
-        if (permanent == null) {
-            throw new NullPointerException("Permanent address cannot be null");
-        }
-        this.permanent = permanent;
-    }
-
-    public void setTemporaryAddress(Address temporary) {
-        this.temporary = temporary;
-    }
+  public Person setTemporaryAddress(Address temporary)
+  {
+    this.temporary = temporary;
+    return this;
+  }
 
     public String getName() {
         return name;
