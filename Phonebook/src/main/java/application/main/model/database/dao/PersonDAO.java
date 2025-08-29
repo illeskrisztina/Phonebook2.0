@@ -32,17 +32,20 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
     @Override
     public synchronized Person createPerson(Person person) {
         try (Connection connection = super.establishConnection()) {
-            PreparedStatement statement = connection.prepareStatement("insert into phonebook.people(name, age) values (?, ?);", Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, person.getName());
-            statement.setInt(2, person.getAge());
-            statement.executeUpdate();
 
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                person.setId(generatedKeys.getInt(1));
-            } else {
-                throw new DatabaseConnectionException("No keys were generated.");
+            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.people(name, age) values (?, ?);", Statement.RETURN_GENERATED_KEYS);){
+                statement.setString(1, person.getName());
+                statement.setInt(2, person.getAge());
+                statement.executeUpdate();
+
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    person.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DatabaseConnectionException("No keys were generated.");
+                }
             }
+
             return person;
         } catch (SQLException e) {
             throw new DatabaseConnectionException("Something went wrong while creating an entry for a person in the database: " + e.getMessage());
@@ -52,15 +55,17 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
     @Override
     public SimplePersonDTO getPerson(int id) {
         try (Connection connection = super.establishConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id\n"
-                    + "FROM phonebook.people\n" + "WHERE people.id = ?;");
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-
             SimplePersonDTO fetched = null;
-            while (rs.next()) {
-                fetched = new SimplePersonDTO(rs.getString("name"),
-                        rs.getInt("age"), rs.getInt("id"));
+
+            try (PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id FROM phonebook.people\n" + "WHERE people.id = ?;");){
+                statement.setInt(1, id);
+                ResultSet rs = statement.executeQuery();
+
+
+                while (rs.next()) {
+                    fetched = new SimplePersonDTO(rs.getString("name"),
+                            rs.getInt("age"), rs.getInt("id"));
+                }
             }
 
             return fetched;
@@ -74,14 +79,14 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
         try (Connection connection = super.establishConnection()) {
             List<SimplePersonDTO> allPeople = new ArrayList<>();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id\n"
-                    + "FROM phonebook.people;");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                String name = rs.getString("name");
-                int age = rs.getInt("age");
-                int id = rs.getInt("id");
-                allPeople.add(new SimplePersonDTO(name, age, id));
+            try (PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id FROM phonebook.people;");){
+                ResultSet rs = statement.executeQuery();
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    int age = rs.getInt("age");
+                    int id = rs.getInt("id");
+                    allPeople.add(new SimplePersonDTO(name, age, id));
+                }
             }
 
             return allPeople;
@@ -93,11 +98,13 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
     @Override
     public synchronized Person updatePerson(Person person) {
         try (Connection connection = super.establishConnection()) {
-            PreparedStatement statement = connection.prepareStatement("update phonebook.people set name = ?, age = ? where id = ?;");
-            statement.setString(1, person.getName());
-            statement.setInt(2, person.getAge());
-            statement.setInt(3, person.getId());
-            statement.executeUpdate();
+
+            try (PreparedStatement statement = connection.prepareStatement("update phonebook.people set name = ?, age = ? where id = ?;")){
+                statement.setString(1, person.getName());
+                statement.setInt(2, person.getAge());
+                statement.setInt(3, person.getId());
+                statement.executeUpdate();
+            }
 
             return person;
         } catch (SQLException e) {

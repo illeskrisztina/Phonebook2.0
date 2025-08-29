@@ -40,15 +40,17 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
   {
     try(Connection connection = super.establishConnection())
     {
-      PreparedStatement statement = connection.prepareStatement("insert into phonebook.contact_info(type, contact) values (?, ?);");
-      statement.setString(1, contactInfo.getType());
-      statement.setString(2, contactInfo.getContact());
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.contact_info(type, contact) values (?, ?);");){
+            statement.setString(1, contactInfo.getType());
+            statement.setString(2, contactInfo.getContact());
+            statement.executeUpdate();
+        }
 
-      statement = connection.prepareStatement("insert into phonebook.address_contacts(contact, address_id) values (?, ?);");
-      statement.setString(1, contactInfo.getContact());
-      statement.setInt(2, addressId);
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.address_contacts(contact, address_id) values (?, ?);")){
+            statement.setString(1, contactInfo.getContact());
+            statement.setInt(2, addressId);
+            statement.executeUpdate();
+        }
 
       return contactInfo;
     }
@@ -112,14 +114,14 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     {
       ArrayList<ContactInfo> allContacts = new ArrayList<>();
 
-      PreparedStatement statement = connection.prepareStatement("select contact\n"
-          + "from phonebook.address_contacts where address_id = ?;");
-      statement.setInt(1, addressId);
-      ResultSet rs = statement.executeQuery();
+      try (PreparedStatement statement = connection.prepareStatement("select contact from phonebook.address_contacts where address_id = ?;");){
+          statement.setInt(1, addressId);
+          ResultSet rs = statement.executeQuery();
 
-      while (rs.next())
-      {
-        allContacts.add(getContactInfo(rs.getString(CONTACT)));
+          while (rs.next())
+          {
+              allContacts.add(getContactInfo(rs.getString(CONTACT)));
+          }
       }
 
       return allContacts;
@@ -134,16 +136,18 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
   {
     try(Connection connection = super.establishConnection())
     {
-      PreparedStatement statement = connection.prepareStatement("delete from phonebook.address_contacts where address_id = ? and contact = ?;");
-      statement.setInt(1, addressId);
-      statement.setString(2, contact);
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.address_contacts where address_id = ? and contact = ?;");){
+            statement.setInt(1, addressId);
+            statement.setString(2, contact);
+            statement.executeUpdate();
+        }
 
-      ContactInfo deleted = getContactInfo(contact);
+        ContactInfo deleted = getContactInfo(contact);
 
-      statement = connection.prepareStatement("delete from phonebook.contact_info where contact = ?;");
-      statement.setString(1, contact);
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.contact_info where contact = ?;")){
+            statement.setString(1, contact);
+            statement.executeUpdate();
+        }
 
       return deleted;
     }

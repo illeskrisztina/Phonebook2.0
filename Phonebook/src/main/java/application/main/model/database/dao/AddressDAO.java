@@ -34,17 +34,19 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
     @Override
     public synchronized Address createAddress(Address address, int personId) {
         try (Connection connection = super.establishConnection()) {
-            PreparedStatement statement = connection.prepareStatement("insert into phonebook.address(address, person_id, type) values (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, address.getResidence());
-            statement.setInt(2, personId);
-            statement.setString(3, address.getType());
-            statement.executeUpdate();
 
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                address.setAddressId(generatedKeys.getInt(1));
-            } else {
-                throw new DatabaseConnectionException("No keys were generated.");
+            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.address(address, person_id, type) values (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);){
+                statement.setString(1, address.getResidence());
+                statement.setInt(2, personId);
+                statement.setString(3, address.getType());
+                statement.executeUpdate();
+
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    address.setAddressId(generatedKeys.getInt(1));
+                } else {
+                    throw new DatabaseConnectionException("No keys were generated.");
+                }
             }
 
             return address;
@@ -120,11 +122,13 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
     @Override
     public synchronized Address updateAddress(Address address) {
         try (Connection connection = super.establishConnection()) {
-            PreparedStatement statement = connection.prepareStatement("update phonebook.address set address.address = ?, address.type = ? where address.address_id = ?;");
-            statement.setString(1, address.getResidence());
-            statement.setString(2, address.getType());
-            statement.setInt(3, address.getAddressId());
-            statement.executeUpdate();
+
+            try (PreparedStatement statement = connection.prepareStatement("update phonebook.address set address.address = ?, address.type = ? where address.address_id = ?;");){
+                statement.setString(1, address.getResidence());
+                statement.setString(2, address.getType());
+                statement.setInt(3, address.getAddressId());
+                statement.executeUpdate();
+            }
 
             return address;
         } catch (SQLException e) {
@@ -137,9 +141,10 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
         try (Connection connection = super.establishConnection()) {
             Address deleted = getAddress(addressId);
 
-            PreparedStatement statement = connection.prepareStatement("delete from phonebook.address where address_id = ?;");
-            statement.setInt(1, addressId);
-            statement.executeUpdate();
+            try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.address where address_id = ?;");){
+                statement.setInt(1, addressId);
+                statement.executeUpdate();
+            }
 
             return deleted;
         } catch (SQLException e) {
