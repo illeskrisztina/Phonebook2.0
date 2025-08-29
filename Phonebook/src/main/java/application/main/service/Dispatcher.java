@@ -108,7 +108,7 @@ public class Dispatcher implements IDispatcher {
             }
 
             return address;
-        }).collect(Collectors.toList());
+        });
 
         Person deleted = personService.deletePerson(id);
 
