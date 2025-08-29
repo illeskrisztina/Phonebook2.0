@@ -8,8 +8,6 @@ public class ContactInfo
 //  Something to format contacts so that they are uniform could be nice?
   private String contact;
 
-  public ContactInfo(){}
-
   public ContactInfo setType(String type)
   {
     this.type = type;

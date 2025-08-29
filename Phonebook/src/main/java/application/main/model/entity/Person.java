@@ -1,7 +1,5 @@
 package application.main.model.entity;
 
-import application.main.model.entity.dto.SimplePersonDTO;
-
 import java.util.Objects;
 
 public class Person {
@@ -11,9 +9,6 @@ public class Person {
     private Address permanent;
     private Address temporary;
 
-  public Person()
-  {
-  }
 
   public Person setName(String name)
   {
