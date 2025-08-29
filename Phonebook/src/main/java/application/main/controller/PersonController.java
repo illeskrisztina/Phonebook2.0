@@ -1,10 +1,9 @@
 package application.main.controller;
 
-import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
-import application.main.service.interfaces.IDispatcher;
+import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.Dispatcher;
-import org.slf4j.ILoggerFactory;
+import application.main.service.interfaces.IDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class PersonController
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
   }
 
@@ -46,12 +45,12 @@ public class PersonController
     catch (NoSuchElementException f)
     {
       LOG.error(f.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -66,7 +65,7 @@ public class PersonController
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -81,12 +80,12 @@ public class PersonController
     catch (NoSuchElementException f)
     {
       LOG.error(f.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.NOT_MODIFIED);
+      return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
   }
 
@@ -101,7 +100,7 @@ public class PersonController
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
 }

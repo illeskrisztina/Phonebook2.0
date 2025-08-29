@@ -2,7 +2,7 @@ package application.main.controller;
 
 import application.main.model.entity.ContactInfo;
 import application.main.service.Dispatcher;
-import application.main.service.Interfaces.IDispatcher;
+import application.main.service.interfaces.IDispatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
