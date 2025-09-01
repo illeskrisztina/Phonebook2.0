@@ -1,12 +1,12 @@
-package application.main.model.Entity;
+package application.main.model.entity;
+
+import java.util.Objects;
 
 public class ContactInfo
 {
   private String type;
 //  Something to format contacts so that they are uniform could be nice?
   private String contact;
-
-  public ContactInfo(){}
 
   public ContactInfo setType(String type)
   {
@@ -30,7 +30,12 @@ public class ContactInfo
     return contact;
   }
 
-  public boolean equals(Object obj)
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, contact);
+    }
+
+    public boolean equals(Object obj)
   {
     if(obj == this)
     {

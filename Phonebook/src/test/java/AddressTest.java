@@ -1,5 +1,5 @@
-import application.main.model.Entity.Address;
-import application.main.model.Entity.ContactInfo;
+import application.main.model.entity.Address;
+import application.main.model.entity.ContactInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,13 +12,14 @@ public class AddressTest {
     @BeforeEach
     public void setUp() {
         addressTest = new Address()
-                .setAddress("Hungary, Budapest, XIX. district");
+                .setResidence("Hungary, Budapest, XIX. district");
     }
 
-    @Test
-    public void created_object_has_correct_address() {
-        Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getAddress());
-    }
+  @Test
+  public void created_object_has_correct_address()
+  {
+    Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getResidence());
+  }
 
     @Test
     public void created_object_has_empty_list() {
@@ -38,9 +39,9 @@ public class AddressTest {
 
     @Test
     public void address_can_be_set() {
-        addressTest.setAddress("new address");
+        addressTest.setResidence("new address");
 
-        Assertions.assertEquals("new address", addressTest.getAddress());
+        Assertions.assertEquals("new address", addressTest.getResidence());
     }
 
     @Test
@@ -149,7 +150,7 @@ public class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address().setAddress("Hungary, Budapest, XIX. district");
+        Address other = new Address().setResidence("Hungary, Budapest, XIX. district");
 
         other.addContact(new ContactInfo()
                 .setType("hi")
@@ -181,7 +182,7 @@ public class AddressTest {
         addressTest.addContact(contact3);
 
         Address other = new Address()
-                .setAddress("some address");
+                .setResidence("some address");
 
         other.addContact(new ContactInfo()
                 .setType("hi")

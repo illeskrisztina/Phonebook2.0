@@ -1,5 +1,5 @@
-import application.main.model.Entity.Address;
-import application.main.model.Entity.Person;
+import application.main.model.entity.Address;
+import application.main.model.entity.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ public class PersonTest
               .setName("Melanie")
               .setId(1)
               .setPermanentAddress(new Address()
-                      .setAddress("Denmark, Aarhus"));
+                      .setResidence("Denmark, Aarhus"));
   }
 
   @Test
@@ -63,10 +63,10 @@ public class PersonTest
   public void permanent_address_can_be_set()
   {
     personTest.setPermanentAddress(new Address()
-            .setAddress("new address"));
+            .setResidence("new address"));
 
     Assertions.assertEquals(new Address()
-            .setAddress("new address"), personTest.getPermanentAddress());
+            .setResidence("new address"), personTest.getPermanentAddress());
   }
 
   @Test
@@ -88,9 +88,9 @@ public class PersonTest
   public void temporary_address_can_be_set()
   {
     personTest.setTemporaryAddress(new Address()
-            .setAddress("new temporary address"));
+            .setResidence("new temporary address"));
 
     Assertions.assertEquals(new Address()
-            .setAddress("new temporary address"), personTest.getTemporaryAddress());
+            .setResidence("new temporary address"), personTest.getTemporaryAddress());
   }
 }

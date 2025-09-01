@@ -1,4 +1,6 @@
-package application.main.model.Database;
+package application.main.model.database;
+
+import application.main.model.exception.DatabaseConnectionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +16,7 @@ public abstract class DatabaseHandlerFactory
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while trying to connect to the database.");
+      throw new DatabaseConnectionException("Something went wrong while trying to connect to the database.");
     }
   }
 }

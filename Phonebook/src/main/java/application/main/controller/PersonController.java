@@ -1,9 +1,11 @@
 package application.main.controller;
 
-import application.main.model.Entity.DTOs.SimplePersonDTO;
-import application.main.model.Entity.Person;
-import application.main.service.Interfaces.IDispatcher;
+import application.main.model.entity.Person;
+import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.Dispatcher;
+import application.main.service.interfaces.IDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +18,19 @@ import java.util.NoSuchElementException;
 public class PersonController
 {
   IDispatcher dispatcher = new Dispatcher();
+  private static final Logger LOG = LoggerFactory.getLogger(PersonController.class);
 
   @PostMapping
   public ResponseEntity<Person> createPerson(@RequestBody Person person)
   {
     try
     {
-      Person created = dispatcher.createPerson(person);
-      return new ResponseEntity<>(person, HttpStatus.CREATED);
+      return new ResponseEntity<>(dispatcher.createPerson(person), HttpStatus.CREATED);
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+      LOG.error(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
   }
 
@@ -42,13 +44,13 @@ public class PersonController
     }
     catch (NoSuchElementException f)
     {
-      f.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      LOG.error(f.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      LOG.error(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -62,8 +64,8 @@ public class PersonController
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      LOG.error(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -77,13 +79,13 @@ public class PersonController
     }
     catch (NoSuchElementException f)
     {
-      f.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      LOG.error(f.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.NOT_MODIFIED);
+      LOG.error(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
   }
 
@@ -97,8 +99,8 @@ public class PersonController
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      LOG.error(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
 }
