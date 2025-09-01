@@ -33,7 +33,7 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
     public synchronized Person createPerson(Person person) {
         try (Connection connection = super.establishConnection()) {
 
-            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.people(name, age) values (?, ?);", Statement.RETURN_GENERATED_KEYS);){
+            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.people(name, age) values (?, ?);", Statement.RETURN_GENERATED_KEYS)){
                 statement.setString(1, person.getName());
                 statement.setInt(2, person.getAge());
                 statement.executeUpdate();
@@ -57,7 +57,7 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
         try (Connection connection = super.establishConnection()) {
             SimplePersonDTO fetched = null;
 
-            try (PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id FROM phonebook.people\n" + "WHERE people.id = ?;");){
+            try (PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id FROM phonebook.people\n" + "WHERE people.id = ?;")){
                 statement.setInt(1, id);
                 ResultSet rs = statement.executeQuery();
 
@@ -79,7 +79,7 @@ public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
         try (Connection connection = super.establishConnection()) {
             List<SimplePersonDTO> allPeople = new ArrayList<>();
 
-            try (PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id FROM phonebook.people;");){
+            try (PreparedStatement statement = connection.prepareStatement("SELECT people.name, people.age, people.id FROM phonebook.people;")){
                 ResultSet rs = statement.executeQuery();
                 while (rs.next()) {
                     String name = rs.getString("name");

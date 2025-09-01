@@ -88,13 +88,13 @@ public class Dispatcher implements IDispatcher {
     public Person deletePerson(int id) {
         Person person = new Person();
 
-        addressService.getAllAddress(id).stream().map(address ->
+        addressService.getAllAddress(id).stream().forEach(address ->
         {
             addressService.deleteAddress(address.getAddressId());
 
-            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
+            address.setContacts(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
             contactService.deleteContact(contactInfo.getContact(),  address.getAddressId())
-            ).collect(Collectors.toList())));
+            ).toList());
 
             switch (address.getType()){
                 case "permanent":
@@ -106,8 +106,6 @@ public class Dispatcher implements IDispatcher {
                 default:
                     throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
             }
-
-            return address;
         });
 
         Person deleted = personService.deletePerson(id);

@@ -114,7 +114,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     {
       ArrayList<ContactInfo> allContacts = new ArrayList<>();
 
-      try (PreparedStatement statement = connection.prepareStatement("select contact from phonebook.address_contacts where address_id = ?;");){
+      try (PreparedStatement statement = connection.prepareStatement("select contact from phonebook.address_contacts where address_id = ?;")){
           statement.setInt(1, addressId);
           ResultSet rs = statement.executeQuery();
 
@@ -136,7 +136,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
   {
     try(Connection connection = super.establishConnection())
     {
-        try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.address_contacts where address_id = ? and contact = ?;");){
+        try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.address_contacts where address_id = ? and contact = ?;")){
             statement.setInt(1, addressId);
             statement.setString(2, contact);
             statement.executeUpdate();

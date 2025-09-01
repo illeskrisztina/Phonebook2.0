@@ -35,7 +35,7 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
     public synchronized Address createAddress(Address address, int personId) {
         try (Connection connection = super.establishConnection()) {
 
-            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.address(address, person_id, type) values (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);){
+            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.address(address, person_id, type) values (?, ?, ?);", Statement.RETURN_GENERATED_KEYS)){
                 statement.setString(1, address.getResidence());
                 statement.setInt(2, personId);
                 statement.setString(3, address.getType());
