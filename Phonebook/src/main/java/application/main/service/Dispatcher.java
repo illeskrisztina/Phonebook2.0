@@ -2,17 +2,15 @@ package application.main.service;
 
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
-import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
-import application.main.service.interfaces.IDispatcher;
+import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
+import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public class Dispatcher implements IDispatcher {
     private final IPersonService personService = new PersonService();
@@ -88,7 +86,7 @@ public class Dispatcher implements IDispatcher {
     public Person deletePerson(int id) {
         Person person = new Person();
 
-        addressService.getAllAddress(id).stream().forEach(address ->
+        addressService.getAllAddress(id).forEach(address ->
         {
             addressService.deleteAddress(address.getAddressId());
 
