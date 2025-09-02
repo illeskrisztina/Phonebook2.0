@@ -58,8 +58,8 @@ public class Person {
     }
 
     public Address getPermanentAddress() {
-        return permanent;
-    }
+      return permanent;
+  }
 
     public Address getTemporaryAddress() {
         return temporary;

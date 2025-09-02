@@ -1,7 +1,8 @@
 package application.main.controller;
 
-import application.main.model.entity.Person;
 import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.Person;
+import application.main.service.interfaces.IDispatcher;
 import application.main.service.Dispatcher;
 import application.main.service.interfaces.IDispatcher;
 import org.slf4j.Logger;

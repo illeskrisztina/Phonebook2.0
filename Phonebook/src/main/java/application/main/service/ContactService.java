@@ -11,8 +11,14 @@ public class ContactService implements IContactService {
     private final IContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
 
     @Override
-    public ContactInfo addContact(ContactInfo contact, int addressId) {
-        return contactInfoDAO.createContactInfo(contact, addressId);
+    public ContactInfo addContact(ContactInfo contact, Integer addressId) {
+        ContactInfo added = contactInfoDAO.createContactInfo(contact);
+
+        if(addressId != null)
+        {
+            contactInfoDAO.addContactInfoToAddress(added.getContact(), addressId);
+        }
+        return added;
     }
 
     @Override
