@@ -18,11 +18,11 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public SimplePersonDTO getPerson(int Id) {
-        SimplePersonDTO person = personDAO.getPerson(Id);
+    public SimplePersonDTO getPerson(int id) {
+        SimplePersonDTO person = personDAO.getPerson(id);
 
         if (person == null) {
-            throw new NoSuchElementException("The person under id " + Id + " does not exist");
+            throw new NoSuchElementException("The person under id " + id + " does not exist");
         }
 
         return person;
@@ -45,7 +45,7 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public Person deletePerson(int Id) {
-        return personDAO.deletePerson(Id);
+    public Person deletePerson(int id) {
+        return personDAO.deletePerson(id);
     }
 }

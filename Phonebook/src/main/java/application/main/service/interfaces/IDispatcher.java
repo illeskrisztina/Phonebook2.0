@@ -28,11 +28,11 @@ public interface IDispatcher {
 
     public Person createPerson(Person person);
 
-    public SimplePersonDTO getPerson(int Id);
+    public SimplePersonDTO getPerson(int id);
 
     public List<SimplePersonDTO> getAllPeople();
 
     public Person updatePerson(Person person);
 
-    public Person deletePerson(int Id);
+    public Person deletePerson(int id);
 }

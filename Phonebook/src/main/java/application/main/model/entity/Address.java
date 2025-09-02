@@ -1,10 +1,12 @@
 package application.main.model.entity;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Address
 {
-  private String address;
+  private String residence;
   private String type;
   private int addressId;
   private ArrayList<ContactInfo> contacts = new ArrayList<>();
@@ -13,23 +15,23 @@ public class Address
   {
   }
 
-  public Address(String address)
+  public Address(String residence)
   {
-    this.address = address;
+    this.residence = residence;
     this.contacts = new ArrayList<>();
   }
 
-  public Address(String address, String type, int addressId)
+  public Address(String residence, String type, int addressId)
   {
-    this.address = address;
+    this.residence = residence;
     this.type = type;
     this.addressId = addressId;
     this.contacts = new ArrayList<>();
   }
 
-  public Address setAddress(String address)
+  public Address setResidence(String residence)
   {
-    this.address = address;
+    this.residence = residence;
     return this;
   }
 
@@ -45,7 +47,7 @@ public class Address
     return this;
   }
 
-  public Address setContacts(ArrayList<ContactInfo> contacts)
+  public Address setContacts(List<ContactInfo> contacts)
   {
     this.contacts = new ArrayList<>(contacts);
     return this;
@@ -56,12 +58,12 @@ public class Address
     contacts.add(contact);
   }
 
-  public String getAddress()
+  public String getResidence()
   {
-    return address;
+    return residence;
   }
 
-  public ArrayList<ContactInfo> getContacts()
+  public List<ContactInfo> getContacts()
   {
     return new ArrayList<>(contacts);
   }
@@ -81,7 +83,12 @@ public class Address
     return contacts.remove(contacts.indexOf(contact));
   }
 
-  public boolean equals(Object obj)
+    @Override
+    public int hashCode() {
+        return Objects.hash(residence, type, addressId, contacts);
+    }
+
+    public boolean equals(Object obj)
   {
     if(obj == this)
     {
@@ -93,7 +100,7 @@ public class Address
     }
 
     Address other = (Address) obj;
-    return other.address.equals(this.address) && other.contacts.containsAll(this.contacts);
+    return other.residence.equals(this.residence) && other.contacts.containsAll(this.contacts);
   }
 
   public String toString()
@@ -105,6 +112,6 @@ public class Address
       contactList = contactList.concat(contacts.get(i) + "\n");
     }
 
-    return "Address: " + address + "\nList of Contacts:\n";
+    return "Address: " + residence + "\nList of Contacts:\n";
   }
 }

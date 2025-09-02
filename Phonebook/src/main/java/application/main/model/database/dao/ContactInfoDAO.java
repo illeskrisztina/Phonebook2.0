@@ -8,10 +8,13 @@ import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactInfoDAO
 {
   private static ContactInfoDAO instance;
+
+  private static final String CONTACT = "contact";
 
   private ContactInfoDAO() throws SQLException
   {
@@ -30,39 +33,42 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Issue getting singleton instance of ContactInfoDAO: " + e.getMessage());
+      throw new DatabaseConnectionException("Issue getting singleton instance of ContactInfoDAO: " + e.getMessage());
     }
   }
+
   @Override public synchronized ContactInfo createContactInfo(ContactInfo contactInfo)
   {
     try(Connection connection = super.establishConnection())
     {
-      PreparedStatement statement = connection.prepareStatement("insert into phonebook.contact_info(type, contact) values (?, ?);");
-      statement.setString(1, contactInfo.getType());
-      statement.setString(2, contactInfo.getContact());
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.contact_info(type, contact) values (?, ?);");){
+            statement.setString(1, contactInfo.getType());
+            statement.setString(2, contactInfo.getContact());
+            statement.executeUpdate();
+        }
 
-      return contactInfo;
-    }
-    catch (SQLException e)
-    {
-      throw new RuntimeException("Something went wrong while creating a contact info in the database: " + e.getMessage());
-    }
-  }
-
-  @Override public void addContactInfoToAddress(String contactInfo, int addressId){
-      try(Connection connection = super.establishConnection())
-      {
-          PreparedStatement statement = connection.prepareStatement("insert into phonebook.address_contacts(contact, address_id) values (?, ?);");
-          statement.setString(1, contactInfo);
-          statement.setInt(2, addressId);
-          statement.executeUpdate();
+        return contactInfo;
       }
       catch (SQLException e)
       {
-          throw new DatabaseConnectionException("Something went wrong while adding a contact to an address in the database: " +  e.getMessage());
+          throw new DatabaseConnectionException("Something went wrong while creating a contact info in the database: " + e.getMessage());
       }
   }
+
+    @Override public void addContactInfoToAddress(String contactInfo, int addressId){
+        try(Connection connection = super.establishConnection())
+        {
+            try (PreparedStatement statement = connection.prepareStatement("insert into phonebook.address_contacts(contact, address_id) values (?, ?);")){
+                statement.setString(1, contactInfo);
+                statement.setInt(2, addressId);
+                statement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseConnectionException("Something went wrong while adding a contact to an address in the database: " +  e.getMessage());
+        }
+    }
 
   @Override public ContactInfo getContactInfo(String contact)
   {
@@ -76,7 +82,7 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       while (rs.next())
       {
         fetched = new ContactInfo()
-                .setContact(rs.getString("contact"))
+                .setContact(rs.getString(CONTACT))
                 .setType(rs.getString("type"));
       }
 
@@ -84,11 +90,11 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while getting a contact info from the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while getting a contact info from the database: " + e.getMessage());
     }
   }
 
-  @Override public ArrayList<ContactInfo> getAllContactInfo()
+  @Override public List<ContactInfo> getAllContactInfo()
   {
     try(Connection connection = super.establishConnection())
     {
@@ -101,38 +107,38 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
       {
         allContacts.add(new ContactInfo()
                 .setType(rs.getString("type"))
-                .setContact(rs.getString("contact")));
+                .setContact(rs.getString(CONTACT)));
       }
 
       return allContacts;
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while getting all contact information from the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while getting all contact information from the database: " + e.getMessage());
     }
   }
 
-  public ArrayList<ContactInfo> getAllContactInfoForAddress(int addressId)
+  public List<ContactInfo> getAllContactInfoForAddress(int addressId)
   {
     try(Connection connection = super.establishConnection())
     {
       ArrayList<ContactInfo> allContacts = new ArrayList<>();
 
-      PreparedStatement statement = connection.prepareStatement("select contact\n"
-          + "from phonebook.address_contacts where address_id = ?;");
-      statement.setInt(1, addressId);
-      ResultSet rs = statement.executeQuery();
+      try (PreparedStatement statement = connection.prepareStatement("select contact from phonebook.address_contacts where address_id = ?;")){
+          statement.setInt(1, addressId);
+          ResultSet rs = statement.executeQuery();
 
-      while (rs.next())
-      {
-        allContacts.add(getContactInfo(rs.getString("contact")));
+          while (rs.next())
+          {
+              allContacts.add(getContactInfo(rs.getString(CONTACT)));
+          }
       }
 
       return allContacts;
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while getting all contact information for address with id " + addressId + ": " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while getting all contact information for address with id " + addressId + ": " + e.getMessage());
     }
   }
 
@@ -140,22 +146,24 @@ public class ContactInfoDAO extends DatabaseHandlerFactory implements IContactIn
   {
     try(Connection connection = super.establishConnection())
     {
-      PreparedStatement statement = connection.prepareStatement("delete from phonebook.address_contacts where address_id = ? and contact = ?;");
-      statement.setInt(1, addressId);
-      statement.setString(2, contact);
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.address_contacts where address_id = ? and contact = ?;")){
+            statement.setInt(1, addressId);
+            statement.setString(2, contact);
+            statement.executeUpdate();
+        }
 
-      ContactInfo deleted = getContactInfo(contact);
+        ContactInfo deleted = getContactInfo(contact);
 
-      statement = connection.prepareStatement("delete from phonebook.contact_info where contact = ?;");
-      statement.setString(1, contact);
-      statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("delete from phonebook.contact_info where contact = ?;")){
+            statement.setString(1, contact);
+            statement.executeUpdate();
+        }
 
       return deleted;
     }
     catch (SQLException e)
     {
-      throw new RuntimeException("Something went wrong while deleting a contact information from the database: " + e.getMessage());
+      throw new DatabaseConnectionException("Something went wrong while deleting a contact information from the database: " + e.getMessage());
     }
   }
 }

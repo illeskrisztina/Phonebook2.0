@@ -2,17 +2,15 @@ package application.main.service;
 
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
-import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
-import application.main.service.interfaces.IDispatcher;
+import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
+import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public class Dispatcher implements IDispatcher {
     private final IPersonService personService = new PersonService();
@@ -70,8 +68,8 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public SimplePersonDTO getPerson(int Id) {
-        return personService.getPerson(Id);
+    public SimplePersonDTO getPerson(int id) {
+        return personService.getPerson(id);
     }
 
     @Override
@@ -85,17 +83,16 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public Person deletePerson(int Id) {
+    public Person deletePerson(int id) {
         Person person = new Person();
 
-        List<Address> addresses = addressService.getAllAddress(Id).stream().map(address ->
+        addressService.getAllAddress(id).forEach(address ->
         {
             addressService.deleteAddress(address.getAddressId());
 
-            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
-            {
-                return contactService.deleteContact(contactInfo.getContact(),  address.getAddressId());
-            }).collect(Collectors.toList())));
+            address.setContacts(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
+            contactService.deleteContact(contactInfo.getContact(),  address.getAddressId())
+            ).toList());
 
             switch (address.getType()){
                 case "permanent":
@@ -107,11 +104,9 @@ public class Dispatcher implements IDispatcher {
                 default:
                     throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
             }
+        });
 
-            return address;
-        }).collect(Collectors.toList());
-
-        Person deleted = personService.deletePerson(Id);
+        Person deleted = personService.deletePerson(id);
 
         person.setName(deleted.getName())
                 .setAge(deleted.getAge())

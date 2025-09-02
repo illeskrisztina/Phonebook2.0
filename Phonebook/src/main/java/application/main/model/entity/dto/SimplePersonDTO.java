@@ -4,17 +4,17 @@ public class SimplePersonDTO
 {
   private String name;
   private int age;
-  private int Id;
+  private int id;
 
   public SimplePersonDTO()
   {
   }
 
-  public SimplePersonDTO(String name, int age, int Id)
+  public SimplePersonDTO(String name, int age, int id)
   {
     this.name = name;
     this.age = age;
-    this.Id = Id;
+    this.id = id;
   }
 
   public void setName(String name)
@@ -27,9 +27,9 @@ public class SimplePersonDTO
     this.age = age;
   }
 
-  public void setId(int Id)
+  public void setId(int id)
   {
-    this.Id = Id;
+    this.id = id;
   }
 
   public String getName()
@@ -44,6 +44,6 @@ public class SimplePersonDTO
 
   public int getId()
   {
-    return Id;
+    return id;
   }
 }
