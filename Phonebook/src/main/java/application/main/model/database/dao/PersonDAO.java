@@ -1,9 +1,9 @@
-package application.main.model.Database.DAOs;
+package application.main.model.database.dao;
 
-import application.main.model.Database.DatabaseHandlerFactory;
-import application.main.model.Database.Interfaces.IPersonDAO;
-import application.main.model.Entity.DTOs.SimplePersonDTO;
-import application.main.model.Entity.Person;
+import application.main.model.database.DatabaseHandlerFactory;
+import application.main.model.database.interfaces.IPersonDAO;
+import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.Person;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 import java.sql.*;

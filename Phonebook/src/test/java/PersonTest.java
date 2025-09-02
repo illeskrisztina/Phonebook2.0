@@ -1,5 +1,5 @@
-import application.main.model.Entity.Address;
-import application.main.model.Entity.Person;
+import application.main.model.entity.Address;
+import application.main.model.entity.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

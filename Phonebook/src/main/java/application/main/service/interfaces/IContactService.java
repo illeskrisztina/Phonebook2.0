@@ -1,6 +1,6 @@
-package application.main.service.Interfaces;
+package application.main.service.interfaces;
 
-import application.main.model.Entity.ContactInfo;
+import application.main.model.entity.ContactInfo;
 
 import java.util.List;
 

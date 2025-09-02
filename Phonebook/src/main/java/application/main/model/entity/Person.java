@@ -1,4 +1,4 @@
-package application.main.model.Entity;
+package application.main.model.entity;
 
 public class Person
 {

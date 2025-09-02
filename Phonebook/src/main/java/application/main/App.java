@@ -1,6 +1,6 @@
 package application.main;
 
-import application.main.model.Entity.ContactInfo;
+import application.main.model.entity.ContactInfo;
 import application.main.service.Dispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
