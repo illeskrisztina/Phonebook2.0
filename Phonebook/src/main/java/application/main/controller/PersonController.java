@@ -7,6 +7,7 @@ import application.main.service.Dispatcher;
 import application.main.service.interfaces.IDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +21,26 @@ public class PersonController
 {
   IDispatcher dispatcher = new Dispatcher();
   private static final Logger LOG = LoggerFactory.getLogger(PersonController.class);
+  private static final String ERROR_HEADER = "Error";
 
   @PostMapping
   public ResponseEntity<Person> createPerson(@RequestBody Person person)
   {
     try
     {
-      return new ResponseEntity<>(dispatcher.createPerson(person), HttpStatus.CREATED);
+        Person created = dispatcher.createPerson(person);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.LOCATION, "/" + created.getId())
+                .body(created);
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(HttpStatus.CONFLICT);
+      return ResponseEntity
+              .status(HttpStatus.CONFLICT)
+              .header(ERROR_HEADER, "Could not add person entity into the database.")
+              .build();
     }
   }
 
@@ -41,17 +50,23 @@ public class PersonController
     try
     {
       SimplePersonDTO person = dispatcher.getPerson(id);
-      return new ResponseEntity<>(person, HttpStatus.OK);
+      return ResponseEntity.ok(person);
     }
     catch (NoSuchElementException f)
     {
       LOG.error(f.getMessage());
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .header(ERROR_HEADER, "Could not find the right person to update.")
+              .build();
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      return ResponseEntity
+              .status(HttpStatus.BAD_REQUEST)
+              .header(ERROR_HEADER, "Something went wrong while fetching person entity")
+              .build();
     }
   }
 
@@ -61,12 +76,15 @@ public class PersonController
     try
     {
       List<SimplePersonDTO> allPeople = dispatcher.getAllPeople();
-      return new ResponseEntity<>(allPeople, HttpStatus.OK);
+      return ResponseEntity.ok(allPeople);
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .header(ERROR_HEADER, "Could not retrieve the list of people stored in the database.")
+              .build();
     }
   }
 
@@ -76,17 +94,23 @@ public class PersonController
     try
     {
       Person updated = dispatcher.updatePerson(person);
-      return new ResponseEntity<>(updated, HttpStatus.OK);
+      return ResponseEntity.ok(updated);
     }
     catch (NoSuchElementException f)
     {
       LOG.error(f.getMessage());
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .header(ERROR_HEADER, "Could not update person entity.")
+              .build();
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .header(ERROR_HEADER, "Something went wrong.")
+              .build();
     }
   }
 
@@ -96,12 +120,15 @@ public class PersonController
     try
     {
       Person deleted = dispatcher.deletePerson(id);
-      return new ResponseEntity<>(deleted, HttpStatus.OK);
+      return ResponseEntity.ok(deleted);
     }
     catch (Exception e)
     {
       LOG.error(e.getMessage());
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .header(ERROR_HEADER, "Could not delete person entity from database.")
+              .build();
     }
   }
 }
