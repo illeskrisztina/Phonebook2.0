@@ -5,7 +5,7 @@ import application.main.model.entity.ContactInfo;
 import java.util.List;
 
 public interface IContactService {
-    public ContactInfo addContact(ContactInfo contact, int addressId);
+    public ContactInfo addContact(ContactInfo contact, Integer addressId);
 
     public ContactInfo getContact(String contact);
 

@@ -15,10 +15,9 @@ public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
   private static AddressDAO instance;
   private static final String ADDRESS = "address";
 
-    private AddressDAO() throws SQLException
-  {
-    DriverManager.registerDriver(new SQLServerDriver());
-  }
+    private AddressDAO() throws SQLException {
+        DriverManager.registerDriver(new SQLServerDriver());
+    }
 
     public static synchronized AddressDAO getInstance() {
         try {
