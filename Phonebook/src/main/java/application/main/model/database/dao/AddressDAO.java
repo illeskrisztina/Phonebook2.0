@@ -5,11 +5,13 @@ import application.main.model.database.interfaces.IAddressDAO;
 import application.main.model.entity.Address;
 import application.main.model.exception.DatabaseConnectionException;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class AddressDAO extends DatabaseHandlerFactory implements IAddressDAO
 {
   private static AddressDAO instance;

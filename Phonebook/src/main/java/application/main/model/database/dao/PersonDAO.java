@@ -6,11 +6,13 @@ import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
 import application.main.model.exception.DatabaseConnectionException;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class PersonDAO extends DatabaseHandlerFactory implements IPersonDAO {
     private static PersonDAO instance;
 

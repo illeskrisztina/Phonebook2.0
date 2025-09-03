@@ -8,10 +8,12 @@ import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
 import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Service
 public class Dispatcher implements IDispatcher {
     private final IPersonService personService = new PersonService();
     private final IAddressService addressService = new AddressService();

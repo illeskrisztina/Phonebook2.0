@@ -1,11 +1,13 @@
 package application.main.model.database;
 
 import application.main.model.exception.DatabaseConnectionException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Repository
 public abstract class DatabaseHandlerFactory
 {
   public Connection establishConnection()

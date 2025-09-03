@@ -5,10 +5,12 @@ import application.main.model.database.interfaces.IPersonDAO;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
 import application.main.service.interfaces.IPersonService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Service
 public class PersonService implements IPersonService {
     private final IPersonDAO personDAO = PersonDAO.getInstance();
 

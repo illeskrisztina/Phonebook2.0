@@ -4,9 +4,11 @@ import application.main.model.database.dao.ContactInfoDAO;
 import application.main.model.database.interfaces.IContactInfoDAO;
 import application.main.model.entity.ContactInfo;
 import application.main.service.interfaces.IContactService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ContactService implements IContactService {
     private final IContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
 

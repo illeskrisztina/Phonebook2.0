@@ -3,9 +3,11 @@ package application.main.service;
 import application.main.model.database.dao.AddressDAO;
 import application.main.model.entity.Address;
 import application.main.service.interfaces.IAddressService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AddressService implements IAddressService {
     private final AddressDAO addressDAO = AddressDAO.getInstance();
 
