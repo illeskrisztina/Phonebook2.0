@@ -3,6 +3,7 @@ package application.main.controller;
 import application.main.model.entity.ContactInfo;
 import application.main.service.Dispatcher;
 import application.main.service.interfaces.IDispatcher;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,36 +12,49 @@ import java.util.List;
 
 public class ContactInfoController {
     private final IDispatcher dispatcher = new Dispatcher();
+    private static final String ERROR_HEADER = "Error";
 
     @PostMapping("/person/{personId}/contact")
     public ResponseEntity<ContactInfo> addContactInfo(@PathVariable int personId, @RequestBody ContactInfo contactInfo) {
         ContactInfo created = dispatcher.addContact(contactInfo, personId);
         if(created == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Contact information could not be added.")
+                    .build();
         }
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.LOCATION, "/contact/" + created.getContact())
+                .body(created);
     }
 
     @GetMapping("/contact/{contactId}")
     public ResponseEntity<ContactInfo> getContactInfo(@PathVariable String contactId) {
         ContactInfo fetched = dispatcher.getContact(contactId);
         if(fetched == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Contact information could not be retrieved.")
+                    .build();
         }
-        return new ResponseEntity<>(fetched, HttpStatus.OK);
+        return ResponseEntity.ok(fetched);
     }
 
     @GetMapping("/contact")
     public ResponseEntity<List<ContactInfo>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
-        return new ResponseEntity<>(dispatcher.getAllContacts(addressId),  HttpStatus.OK);
+        return ResponseEntity.ok(dispatcher.getAllContacts(addressId));
     }
 
     @DeleteMapping("/address/{addressId}/contact/{contactId}")
     public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable int addressId, @PathVariable String contactId) {
         ContactInfo deleted = dispatcher.deleteContact(contactId, addressId);
         if(deleted == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Contact information could not be deleted.")
+                    .build();
         }
-        return new ResponseEntity<>(deleted, HttpStatus.OK);
+        return ResponseEntity.ok(deleted);
     }
 }
