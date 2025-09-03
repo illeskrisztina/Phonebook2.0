@@ -4,9 +4,11 @@ import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface IDispatcher {
     public Address createAddress(int personId, Address address);
 

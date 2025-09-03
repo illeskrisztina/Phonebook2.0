@@ -1,9 +1,11 @@
 package application.main.model.database.interfaces;
 
 import application.main.model.entity.ContactInfo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface IContactInfoDAO
 {
   public ContactInfo createContactInfo(ContactInfo contactInfo);
