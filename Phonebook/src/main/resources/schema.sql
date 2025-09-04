@@ -1,13 +1,13 @@
 create schema phonebook;
 
 create table phonebook.person(
-    id int identity(1, 1) primary key,
+    id identity primary key,
     name varchar(120) NOT NULL,
     age int
 );
 
 create table phonebook.address(
-    id int identity(1, 1) primary key,
+    id identity primary key,
     address varchar(200) NOT NULL,
     person_id int NOT NULL,
     type varchar(50) check (type = 'permanent' OR type = 'temporary') NOT NULL,
