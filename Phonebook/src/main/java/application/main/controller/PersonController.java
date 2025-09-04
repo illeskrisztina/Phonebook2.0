@@ -1,12 +1,10 @@
 package application.main.controller;
 
-import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
+import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.interfaces.IDispatcher;
-import application.main.service.Dispatcher;
-import application.main.service.interfaces.IDispatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +15,11 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/people")
+@RequiredArgsConstructor
+@Slf4j
 public class PersonController
 {
-  IDispatcher dispatcher = new Dispatcher();
-  private static final Logger LOG = LoggerFactory.getLogger(PersonController.class);
+  private final IDispatcher dispatcher;
   private static final String ERROR_HEADER = "Error";
 
   @PostMapping
@@ -36,7 +35,7 @@ public class PersonController
     }
     catch (Exception e)
     {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
       return ResponseEntity
               .status(HttpStatus.CONFLICT)
               .header(ERROR_HEADER, "Could not add person entity into the database.")
@@ -54,7 +53,7 @@ public class PersonController
     }
     catch (NoSuchElementException f)
     {
-      LOG.error(f.getMessage());
+      log.error(f.getMessage());
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
               .header(ERROR_HEADER, "Could not find the right person to update.")
@@ -62,7 +61,7 @@ public class PersonController
     }
     catch (Exception e)
     {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
       return ResponseEntity
               .status(HttpStatus.BAD_REQUEST)
               .header(ERROR_HEADER, "Something went wrong while fetching person entity")
@@ -80,7 +79,7 @@ public class PersonController
     }
     catch (Exception e)
     {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
               .header(ERROR_HEADER, "Could not retrieve the list of people stored in the database.")
@@ -98,7 +97,7 @@ public class PersonController
     }
     catch (NoSuchElementException f)
     {
-      LOG.error(f.getMessage());
+      log.error(f.getMessage());
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
               .header(ERROR_HEADER, "Could not update person entity.")
@@ -106,7 +105,7 @@ public class PersonController
     }
     catch (Exception e)
     {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
               .header(ERROR_HEADER, "Something went wrong.")
@@ -124,7 +123,7 @@ public class PersonController
     }
     catch (Exception e)
     {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
               .header(ERROR_HEADER, "Could not delete person entity from database.")

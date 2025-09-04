@@ -1,8 +1,9 @@
 package application.main.controller;
 
 import application.main.model.entity.Address;
-import application.main.service.Dispatcher;
 import application.main.service.interfaces.IDispatcher;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
+@Slf4j
 public class AddressController {
-    private IDispatcher dispatcher = new Dispatcher();
+    private final IDispatcher dispatcher;
     private static final String ERROR_HEADER = "Error";
 
     @PostMapping("/people/{personId}/addresses")
