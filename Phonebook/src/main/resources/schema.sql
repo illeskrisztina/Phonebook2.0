@@ -3,7 +3,11 @@ create schema phonebook;
 create table phonebook.person(
     id identity primary key,
     name varchar(120) NOT NULL,
-    age int
+    permanent_id int,
+    temporary_id int,
+    age int,
+    FOREIGN KEY (permanent_id) REFERENCES phonebook.address(id),
+    FOREIGN KEY (address_id) REFERENCES phonebook.address(id)
 );
 
 create table phonebook.address(
