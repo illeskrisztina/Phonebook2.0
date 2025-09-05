@@ -10,6 +10,7 @@ import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -92,16 +93,16 @@ public class Dispatcher implements IDispatcher {
         {
             addressService.deleteAddress(address.getAddressId());
 
-            address.setContacts(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
+            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
             contactService.deleteContact(contactInfo.getContact(),  address.getAddressId())
-            ).toList());
+            ).toList()));
 
             switch (address.getType()){
                 case "permanent":
-                    person.setPermanentAddress(address);
+                    person.setPermanentAddressId(address.getAddressId());
                     break;
                 case "temporary":
-                    person.setTemporaryAddress(address);
+                    person.setTemporaryAddressId(address.getAddressId());
                     break;
                 default:
                     throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
