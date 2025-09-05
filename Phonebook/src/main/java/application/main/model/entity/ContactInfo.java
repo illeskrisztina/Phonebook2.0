@@ -1,57 +1,26 @@
 package application.main.model.entity;
 
-import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.*;
+import lombok.experimental.Accessors;
 
-public class ContactInfo
-{
-  private String type;
-//  Something to format contacts so that they are uniform could be nice?
-  private String contact;
+@Entity
+@Table(name = "contact_info", schema = "phonebook")
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@Getter
+@Setter
+@Accessors(chain = true)
+public class ContactInfo {
 
-  public ContactInfo setType(String type)
-  {
-    this.type = type;
-    return this;
-  }
-
-  public ContactInfo setContact(String contact)
-  {
-    this.contact = contact;
-    return this;
-  }
-
-  public String getType()
-  {
-    return type;
-  }
-
-  public String getContact()
-  {
-    return contact;
-  }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, contact);
-    }
-
-    public boolean equals(Object obj)
-  {
-    if(obj == this)
-    {
-      return true;
-    }
-    if(obj == null || obj.getClass() != this.getClass())
-    {
-      return false;
-    }
-
-    ContactInfo other = (ContactInfo) obj;
-    return other.type.equals(this.type) && other.contact.equals(this.contact);
-  }
-
-  public String toString()
-  {
-    return type + ": " + contact;
-  }
+    @Column(name = "type")
+    private String type;
+    @Id
+    @Column(name = "contact")
+    private String contact;
 }
