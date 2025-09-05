@@ -15,24 +15,7 @@ public class PersonTest
               .setAge(25)
               .setName("Melanie")
               .setId(1)
-              .setPermanentAddress(new Address()
-                      .setResidence("Denmark, Aarhus"));
-  }
-
-  @Test
-  public void setting_permanent_to_null_throws_error()
-  {
-    try
-    {
-      new Person().setPermanentAddress(null);
-      //Lambdas not supported before Java 8, so roundabout method had to be used
-      //If the previous code does not throw, this line fails the test
-      Assertions.assertEquals(false, true);
-    }
-    catch (NullPointerException e)
-    {
-      //If code throws exception, test jumps here and passes
-    }
+              .setPermanentAddressId(1);
   }
 
   @Test
@@ -59,38 +42,10 @@ public class PersonTest
     Assertions.assertEquals(4, personTest.getId());
   }
 
-  @Test
-  public void permanent_address_can_be_set()
-  {
-    personTest.setPermanentAddress(new Address()
-            .setResidence("new address"));
-
-    Assertions.assertEquals(new Address()
-            .setResidence("new address"), personTest.getPermanentAddress());
-  }
-
-  @Test
-  public void permanent_cannot_be_set_to_null()
-  {
-    try
-    {
-      personTest.setPermanentAddress(null);
-
-      //Test fails
-      Assertions.assertEquals(true, false);
-    }
-    catch (NullPointerException e)
-    {
-      //Test succeeds
-    }
-  }
-
   public void temporary_address_can_be_set()
   {
-    personTest.setTemporaryAddress(new Address()
-            .setResidence("new temporary address"));
+    personTest.setTemporaryAddressId(1);
 
-    Assertions.assertEquals(new Address()
-            .setResidence("new temporary address"), personTest.getTemporaryAddress());
+    Assertions.assertEquals(1, personTest.getTemporaryAddressId());
   }
 }
