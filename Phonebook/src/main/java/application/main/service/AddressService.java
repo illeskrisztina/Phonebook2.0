@@ -6,40 +6,44 @@ import application.main.service.interfaces.IAddressService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressService implements IAddressService {
-    private final AddressDAO addressDAO = AddressDAO.getInstance();
+    private AddressDAO addressDAO;
 
     @Override
-    public Address createAddress(int personId, Address address) {
-        return addressDAO.createAddress(address, personId);
+    public Address createAddress(Address address) {
+        return addressDAO.save(address);
     }
 
     @Override
     public Address getAddress(int id) {
-        return addressDAO.getAddress(id);
+        return addressDAO.findById(id).orElse(null);
     }
 
     @Override
     public List<Address> getAllAddress(Integer personId) {
-        if(personId == null)
-        {
-            return addressDAO.getAllAddresses();
-        }
-        else
-        {
-            return addressDAO.getAllAddressesForPerson(personId);
+        if (personId == null) {
+            return addressDAO.findAll();
+        } else {
+            return addressDAO.findAll().stream().filter(address -> address.getPersonId() == personId).toList();
         }
     }
 
     @Override
     public Address updateAddress(Address address) {
-        return addressDAO.updateAddress(address);
+        return addressDAO.save(address);
     }
 
     @Override
     public Address deleteAddress(int id) {
-        return addressDAO.deleteAddress(id);
+
+        Address deleted = addressDAO.findById(id).orElse(null);
+        if (deleted != null) {
+            addressDAO.deleteById(id);
+        }
+
+        return deleted;
     }
 }

@@ -4,11 +4,13 @@ import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
 import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.exception.NoSuchAddressTypeException;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
 import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +22,29 @@ public class Dispatcher implements IDispatcher {
     private final IAddressService addressService = new AddressService();
     private final IContactService contactService = new ContactService();
 
+    @Transactional
     @Override
     public Address createAddress(int personId, Address address) {
-        return addressService.createAddress(personId, address);
+        Address created = addressService.createAddress(address);
+
+        SimplePersonDTO simplePersonDTO = getPerson(personId);
+        switch (address.getType()) {
+            case "permanent" ->
+                personService.updatePerson(new Person()
+                        .setId(simplePersonDTO.getId())
+                        .setName(simplePersonDTO.getName())
+                        .setAge(simplePersonDTO.getAge())
+                        .setPermanentAddressId(address.getAddressId()));
+            case "temporary" ->
+                    personService.updatePerson(new Person()
+                            .setId(simplePersonDTO.getId())
+                            .setName(simplePersonDTO.getName())
+                            .setAge(simplePersonDTO.getAge())
+                            .setTemporaryAddressId(address.getAddressId()));
+            default -> throw new NoSuchAddressTypeException(address.getType() + " does not exist.");
+        }
+
+        return created;
     }
 
     @Override

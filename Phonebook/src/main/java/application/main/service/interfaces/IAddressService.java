@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 public interface IAddressService {
-    public Address createAddress(int personId, Address address);
+    public Address createAddress(Address address);
 
     public Address getAddress(int id);
 
