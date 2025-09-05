@@ -4,6 +4,7 @@ import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
 import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.enums.AddressType;
 import application.main.model.exception.NoSuchAddressTypeException;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
@@ -28,14 +29,15 @@ public class Dispatcher implements IDispatcher {
         Address created = addressService.createAddress(address);
 
         SimplePersonDTO simplePersonDTO = getPerson(personId);
+
         switch (address.getType()) {
-            case "permanent" ->
+            case AddressType.PERMANENT ->
                 personService.updatePerson(new Person()
                         .setId(simplePersonDTO.getId())
                         .setName(simplePersonDTO.getName())
                         .setAge(simplePersonDTO.getAge())
                         .setPermanentAddressId(address.getAddressId()));
-            case "temporary" ->
+            case AddressType.TEMPORARY ->
                     personService.updatePerson(new Person()
                             .setId(simplePersonDTO.getId())
                             .setName(simplePersonDTO.getName())
@@ -120,14 +122,12 @@ public class Dispatcher implements IDispatcher {
             ).toList()));
 
             switch (address.getType()){
-                case "permanent":
+                case AddressType.PERMANENT ->
                     person.setPermanentAddressId(address.getAddressId());
-                    break;
-                case "temporary":
+                case AddressType.TEMPORARY ->
                     person.setTemporaryAddressId(address.getAddressId());
-                    break;
-                default:
-                    throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
+                default ->
+                    throw new NoSuchAddressTypeException("The address type " + address.getType() + " does not exist");
             }
         });
 
