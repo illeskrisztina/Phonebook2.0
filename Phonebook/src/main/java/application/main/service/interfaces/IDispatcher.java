@@ -26,7 +26,7 @@ public interface IDispatcher {
 
     public List<ContactInfo> getAllContacts(Integer addressId);
 
-    public ContactInfo deleteContact(String contact, int addressId);
+    public ContactInfo deleteContact(String contact);
 
     public Person createPerson(Person person);
 

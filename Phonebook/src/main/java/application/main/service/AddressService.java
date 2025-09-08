@@ -6,7 +6,6 @@ import application.main.service.interfaces.IAddressService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AddressService implements IAddressService {
@@ -27,7 +26,7 @@ public class AddressService implements IAddressService {
         if (personId == null) {
             return addressDAO.findAll();
         } else {
-            return addressDAO.findAll().stream().filter(address -> address.getPersonId() == personId).toList();
+            return addressDAO.findAll().stream().filter(address -> address.getPerson().getId() == personId).toList();
         }
     }
 

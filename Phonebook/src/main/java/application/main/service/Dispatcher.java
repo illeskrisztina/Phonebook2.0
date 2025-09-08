@@ -10,18 +10,19 @@ import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
 import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class Dispatcher implements IDispatcher {
-    private final IPersonService personService = new PersonService();
-    private final IAddressService addressService = new AddressService();
-    private final IContactService contactService = new ContactService();
+    private final IPersonService personService;
+    private final IAddressService addressService;
+    private final IContactService contactService;
 
     @Transactional
     @Override
@@ -36,13 +37,13 @@ public class Dispatcher implements IDispatcher {
                         .setId(simplePersonDTO.getId())
                         .setName(simplePersonDTO.getName())
                         .setAge(simplePersonDTO.getAge())
-                        .setPermanentAddressId(address.getAddressId()));
+                        .setPermanentAddress(address));
             case AddressType.TEMPORARY ->
                     personService.updatePerson(new Person()
                             .setId(simplePersonDTO.getId())
                             .setName(simplePersonDTO.getName())
                             .setAge(simplePersonDTO.getAge())
-                            .setTemporaryAddressId(address.getAddressId()));
+                            .setTemporaryAddress(address));
             default -> throw new NoSuchAddressTypeException(address.getType() + " does not exist.");
         }
 
@@ -69,24 +70,34 @@ public class Dispatcher implements IDispatcher {
         return addressService.deleteAddress(id);
     }
 
+    @Transactional
     @Override
     public ContactInfo addContact(ContactInfo contact, Integer addressId) {
-        return contactService.addContact(contact, addressId);
+        ContactInfo created = contactService.addContact(contact);
+
+        if(addressId != null) {
+            Address address = addressService.getAddress(addressId);
+            address.addContact(contact);
+
+            addressService.updateAddress(address);
+        }
+        return created;
     }
 
     @Override
     public ContactInfo getContact(String contact) {
-        return null;
+        return contactService.getContact(contact);
     }
+
 
     @Override
     public List<ContactInfo> getAllContacts(Integer addressId) {
-        return contactService.getAllContacts(addressId);
+        return contactService.getAllContacts(null);
     }
 
     @Override
-    public ContactInfo deleteContact(String contact, int addressId) {
-        return contactService.deleteContact(contact, addressId);
+    public ContactInfo deleteContact(String contact) {
+        return contactService.deleteContact(contact);
     }
 
     @Override
@@ -115,17 +126,17 @@ public class Dispatcher implements IDispatcher {
 
         addressService.getAllAddress(id).forEach(address ->
         {
-            addressService.deleteAddress(address.getAddressId());
+            addressService.deleteAddress(address.getId());
 
-            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
-            contactService.deleteContact(contactInfo.getContact(),  address.getAddressId())
+            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getId()).stream().map(contactInfo ->
+            contactService.deleteContact(contactInfo.getContact())
             ).toList()));
 
             switch (address.getType()){
                 case AddressType.PERMANENT ->
-                    person.setPermanentAddressId(address.getAddressId());
+                    person.setPermanentAddress(address);
                 case AddressType.TEMPORARY ->
-                    person.setTemporaryAddressId(address.getAddressId());
+                    person.setTemporaryAddress(address);
                 default ->
                     throw new NoSuchAddressTypeException("The address type " + address.getType() + " does not exist");
             }
