@@ -16,18 +16,22 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "person", schema = "phonebook")
 public class Person {
-    @Column(name = "name")
-    private String name;
-    @Column(name = "age")
-    private int age;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "permanent_id")
-    @OneToOne
-    private Integer permanentAddressId;
-    @Column(name = "temporary_id")
-    @OneToOne
-    private Integer temporaryAddressId;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "age")
+    private int age;
+
+    @OneToOne(mappedBy = "person")
+    @JoinColumn(name = "permanent_id")
+    private Address permanentAddress;
+
+    @OneToOne(mappedBy = "person")
+    @JoinColumn(name = "temporary_id")
+    private Address temporaryAddress;
 }

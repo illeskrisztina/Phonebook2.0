@@ -1,11 +1,10 @@
 package application.main.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 @Entity
 @Table(name = "contact_info", schema = "phonebook")
@@ -17,10 +16,13 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class ContactInfo {
-
-    @Column(name = "type")
-    private String type;
     @Id
     @Column(name = "contact")
     private String contact;
+
+    @Column(name = "type")
+    private String type;
+
+    @ManyToMany(mappedBy = "contacts")
+    private List<Address> addresses;
 }

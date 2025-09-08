@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "address", schema = "phonebook")
@@ -17,19 +18,28 @@ import java.util.ArrayList;
 @Accessors(chain = true)
 public class Address {
 
-    @Column(name = "address")
-    private String residence;
-    @Column(name = "type")
-    private String type;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int addressId;
-    @OneToMany
-    private ArrayList<ContactInfo> contacts = new ArrayList<>();
-    @Column(name = "person_id")
+    private int id;
+
+    @Column(name = "address")
+    private String residence;
+
+    @Column(name = "type")
+    private String type;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "address_contacts",
+            joinColumns = {
+            @JoinColumn(name = "address_id", referencedColumnName = "id")},
+            inverseJoinColumns = {
+            @JoinColumn(name = "contact", referencedColumnName = "contact")})
+    private List<ContactInfo> contacts = new ArrayList<>();
+
     @OneToOne
-    private int personId;
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person person;
 
 
     public void addContact(ContactInfo contact) {
