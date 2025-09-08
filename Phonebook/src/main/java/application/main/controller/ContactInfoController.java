@@ -51,9 +51,9 @@ public class ContactInfoController {
         return ResponseEntity.ok(dispatcher.getAllContacts(addressId));
     }
 
-    @DeleteMapping("/address/{addressId}/contact/{contactId}")
-    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable int addressId, @PathVariable String contactId) {
-        ContactInfo deleted = dispatcher.deleteContact(contactId, addressId);
+    @DeleteMapping("/contact/{contactId}")
+    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable String contactId) {
+        ContactInfo deleted = dispatcher.deleteContact(contactId);
         if(deleted == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)

@@ -30,7 +30,7 @@ public class AddressController {
         }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "addresses/" + created.getAddressId())
+                .header(HttpHeaders.LOCATION, "addresses/" + created.getId())
                 .body(created);
     }
 
