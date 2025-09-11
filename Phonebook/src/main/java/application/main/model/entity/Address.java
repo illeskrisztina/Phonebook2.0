@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "address", schema = "phonebook")
 @Setter
 @Getter
-@ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +29,7 @@ public class Address {
     private String type;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "address_contacts",
+    @JoinTable(name = "address_contacts", schema = "phonebook",
             joinColumns = {
             @JoinColumn(name = "address_id", referencedColumnName = "id")},
             inverseJoinColumns = {

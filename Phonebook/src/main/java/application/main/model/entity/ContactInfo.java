@@ -10,7 +10,6 @@ import java.util.List;
 @Table(name = "contact_info", schema = "phonebook")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
 @Getter
 @Setter

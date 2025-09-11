@@ -27,11 +27,11 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    @OneToOne(mappedBy = "person")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "permanent_id")
     private Address permanentAddress;
 
-    @OneToOne(mappedBy = "person")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "temporary_id")
     private Address temporaryAddress;
 }
