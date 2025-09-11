@@ -11,7 +11,7 @@ public interface IContactService {
 
     public ContactInfo getContact(String contact);
 
-    public List<ContactInfo> getAllContacts(Integer addressId);
+    public List<ContactInfo> getAllContacts();
 
     public ContactInfo deleteContact(String contact);
 }

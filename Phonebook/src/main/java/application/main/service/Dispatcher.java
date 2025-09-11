@@ -90,9 +90,24 @@ public class Dispatcher implements IDispatcher {
     }
 
 
+
     @Override
     public List<ContactInfo> getAllContacts(Integer addressId) {
-        return contactService.getAllContacts(null);
+        if(addressId == null) {
+            return contactService.getAllContacts();
+        }
+
+        Address address = addressService.getAddress(addressId);
+
+        List<ContactInfo> contacts = new ArrayList<>();
+
+        for (int i = 0; i < address.getContacts().size(); i++) {
+            if (address.getContacts().get(i) != null) {
+                contacts.add(address.getContacts().get(i));
+            }
+        }
+
+        return contacts;
     }
 
     @Override

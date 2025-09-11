@@ -24,16 +24,8 @@ public class ContactService implements IContactService {
     }
 
     @Override
-    public List<ContactInfo> getAllContacts(Integer addressId) {
-        if (addressId == null) {
-            return contactInfoDAO.findAll();
-        }
-        else {
-            return contactInfoDAO.findAll().stream()
-                    .filter(contactInfo -> contactInfo.getAddresses().stream()
-                            .anyMatch(address -> address.getId() == addressId))
-                    .toList();
-        }
+    public List<ContactInfo> getAllContacts() {
+        return contactInfoDAO.findAll();
     }
 
     @Override
