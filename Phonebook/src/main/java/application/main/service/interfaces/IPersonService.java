@@ -10,7 +10,7 @@ import java.util.List;
 public interface IPersonService {
     public Person createPerson(Person person);
 
-    public SimplePersonDTO getPerson(int id);
+    public Person getPerson(int id);
 
     public List<SimplePersonDTO> getAllPeople();
 

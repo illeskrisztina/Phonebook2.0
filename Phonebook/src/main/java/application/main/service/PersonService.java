@@ -23,8 +23,8 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public SimplePersonDTO getPerson(int id) {
-        SimplePersonDTO person = personMapper.personToSimplePersonDTO(personDAO.findById(id).orElse(null));
+    public Person getPerson(int id) {
+        Person person = personDAO.findById(id).orElse(null);
 
         if (person == null) {
             throw new NoSuchElementException("The person under id " + id + " does not exist");

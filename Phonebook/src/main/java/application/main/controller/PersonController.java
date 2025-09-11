@@ -17,117 +17,98 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/people")
 @RequiredArgsConstructor
 @Slf4j
-public class PersonController
-{
-  private final IDispatcher dispatcher;
-  private static final String ERROR_HEADER = "Error";
+public class PersonController {
+    private final IDispatcher dispatcher;
+    private static final String ERROR_HEADER = "Error";
 
-  @PostMapping
-  public ResponseEntity<Person> createPerson(@RequestBody Person person)
-  {
-    try
-    {
-        Person created = dispatcher.createPerson(person);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "/" + created.getId())
-                .body(created);
+    @PostMapping
+    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+        try {
+            Person created = dispatcher.createPerson(person);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .header(HttpHeaders.LOCATION, "/" + created.getId())
+                    .body(created);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .header(ERROR_HEADER, "Could not add person entity into the database.")
+                    .build();
+        }
     }
-    catch (Exception e)
-    {
-      log.error(e.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.CONFLICT)
-              .header(ERROR_HEADER, "Could not add person entity into the database.")
-              .build();
-    }
-  }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<SimplePersonDTO> getPerson(@PathVariable("id") int id)
-  {
-    try
-    {
-      SimplePersonDTO person = dispatcher.getPerson(id);
-      return ResponseEntity.ok(person);
+    @GetMapping("/{id}")
+    public ResponseEntity<SimplePersonDTO> getPerson(@PathVariable("id") int id) {
+        try {
+            SimplePersonDTO person = dispatcher.getPerson(id);
+            if (person == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .header("Person with id " + id + " not found.")
+                        .build();
+            }
+            return ResponseEntity.ok(person);
+        } catch (NoSuchElementException f) {
+            log.error(f.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Could not find the right person to update.")
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .header(ERROR_HEADER, "Something went wrong while fetching person entity")
+                    .build();
+        }
     }
-    catch (NoSuchElementException f)
-    {
-      log.error(f.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.NOT_FOUND)
-              .header(ERROR_HEADER, "Could not find the right person to update.")
-              .build();
-    }
-    catch (Exception e)
-    {
-      log.error(e.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.BAD_REQUEST)
-              .header(ERROR_HEADER, "Something went wrong while fetching person entity")
-              .build();
-    }
-  }
 
-  @GetMapping
-  public ResponseEntity<List<SimplePersonDTO>> getAllPeople()
-  {
-    try
-    {
-      List<SimplePersonDTO> allPeople = dispatcher.getAllPeople();
-      return ResponseEntity.ok(allPeople);
+    @GetMapping
+    public ResponseEntity<List<SimplePersonDTO>> getAllPeople() {
+        try {
+            List<SimplePersonDTO> allPeople = dispatcher.getAllPeople();
+            return ResponseEntity.ok(allPeople);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Could not retrieve the list of people stored in the database.")
+                    .build();
+        }
     }
-    catch (Exception e)
-    {
-      log.error(e.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.NOT_FOUND)
-              .header(ERROR_HEADER, "Could not retrieve the list of people stored in the database.")
-              .build();
-    }
-  }
 
-  @PutMapping
-  public ResponseEntity<Person> updatePerson(@RequestBody Person person)
-  {
-    try
-    {
-      Person updated = dispatcher.updatePerson(person);
-      return ResponseEntity.ok(updated);
+    @PutMapping
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
+        try {
+            Person updated = dispatcher.updatePerson(person);
+            return ResponseEntity.ok(updated);
+        } catch (NoSuchElementException f) {
+            log.error(f.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Could not update person entity.")
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Something went wrong.")
+                    .build();
+        }
     }
-    catch (NoSuchElementException f)
-    {
-      log.error(f.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.NOT_FOUND)
-              .header(ERROR_HEADER, "Could not update person entity.")
-              .build();
-    }
-    catch (Exception e)
-    {
-      log.error(e.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.NOT_FOUND)
-              .header(ERROR_HEADER, "Something went wrong.")
-              .build();
-    }
-  }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Person> deletePerson(@PathVariable("id") int id)
-  {
-    try
-    {
-      Person deleted = dispatcher.deletePerson(id);
-      return ResponseEntity.ok(deleted);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Person> deletePerson(@PathVariable("id") int id) {
+        try {
+            Person deleted = dispatcher.deletePerson(id);
+            return ResponseEntity.ok(deleted);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Could not delete person entity from database.")
+                    .build();
+        }
     }
-    catch (Exception e)
-    {
-      log.error(e.getMessage());
-      return ResponseEntity
-              .status(HttpStatus.NOT_FOUND)
-              .header(ERROR_HEADER, "Could not delete person entity from database.")
-              .build();
-    }
-  }
 }
