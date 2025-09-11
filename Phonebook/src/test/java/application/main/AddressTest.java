@@ -1,3 +1,5 @@
+package application.main;
+
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import org.junit.jupiter.api.Assertions;
@@ -6,28 +8,28 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-public class AddressTest {
+ class AddressTest {
     private Address addressTest;
 
     @BeforeEach
-    public void setUp() {
+     void setUp() {
         addressTest = new Address()
                 .setResidence("Hungary, Budapest, XIX. district");
     }
 
   @Test
-  public void created_object_has_correct_address()
+  void created_object_has_correct_address()
   {
     Assertions.assertEquals("Hungary, Budapest, XIX. district", addressTest.getResidence());
   }
 
     @Test
-    public void created_object_has_empty_list() {
+    void created_object_has_empty_list() {
         Assertions.assertEquals(0, addressTest.getContacts().size());
     }
 
     @Test
-    public void adding_contact_increases_list_size_by_one() {
+    void adding_contact_increases_list_size_by_one() {
         Assertions.assertEquals(0, addressTest.getContacts().size());
         ContactInfo contact = new ContactInfo()
                 .setType("hi")
@@ -38,14 +40,14 @@ public class AddressTest {
     }
 
     @Test
-    public void address_can_be_set() {
+    void address_can_be_set() {
         addressTest.setResidence("new address");
 
         Assertions.assertEquals("new address", addressTest.getResidence());
     }
 
     @Test
-    public void contact_list_can_be_set() {
+    void contact_list_can_be_set() {
         ArrayList<ContactInfo> newList = new ArrayList<>();
         newList.add(new ContactInfo()
                 .setType("hi")
@@ -64,7 +66,7 @@ public class AddressTest {
     }
 
     @Test
-    public void removing_contact_removes_right_contact() {
+    void removing_contact_removes_right_contact() {
         ContactInfo contact1 = new ContactInfo()
                 .setType("hi")
                 .setContact("hello");
@@ -88,7 +90,7 @@ public class AddressTest {
     }
 
     @Test
-    public void removing_contact_decreases_size_of_list() {
+    void removing_contact_decreases_size_of_list() {
         ContactInfo contact1 = new ContactInfo()
                 .setType("hi")
                 .setContact("hello");
@@ -111,7 +113,7 @@ public class AddressTest {
     }
 
     @Test
-    public void removing_contact_leaves_right_ones_behind() {
+    void removing_contact_leaves_right_ones_behind() {
         ContactInfo contact1 = new ContactInfo()
                 .setType("hi")
                 .setContact("hello");
@@ -135,7 +137,7 @@ public class AddressTest {
     }
 
     @Test
-    public void constructing_same_contacts_list_still_returns_equal() {
+    void constructing_same_contacts_list_still_returns_equal() {
         ContactInfo contact1 = new ContactInfo()
                 .setType("hi")
                 .setContact("hello");
@@ -166,7 +168,7 @@ public class AddressTest {
     }
 
     @Test
-    public void address_with_different_attributes_not_equal() {
+    void address_with_different_attributes_not_equal() {
         ContactInfo contact1 = new ContactInfo()
                 .setType("hi")
                 .setContact("hello");
