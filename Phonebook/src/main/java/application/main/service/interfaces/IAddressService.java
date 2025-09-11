@@ -11,7 +11,7 @@ public interface IAddressService {
 
     public Address getAddress(int id);
 
-    public List<Address> getAllAddress(Integer personId);
+    public List<Address> getAllAddress();
 
     public Address updateAddress(Address address);
 

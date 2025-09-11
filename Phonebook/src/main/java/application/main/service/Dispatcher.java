@@ -3,6 +3,7 @@ package application.main.service;
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
+import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.enums.AddressType;
 import application.main.model.exception.NoSuchAddressTypeException;
@@ -23,6 +24,8 @@ public class Dispatcher implements IDispatcher {
     private final IPersonService personService;
     private final IAddressService addressService;
     private final IContactService contactService;
+
+    private final PersonMapper personMapper;
 
     @Transactional
     @Override
@@ -57,7 +60,23 @@ public class Dispatcher implements IDispatcher {
 
     @Override
     public List<Address> getAllAddress(Integer personId) {
-        return addressService.getAllAddress(personId);
+        if(personId == null) {
+            return addressService.getAllAddress();
+        }
+
+        Person person = personService.getPerson(personId);
+
+        List<Address> addresses = new ArrayList<>();
+
+        if(person.getPermanentAddress() != null) {
+            addresses.add(person.getPermanentAddress());
+        }
+
+        if(person.getTemporaryAddress() != null) {
+            addresses.add(person.getTemporaryAddress());
+        }
+
+        return addresses;
     }
 
     @Override
@@ -122,7 +141,7 @@ public class Dispatcher implements IDispatcher {
 
     @Override
     public SimplePersonDTO getPerson(int id) {
-        return personService.getPerson(id);
+        return personMapper.personToSimplePersonDTO(personService.getPerson(id));
     }
 
     @Override
@@ -139,13 +158,13 @@ public class Dispatcher implements IDispatcher {
     public Person deletePerson(int id) {
         Person person = new Person();
 
-        addressService.getAllAddress(id).forEach(address ->
+        getAllAddress(id).forEach(address ->
         {
             addressService.deleteAddress(address.getId());
 
-            address.setContacts(new ArrayList<>(contactService.getAllContacts(address.getId()).stream().map(contactInfo ->
+            getAllContacts(address.getId()).stream().map(contactInfo ->
             contactService.deleteContact(contactInfo.getContact())
-            ).toList()));
+            );
 
             switch (address.getType()){
                 case AddressType.PERMANENT ->

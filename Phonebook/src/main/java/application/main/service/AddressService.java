@@ -3,13 +3,15 @@ package application.main.service;
 import application.main.model.database.dao.AddressDAO;
 import application.main.model.entity.Address;
 import application.main.service.interfaces.IAddressService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AddressService implements IAddressService {
-    private AddressDAO addressDAO;
+    private final AddressDAO addressDAO;
 
     @Override
     public Address createAddress(Address address) {
@@ -22,12 +24,8 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public List<Address> getAllAddress(Integer personId) {
-        if (personId == null) {
-            return addressDAO.findAll();
-        } else {
-            return addressDAO.findAll().stream().filter(address -> address.getPerson().getId() == personId).toList();
-        }
+    public List<Address> getAllAddress() {
+        return addressDAO.findAll();
     }
 
     @Override
