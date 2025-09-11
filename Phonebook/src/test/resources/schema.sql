@@ -3,7 +3,6 @@ create schema if not exists phonebook;
 create table if not exists phonebook.address(
     id int primary key AUTO_INCREMENT,
     address varchar(200),
-    person_id int,
     type varchar(50) check (type = 'permanent' OR type = 'temporary') NOT NULL
 );
 
@@ -24,7 +23,7 @@ create table if not exists phonebook.contact_info(
     contact varchar(200) PRIMARY KEY
 );
 
-create table phonebook.address_contacts(
+create table if not exists phonebook.address_contacts(
     contact varchar(200),
     address_id int NOT NULL,
     PRIMARY KEY (contact, address_id),
