@@ -86,6 +86,20 @@ public class Dispatcher implements IDispatcher {
 
     @Override
     public Address deleteAddress(int id) {
+        getAllContacts(id).forEach(contact ->
+            contactService.deleteContact(contact.getContact())
+        );
+
+        personService.getAllPeople().stream()
+                .filter(person ->
+                        (person.getTemporaryAddress() != null && person.getTemporaryAddress().getId() == id)
+                                || (person.getPermanentAddress() != null && person.getPermanentAddress().getId() == id))
+                .forEach(person -> {
+                    person.setPermanentAddress(null);
+                    person.setTemporaryAddress(null);
+                    personService.updatePerson(person);
+                });
+
         return addressService.deleteAddress(id);
     }
 
@@ -146,7 +160,7 @@ public class Dispatcher implements IDispatcher {
 
     @Override
     public List<SimplePersonDTO> getAllPeople() {
-        return personService.getAllPeople();
+        return personService.getAllPeople().stream().map(personMapper::personToSimplePersonDTO).toList();
     }
 
     @Override
@@ -162,7 +176,7 @@ public class Dispatcher implements IDispatcher {
         {
             addressService.deleteAddress(address.getId());
 
-            getAllContacts(address.getId()).stream().map(contactInfo ->
+            getAllContacts(address.getId()).forEach(contactInfo ->
             contactService.deleteContact(contactInfo.getContact())
             );
 

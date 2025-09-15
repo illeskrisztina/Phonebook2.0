@@ -3,7 +3,6 @@ package application.main.service;
 import application.main.model.database.dao.PersonDAO;
 import application.main.model.entity.Person;
 import application.main.model.entity.dto.PersonMapper;
-import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.interfaces.IPersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +33,8 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public List<SimplePersonDTO> getAllPeople() {
-        return personDAO.findAll().stream().map(personMapper::personToSimplePersonDTO).toList();
+    public List<Person> getAllPeople() {
+        return personDAO.findAll();
     }
 
     @Override

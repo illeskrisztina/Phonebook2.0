@@ -1,6 +1,5 @@
 package application.main.service.interfaces;
 
-import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,7 @@ public interface IPersonService {
 
     public Person getPerson(int id);
 
-    public List<SimplePersonDTO> getAllPeople();
+    public List<Person> getAllPeople();
 
     public Person updatePerson(Person person);
 
