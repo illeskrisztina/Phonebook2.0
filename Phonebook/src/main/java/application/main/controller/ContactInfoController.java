@@ -19,9 +19,9 @@ public class ContactInfoController {
     private final IDispatcher dispatcher;
     private static final String ERROR_HEADER = "Error";
 
-    @PostMapping("/person/{personId}/contact")
-    public ResponseEntity<ContactInfo> addContactInfo(@PathVariable int personId, @RequestBody ContactInfo contactInfo) {
-        ContactInfo created = dispatcher.addContact(contactInfo, personId);
+    @PostMapping("/address/{addressId}/contact")
+    public ResponseEntity<ContactInfo> addContactInfo(@PathVariable int addressId, @RequestBody ContactInfo contactInfo) {
+        ContactInfo created = dispatcher.addContact(contactInfo, addressId);
         if(created == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
