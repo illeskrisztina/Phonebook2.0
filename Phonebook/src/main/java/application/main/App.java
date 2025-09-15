@@ -3,7 +3,8 @@ package application.main;
 import application.main.model.entity.ContactInfo;
 import application.main.service.Dispatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void readJsonFiles() {
         try{
             ContactInfo contact = mapper.readValue(new File(System.getProperty("user.dir") + "/Phonebook/src/main/resources/contact.json"), ContactInfo.class);
