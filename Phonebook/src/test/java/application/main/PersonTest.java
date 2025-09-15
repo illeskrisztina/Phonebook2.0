@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -125,12 +126,13 @@ class PersonTest {
     void updating_test_person_updates_entity() {
         ResponseEntity<SimplePersonDTO> response = restTemplate.getForEntity("/api/people/1",  SimplePersonDTO.class);
 
-        restTemplate.postForEntity("/api/people", mapper.simplePersonDTOToPerson(response.getBody().setName("Margaret").setAge(12)), Person.class);
+        restTemplate.exchange("/api/people", HttpMethod.PUT, new HttpEntity<>(mapper.simplePersonDTOToPerson(response.getBody().setName("Margaret").setAge(12))) , Person.class);
 
         ResponseEntity<SimplePersonDTO> updated = restTemplate.getForEntity("/api/people/1", SimplePersonDTO.class);
 
         Assertions.assertEquals("Margaret", updated.getBody().getName());
         Assertions.assertEquals(12, updated.getBody().getAge());
+        Assertions.assertEquals(1, updated.getBody().getId());
     }
 
     @Test
