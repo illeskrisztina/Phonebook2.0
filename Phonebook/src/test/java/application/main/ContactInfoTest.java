@@ -1,49 +1,59 @@
+package application.main;
+
 import application.main.model.entity.ContactInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
-public class ContactInfoTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+class ContactInfoTest {
     ContactInfo contactTest;
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         contactTest = new ContactInfo()
                 .setType("mobile phone")
                 .setContact("+36 1 234 5678");
     }
 
     @Test
-    public void created_object_not_null() {
+    void created_object_not_null() {
         Assertions.assertNotNull(contactTest);
     }
 
     @Test
-    public void created_object_has_correct_contact_type() {
+    void created_object_has_correct_contact_type() {
         Assertions.assertEquals("mobile phone", contactTest.getType());
     }
 
     @Test
-    public void created_object_has_correct_contact() {
+    void created_object_has_correct_contact() {
         Assertions.assertEquals("+36 1 234 5678", contactTest.getContact());
     }
 
     @Test
-    public void created_object_type_can_be_set() {
+    void created_object_type_can_be_set() {
         contactTest.setType("email");
 
         Assertions.assertEquals("email", contactTest.getType());
     }
 
     @Test
-    public void created_object_contact_can_be_set() {
+    void created_object_contact_can_be_set() {
         contactTest.setContact("hi@gmail.com");
 
         Assertions.assertEquals("hi@gmail.com", contactTest.getContact());
     }
 
     @Test
-    public void different_objects_same_attributes_are_equal() {
+    void different_objects_same_attributes_are_equal() {
         ContactInfo other = new ContactInfo()
                 .setType("mobile phone")
                 .setContact("+36 1 234 5678");
@@ -52,7 +62,7 @@ public class ContactInfoTest {
     }
 
     @Test
-    public void different_objects_different_attributes_not_equal() {
+    void different_objects_different_attributes_not_equal() {
         ContactInfo other = new ContactInfo()
                 .setType("email")
                 .setContact("hi@gmail.com");
