@@ -106,7 +106,7 @@ class ContactInfoTest {
 
     @Test
     void getting_contact_returns_ok_if_successful() {
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contact/+36 20 234 5678" + contactTest.getContact(), ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contact/+36 20 234 5678", ContactInfo.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
