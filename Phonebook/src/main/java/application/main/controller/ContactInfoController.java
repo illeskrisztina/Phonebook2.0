@@ -20,7 +20,7 @@ public class ContactInfoController {
     private static final String ERROR_HEADER = "Error";
 
     @PostMapping("/address/{addressId}/contact")
-    public ResponseEntity<ContactInfo> addContactInfo(@PathVariable int addressId, @RequestBody ContactInfo contactInfo) {
+    public ResponseEntity<ContactInfo> addContactInfo(@PathVariable(name = "addressId") int addressId, @RequestBody ContactInfo contactInfo) {
         ContactInfo created = dispatcher.addContact(contactInfo, addressId);
         if(created == null) {
             return ResponseEntity
@@ -29,13 +29,13 @@ public class ContactInfoController {
                     .build();
         }
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .header(HttpHeaders.LOCATION, "/contact/" + created.getContact())
                 .body(created);
     }
 
     @GetMapping("/contact/{contactId}")
-    public ResponseEntity<ContactInfo> getContactInfo(@PathVariable String contactId) {
+    public ResponseEntity<ContactInfo> getContactInfo(@PathVariable(name = "contactId") String contactId) {
         ContactInfo fetched = dispatcher.getContact(contactId);
         if(fetched == null) {
             return ResponseEntity
@@ -52,7 +52,7 @@ public class ContactInfoController {
     }
 
     @DeleteMapping("/contact/{contactId}")
-    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable String contactId) {
+    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
         ContactInfo deleted = dispatcher.deleteContact(contactId);
         if(deleted == null) {
             return ResponseEntity

@@ -20,7 +20,7 @@ public class ContactService implements IContactService {
 
     @Override
     public ContactInfo getContact(String contact) {
-        return contactInfoDAO.getReferenceById(contact);
+        return contactInfoDAO.findById(contact).orElse(null);
     }
 
     @Override
