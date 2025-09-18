@@ -177,7 +177,6 @@ public class Dispatcher implements IDispatcher {
 
         getAllAddress(id).forEach(address ->
         {
-            addressService.deleteAddress(address.getId());
 
             getAllContacts(address.getId()).forEach(contactInfo ->
             contactService.deleteContact(contactInfo.getContact())
@@ -191,6 +190,8 @@ public class Dispatcher implements IDispatcher {
                 default ->
                     throw new NoSuchAddressTypeException("The address type " + address.getType() + " does not exist");
             }
+
+            addressService.deleteAddress(address.getId());
         });
 
         Person deleted = personService.deletePerson(id);
