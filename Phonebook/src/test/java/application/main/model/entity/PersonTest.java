@@ -1,7 +1,5 @@
-package application.main;
+package application.main.model.entity;
 
-import application.main.model.entity.Address;
-import application.main.model.entity.Person;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.enums.AddressType;
 import org.junit.jupiter.api.Assertions;
