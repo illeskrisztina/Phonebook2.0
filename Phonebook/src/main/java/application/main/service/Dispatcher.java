@@ -13,6 +13,7 @@ import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Dispatcher implements IDispatcher {
 
     private final PersonMapper personMapper;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Address createAddress(int personId, Address address) {
         Address created = addressService.createAddress(address);
@@ -84,6 +85,7 @@ public class Dispatcher implements IDispatcher {
         return addressService.updateAddress(address);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Address deleteAddress(int id) {
         getAllContacts(id).forEach(contact ->
@@ -103,7 +105,7 @@ public class Dispatcher implements IDispatcher {
         return addressService.deleteAddress(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public ContactInfo addContact(ContactInfo contact, Integer addressId) {
         ContactInfo created = contactService.addContact(contact);
@@ -168,6 +170,7 @@ public class Dispatcher implements IDispatcher {
         return personService.updatePerson(person);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Person deletePerson(int id) {
         Person person = new Person();
