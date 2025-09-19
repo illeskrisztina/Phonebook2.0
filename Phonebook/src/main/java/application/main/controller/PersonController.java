@@ -53,7 +53,7 @@ public class PersonController {
             log.error(f.getMessage());
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .header(ERROR_HEADER, "Could not find the right person to update.")
+                    .header(ERROR_HEADER, "Could not find the right person.")
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
