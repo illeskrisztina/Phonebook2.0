@@ -45,7 +45,7 @@ public class PersonController {
             if (person == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .header("Person with id " + id + " not found.")
+                        .header(ERROR_HEADER,"Person with id " + id + " not found.")
                         .build();
             }
             return ResponseEntity.ok(person);
