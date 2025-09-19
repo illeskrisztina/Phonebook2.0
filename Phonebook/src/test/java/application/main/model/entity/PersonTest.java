@@ -1,21 +1,14 @@
 package application.main.model.entity;
 
-import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.enums.AddressType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 
 
 class PersonTest {
     private Person personTest;
     private Address temporaryAddress;
-    @Autowired
-    private TestRestTemplate restTemplate;
-    @Autowired
-    private PersonMapper mapper;
 
     @BeforeEach
     void setUp() {
