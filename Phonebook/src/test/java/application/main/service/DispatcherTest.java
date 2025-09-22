@@ -252,5 +252,89 @@ class DispatcherTest {
         verify(personService, times(2)).updatePerson(personTest);
     }
 
+    @Test
+    void deleting_address_modifies_right_person() {
+        personTest.setTemporaryAddress(temporaryAddressTest);
+        personTest.setPermanentAddress(permanentAddressTest);
+        Person personTest2 = new Person()
+                .setName("Melinoe")
+                .setAge(35)
+                .setId(2);
 
+        lenient().when(personService.getAllPeople()).thenReturn(List.of(personTest2, personTest));
+        lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+        lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
+
+        dispatcher.deleteAddress(1);
+        dispatcher.deleteAddress(2);
+
+        verify(personService, times(2)).updatePerson(personTest);
+        verify(personService, times(0)).updatePerson(personTest2);
+    }
+
+    @Test
+    void if_addressId_is_not_null_contact_gets_added_to_specific_address() {
+        permanentAddressTest.addContact(contactInfoTest);
+        when(contactService.addContact(contactInfoTest)).thenReturn(contactInfoTest);
+        when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+
+        ContactInfo saved = dispatcher.addContact(contactInfoTest, 1);
+
+        verify(contactService,  times(1)).addContact(contactInfoTest);
+        verify(addressService, times(1)).updateAddress(permanentAddressTest);
+        Assertions.assertEquals(contactInfoTest, saved);
+    }
+
+    @Test
+    void null_addressId_only_adds_contact_to_database() {
+        when(contactService.addContact(contactInfoTest)).thenReturn(contactInfoTest);
+
+        ContactInfo saved = dispatcher.addContact(contactInfoTest, null);
+
+        verify(contactService,  times(1)).addContact(contactInfoTest);
+        verify(addressService, times(0)).updateAddress(permanentAddressTest);
+        Assertions.assertEquals(contactInfoTest, saved);
+    }
+
+    @Test
+    void getContact_calls_appropriate_service_method() {
+        when(contactService.getContact(contactInfoTest.getContact())).thenReturn(contactInfoTest);
+
+        ContactInfo contact = dispatcher.getContact(contactInfoTest.getContact());
+
+        verify(contactService, times(1)).getContact(contactInfoTest.getContact());
+        Assertions.assertEquals(contactInfoTest, contact);
+    }
+
+    @Test
+    void getting_all_contacts_for_no_specific_address_returns_all_contacts() {
+        when(contactService.getAllContacts()).thenReturn(List.of(contactInfoTest));
+
+        List<ContactInfo> contacts = dispatcher.getAllContacts(null);
+
+        verify(contactService, times(1)).getAllContacts();
+        Assertions.assertEquals(List.of(contactInfoTest), contacts);
+    }
+
+    @Test
+    void getting_all_contacts_gets_specific_address_first() {
+        permanentAddressTest.addContact(contactInfoTest);
+        when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+
+        List<ContactInfo> contacts = dispatcher.getAllContacts(1);
+
+        verify(addressService, times(1)).getAddress(1);
+        verify(contactService, times(0)).getAllContacts();
+        Assertions.assertEquals(List.of(contactInfoTest), contacts);
+    }
+
+    @Test
+    void deleteContact_calls_appropriate_service_method() {
+        when(contactService.deleteContact(contactInfoTest.getContact())).thenReturn(contactInfoTest);
+
+        ContactInfo contact = dispatcher.deleteContact(contactInfoTest.getContact());
+
+        verify(contactService, times(1)).deleteContact(contactInfoTest.getContact());
+        Assertions.assertEquals(contactInfoTest, contact);
+    }
 }

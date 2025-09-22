@@ -137,15 +137,7 @@ public class Dispatcher implements IDispatcher {
 
         Address address = addressService.getAddress(addressId);
 
-        List<ContactInfo> contacts = new ArrayList<>();
-
-        for (int i = 0; i < address.getContacts().size(); i++) {
-            if (address.getContacts().get(i) != null) {
-                contacts.add(address.getContacts().get(i));
-            }
-        }
-
-        return contacts;
+        return new ArrayList<>(address.getContacts());
     }
 
     @Override
