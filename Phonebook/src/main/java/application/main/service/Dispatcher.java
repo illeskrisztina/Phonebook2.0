@@ -85,7 +85,6 @@ public class Dispatcher implements IDispatcher {
         return addressService.updateAddress(address);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Address deleteAddress(int id) {
         getAllContacts(id).forEach(contact ->
@@ -177,11 +176,6 @@ public class Dispatcher implements IDispatcher {
 
         getAllAddress(id).forEach(address ->
         {
-
-            getAllContacts(address.getId()).forEach(contactInfo ->
-            contactService.deleteContact(contactInfo.getContact())
-            );
-
             switch (address.getType()){
                 case AddressType.PERMANENT ->
                     person.setPermanentAddress(address);
@@ -191,7 +185,7 @@ public class Dispatcher implements IDispatcher {
                     throw new NoSuchAddressTypeException("The address type " + address.getType() + " does not exist");
             }
 
-            addressService.deleteAddress(address.getId());
+            deleteAddress(address.getId());
         });
 
         Person deleted = personService.deletePerson(id);
