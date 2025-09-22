@@ -96,8 +96,12 @@ public class Dispatcher implements IDispatcher {
                         (person.getTemporaryAddress() != null && person.getTemporaryAddress().getId() == id)
                                 || (person.getPermanentAddress() != null && person.getPermanentAddress().getId() == id))
                 .forEach(person -> {
-                    person.setPermanentAddress(null);
-                    person.setTemporaryAddress(null);
+                    if(person.getPermanentAddress() != null && person.getPermanentAddress().getId() == id) {
+                        person.setPermanentAddress(null);
+                    }
+                    if(person.getTemporaryAddress() != null && person.getTemporaryAddress().getId() == id) {
+                        person.setTemporaryAddress(null);
+                    }
                     personService.updatePerson(person);
                 });
 
