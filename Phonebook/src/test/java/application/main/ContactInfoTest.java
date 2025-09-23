@@ -1,7 +1,7 @@
 package application.main;
 
 import application.main.model.entity.Address;
-import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.ContactInfoDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,13 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ContactInfoTest {
-    ContactInfo contactTest;
+    ContactInfoDTO contactTest;
     @Autowired
     private TestRestTemplate restTemplate;
 
     @BeforeEach
     void setUp() {
-        contactTest = new ContactInfo()
+        contactTest = new ContactInfoDTO()
                 .setType("mobile phone")
                 .setContact("+36 1 234 5678");
     }
@@ -61,7 +61,7 @@ class ContactInfoTest {
 
     @Test
     void different_objects_same_attributes_are_equal() {
-        ContactInfo other = new ContactInfo()
+        ContactInfoDTO other = new ContactInfoDTO()
                 .setType("mobile phone")
                 .setContact("+36 1 234 5678");
 
@@ -70,7 +70,7 @@ class ContactInfoTest {
 
     @Test
     void different_objects_different_attributes_not_equal() {
-        ContactInfo other = new ContactInfo()
+        ContactInfoDTO other = new ContactInfoDTO()
                 .setType("email")
                 .setContact("hi@gmail.com");
 
@@ -79,16 +79,16 @@ class ContactInfoTest {
 
     @Test
     void adding_contact_info_returns_created_status_code() {
-        ResponseEntity<ContactInfo> response = restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
+        ResponseEntity<ContactInfoDTO> response = restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfoDTO.class);
 
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
     void adding_contact_info_creates_it_in_database() {
-        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
+        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfoDTO.class);
 
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/" + contactTest.getContact(), ContactInfo.class);
+        ResponseEntity<ContactInfoDTO> response = restTemplate.getForEntity("/api/contacts/" + contactTest.getContact(), ContactInfoDTO.class);
 
         Assertions.assertEquals("mobile phone", response.getBody().getType());
         Assertions.assertEquals("+36 1 234 5678", response.getBody().getContact());
@@ -96,7 +96,7 @@ class ContactInfoTest {
 
     @Test
     void adding_contact_info_adds_it_to_correct_address() {
-        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
+        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfoDTO.class);
 
         ResponseEntity<Address> response =  restTemplate.getForEntity("/api/addresses/1", Address.class);
 
@@ -106,14 +106,14 @@ class ContactInfoTest {
 
     @Test
     void getting_contact_returns_ok_if_successful() {
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/+36 20 234 5678", ContactInfo.class);
+        ResponseEntity<ContactInfoDTO> response = restTemplate.getForEntity("/api/contacts/+36 20 234 5678", ContactInfoDTO.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void getting_contact_returns_correct_saved_contact() {
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/+36 20 234 5678", ContactInfo.class);
+        ResponseEntity<ContactInfoDTO> response = restTemplate.getForEntity("/api/contacts/+36 20 234 5678", ContactInfoDTO.class);
 
         Assertions.assertEquals("+36 20 234 5678",  response.getBody().getContact());
         Assertions.assertEquals("mobile phone", response.getBody().getType());
@@ -143,7 +143,7 @@ class ContactInfoTest {
 
     @Test
     void getting_all_contacts_for_address_returns_correct_list() {
-        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
+        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfoDTO.class);
         ResponseEntity<ArrayList> response = restTemplate.getForEntity("/api/contacts?addressId=1", ArrayList.class);
 
         Assertions.assertEquals("{contact=+36 20 234 5678, type=mobile phone}", response.getBody().get(0).toString());
@@ -152,15 +152,15 @@ class ContactInfoTest {
 
     @Test
     void deleting_contact_entity_from_database_returns_no_content_status_code() {
-        ResponseEntity<ContactInfo> response = restTemplate.exchange("/api/contacts/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
+        ResponseEntity<ContactInfoDTO> response = restTemplate.exchange("/api/contacts/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfoDTO.class);
 
         Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
     void deleting_contact_entity_deletes_it_from_the_database() {
-        restTemplate.exchange("/api/contacts/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/davy_blue@gmail.com", ContactInfo.class);
+        restTemplate.exchange("/api/contacts/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfoDTO.class);
+        ResponseEntity<ContactInfoDTO> response = restTemplate.getForEntity("/api/contacts/davy_blue@gmail.com", ContactInfoDTO.class);
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
