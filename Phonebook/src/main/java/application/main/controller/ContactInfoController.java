@@ -52,7 +52,7 @@ public class ContactInfoController {
     }
 
     @DeleteMapping("/contact/{contactId}")
-    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
+    public ResponseEntity<Void> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
         dispatcher.deleteContact(contactId);
         return ResponseEntity
                 .noContent()
