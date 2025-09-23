@@ -23,13 +23,9 @@ public class PersonService implements IPersonService {
 
     @Override
     public Person getPerson(int id) {
-        Person person = personDAO.findById(id).orElse(null);
-
-        if (person == null) {
-            throw new NoSuchElementException("The person under id " + id + " does not exist");
-        }
-
-        return person;
+        return personDAO.findById(id)
+                .orElseThrow(()
+                -> new NoSuchElementException("The person under id " + id + " does not exist") );
     }
 
     @Override
@@ -43,13 +39,9 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public Person deletePerson(int id) {
-        Person deleted = personDAO.findById(id).orElse(null);
-
-        if (deleted != null) {
+    public void deletePerson(int id) {
+        if (personDAO.existsById(id)) {
             personDAO.deleteById(id);
         }
-
-        return deleted;
     }
 }

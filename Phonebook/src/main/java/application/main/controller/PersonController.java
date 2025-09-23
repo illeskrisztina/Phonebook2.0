@@ -99,10 +99,11 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Person> deletePerson(@PathVariable("id") int id) {
+    public ResponseEntity<Void> deletePerson(@PathVariable("id") int id) {
         try {
-            Person deleted = dispatcher.deletePerson(id);
-            return ResponseEntity.ok(deleted);
+            return ResponseEntity
+                    .noContent()
+                    .build();
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity
