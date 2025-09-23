@@ -20,7 +20,7 @@ public class ContactInfoController {
     private final IDispatcher dispatcher;
     private static final String ERROR_HEADER = "Error";
 
-    @PostMapping("/address/{addressId}/contact")
+    @PostMapping("/addresses/{addressId}/contacts")
     public ResponseEntity<ContactInfo> addContactInfo(@PathVariable(name = "addressId") int addressId, @RequestBody ContactInfo contactInfo) {
         ContactInfo created = dispatcher.addContact(contactInfo, addressId);
         if(created == null) {
@@ -35,7 +35,7 @@ public class ContactInfoController {
                 .body(created);
     }
 
-    @GetMapping("/contact/{contactId}")
+    @GetMapping("/contacts/{contactId}")
     public ResponseEntity<ContactInfo> getContactInfo(@PathVariable(name = "contactId") String contactId) {
         try {
             ContactInfo fetched = dispatcher.getContact(contactId);
@@ -49,12 +49,12 @@ public class ContactInfoController {
         }
     }
 
-    @GetMapping("/contact")
+    @GetMapping("/contacts")
     public ResponseEntity<List<ContactInfo>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
         return ResponseEntity.ok(dispatcher.getAllContacts(addressId));
     }
 
-    @DeleteMapping("/contact/{contactId}")
+    @DeleteMapping("/contacts/{contactId}")
     public ResponseEntity<Void> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
         dispatcher.deleteContact(contactId);
         return ResponseEntity

@@ -79,16 +79,16 @@ class ContactInfoTest {
 
     @Test
     void adding_contact_info_returns_created_status_code() {
-        ResponseEntity<ContactInfo> response = restTemplate.postForEntity("/api/address/1/contact", contactTest, ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
 
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
     void adding_contact_info_creates_it_in_database() {
-        restTemplate.postForEntity("/api/address/1/contact", contactTest, ContactInfo.class);
+        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
 
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contact/" + contactTest.getContact(), ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/" + contactTest.getContact(), ContactInfo.class);
 
         Assertions.assertEquals("mobile phone", response.getBody().getType());
         Assertions.assertEquals("+36 1 234 5678", response.getBody().getContact());
@@ -96,7 +96,7 @@ class ContactInfoTest {
 
     @Test
     void adding_contact_info_adds_it_to_correct_address() {
-        restTemplate.postForEntity("/api/address/1/contact", contactTest, ContactInfo.class);
+        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
 
         ResponseEntity<Address> response =  restTemplate.getForEntity("/api/addresses/1", Address.class);
 
@@ -106,14 +106,14 @@ class ContactInfoTest {
 
     @Test
     void getting_contact_returns_ok_if_successful() {
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contact/+36 20 234 5678", ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/+36 20 234 5678", ContactInfo.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void getting_contact_returns_correct_saved_contact() {
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contact/+36 20 234 5678", ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/+36 20 234 5678", ContactInfo.class);
 
         Assertions.assertEquals("+36 20 234 5678",  response.getBody().getContact());
         Assertions.assertEquals("mobile phone", response.getBody().getType());
@@ -122,29 +122,29 @@ class ContactInfoTest {
     @Test
     void getting_all_contacts_returns_ok_status_code()
     {
-        ResponseEntity<List> response = restTemplate.getForEntity("/api/contact", List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity("/api/contacts", List.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void getting_all_contacts_returns_correct_saved_contacts() {
-        ResponseEntity<List> response = restTemplate.getForEntity("/api/contact", List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity("/api/contacts", List.class);
 
         Assertions.assertEquals(3, response.getBody().size());
     }
 
     @Test
     void getting_all_contacts_for_address_returns_only_ones_belonging_to_address() {
-        ResponseEntity<List> response = restTemplate.getForEntity("/api/contact?addressId=1", List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity("/api/contacts?addressId=1", List.class);
 
         Assertions.assertEquals(1,  response.getBody().size());
     }
 
     @Test
     void getting_all_contacts_for_address_returns_correct_list() {
-        restTemplate.postForEntity("/api/address/1/contact", contactTest, ContactInfo.class);
-        ResponseEntity<ArrayList> response = restTemplate.getForEntity("/api/contact?addressId=1", ArrayList.class);
+        restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfo.class);
+        ResponseEntity<ArrayList> response = restTemplate.getForEntity("/api/contacts?addressId=1", ArrayList.class);
 
         Assertions.assertEquals("{contact=+36 20 234 5678, type=mobile phone}", response.getBody().get(0).toString());
         Assertions.assertEquals("{contact=+36 1 234 5678, type=mobile phone}", response.getBody().get(1).toString());
@@ -152,15 +152,15 @@ class ContactInfoTest {
 
     @Test
     void deleting_contact_entity_from_database_returns_no_content_status_code() {
-        ResponseEntity<ContactInfo> response = restTemplate.exchange("/api/contact/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.exchange("/api/contacts/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
 
         Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
     void deleting_contact_entity_deletes_it_from_the_database() {
-        restTemplate.exchange("/api/contact/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
-        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contact/davy_blue@gmail.com", ContactInfo.class);
+        restTemplate.exchange("/api/contacts/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
+        ResponseEntity<ContactInfo> response = restTemplate.getForEntity("/api/contacts/davy_blue@gmail.com", ContactInfo.class);
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
