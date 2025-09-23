@@ -20,4 +20,11 @@ public class AddressDTO {
     private AddressType type;
     private List<ContactInfo> contacts = new ArrayList<>();
 
+    public void addContact(ContactInfo contact) {
+        contacts.add(contact);
+    }
+
+    public ContactInfo removeContact(ContactInfo contact) {
+        return contacts.remove(contacts.indexOf(contact));
+    }
 }

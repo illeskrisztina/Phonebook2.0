@@ -1,7 +1,7 @@
 package application.main;
 
-import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.enums.AddressType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +23,11 @@ class AddressTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private Address addressTest;
+    private AddressDTO addressTest;
 
     @BeforeEach
      void setUp() {
-        addressTest = new Address()
+        addressTest = new AddressDTO()
                 .setResidence("Hungary, Budapest, XIX. district")
                 .setType(AddressType.TEMPORARY);
     }
@@ -167,7 +167,7 @@ class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address().setResidence("Hungary, Budapest, XIX. district").setType(AddressType.TEMPORARY);
+        AddressDTO other = new AddressDTO().setResidence("Hungary, Budapest, XIX. district").setType(AddressType.TEMPORARY);
 
         other.addContact(new ContactInfo()
                 .setType("hi")
@@ -198,7 +198,7 @@ class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address()
+        AddressDTO other = new AddressDTO()
                 .setResidence("some address");
 
         other.addContact(new ContactInfo()
@@ -210,16 +210,16 @@ class AddressTest {
 
     @Test
     void adding_address_returns_created_status_code() {
-        ResponseEntity<Address> response = restTemplate.postForEntity("/api/people/1/addresses",  addressTest, Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.postForEntity("/api/people/1/addresses",  addressTest, AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
      void adding_address_saves_it_to_database() {
-        ResponseEntity<Address> saved = restTemplate.postForEntity("/api/people/1/addresses", addressTest, Address.class);
+        ResponseEntity<AddressDTO> saved = restTemplate.postForEntity("/api/people/1/addresses", addressTest, AddressDTO.class);
 
-        ResponseEntity<Address> response = restTemplate.getForEntity("/api/addresses/" + saved.getBody().getId(), Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.getForEntity("/api/addresses/" + saved.getBody().getId(), AddressDTO.class);
 
         Assertions.assertEquals("Hungary, Budapest, XIX. district", response.getBody().getResidence());
         Assertions.assertEquals(AddressType.TEMPORARY, saved.getBody().getType());
@@ -227,7 +227,7 @@ class AddressTest {
 
     @Test
     void getting_address_from_database_returns_saved_entity() {
-        ResponseEntity<Address> response = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
 
         Assertions.assertEquals("Hungary, Budapest, 1194, Some street 13.", response.getBody().getResidence());
@@ -243,11 +243,11 @@ class AddressTest {
 
     @Test
     void updating_address_entity_updates_it_in_the_database() {
-        ResponseEntity<Address> original = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> original = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
-        restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<Address>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), Address.class);
+        restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<AddressDTO>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), AddressDTO.class);
 
-        ResponseEntity<Address> updated = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> updated = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
         Assertions.assertEquals(AddressType.TEMPORARY, updated.getBody().getType());
         Assertions.assertEquals("Someplace far", updated.getBody().getResidence());
@@ -256,9 +256,9 @@ class AddressTest {
 
     @Test
     void updating_address_entity_returns_ok_status_code() {
-        ResponseEntity<Address> original = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> original = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
-        ResponseEntity<Address> response = restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<Address>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<AddressDTO>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -267,14 +267,14 @@ class AddressTest {
     void deleting_address_entity_deletes_it_from_the_database() {
         restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, Void.class);
 
-        ResponseEntity<Address> deleted = restTemplate.getForEntity("/api/addresses/2", Address.class);
+        ResponseEntity<AddressDTO> deleted = restTemplate.getForEntity("/api/addresses/2", AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, deleted.getStatusCode());
     }
 
     @Test
     void deleting_address_entity_returns_no_content_status_code() {
-        ResponseEntity<Address> deleted = restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, Address.class);
+        ResponseEntity<AddressDTO> deleted = restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.NO_CONTENT, deleted.getStatusCode());
     }
