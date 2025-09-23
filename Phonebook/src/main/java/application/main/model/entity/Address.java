@@ -33,7 +33,7 @@ public class Address implements  Serializable {
     private String type;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "address_contacts", schema = "phonebook",
             joinColumns = {
             @JoinColumn(name = "address_id", referencedColumnName = "id")},
