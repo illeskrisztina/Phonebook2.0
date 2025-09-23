@@ -205,7 +205,7 @@ class AddressTest {
                 .setType("hi")
                 .setContact("hello"));
 
-        Assertions.assertEquals(false, other.equals(addressTest));
+        Assertions.assertNotEquals(true, other.equals(addressTest));
     }
 
     @Test
