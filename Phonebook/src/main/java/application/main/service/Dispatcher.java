@@ -87,7 +87,7 @@ public class Dispatcher implements IDispatcher {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Address deleteAddress(int id) {
+    public void deleteAddress(int id) {
         getAllContacts(id).forEach(contact ->
             contactService.deleteContact(contact.getContact())
         );
@@ -101,8 +101,6 @@ public class Dispatcher implements IDispatcher {
                     person.setTemporaryAddress(null);
                     personService.updatePerson(person);
                 });
-
-        return addressService.deleteAddress(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -146,8 +144,8 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public ContactInfo deleteContact(String contact) {
-        return contactService.deleteContact(contact);
+    public void deleteContact(String contact) {
+        contactService.deleteContact(contact);
     }
 
     @Override
@@ -172,9 +170,7 @@ public class Dispatcher implements IDispatcher {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Person deletePerson(int id) {
-        Person person = new Person();
-
+    public void deletePerson(int id) {
         getAllAddress(id).forEach(address ->
         {
 
@@ -182,24 +178,9 @@ public class Dispatcher implements IDispatcher {
             contactService.deleteContact(contactInfo.getContact())
             );
 
-            switch (address.getType()){
-                case AddressType.PERMANENT ->
-                    person.setPermanentAddress(address);
-                case AddressType.TEMPORARY ->
-                    person.setTemporaryAddress(address);
-                default ->
-                    throw new NoSuchAddressTypeException("The address type " + address.getType() + " does not exist");
-            }
-
             addressService.deleteAddress(address.getId());
         });
 
-        Person deleted = personService.deletePerson(id);
-
-        person.setName(deleted.getName())
-                .setAge(deleted.getAge())
-                .setId(deleted.getId());
-
-        return person;
+        personService.deletePerson(id);
     }
 }

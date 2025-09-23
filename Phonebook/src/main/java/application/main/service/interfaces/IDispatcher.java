@@ -18,7 +18,7 @@ public interface IDispatcher {
 
     public Address updateAddress(Address address);
 
-    public Address deleteAddress(int id);
+    public void deleteAddress(int id);
 
     public ContactInfo addContact(ContactInfo contact, Integer addressId);
 
@@ -26,7 +26,7 @@ public interface IDispatcher {
 
     public List<ContactInfo> getAllContacts(Integer addressId);
 
-    public ContactInfo deleteContact(String contact);
+    public void deleteContact(String contact);
 
     public Person createPerson(Person person);
 
@@ -36,5 +36,5 @@ public interface IDispatcher {
 
     public Person updatePerson(Person person);
 
-    public Person deletePerson(int id);
+    public void deletePerson(int id);
 }
