@@ -5,7 +5,6 @@ import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
-import application.main.model.entity.enums.AddressType;
 import application.main.model.exception.NoSuchAddressTypeException;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
@@ -34,11 +33,11 @@ public class Dispatcher implements IDispatcher {
         Address created = addressService.createAddress(address);
 
         switch (address.getType()) {
-            case AddressType.PERMANENT ->
+            case PERMANENT ->
                 personService.updatePerson(
                         personService.getPerson(personId)
                                 .setPermanentAddress(address));
-            case AddressType.TEMPORARY ->
+            case TEMPORARY ->
                     personService.updatePerson(
                             personService.getPerson(personId)
                                     .setTemporaryAddress(address));
