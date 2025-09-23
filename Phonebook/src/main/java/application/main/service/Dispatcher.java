@@ -144,8 +144,8 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public Person createPerson(Person person) {
-        return personService.createPerson(person);
+    public PersonDTO createPerson(Person person) {
+        return personMapper.personToPersonDTO(personService.createPerson(person));
     }
 
     @Override
@@ -159,8 +159,8 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public Person updatePerson(Person person) {
-        return personService.updatePerson(person);
+    public PersonDTO updatePerson(Person person) {
+        return personMapper.personToPersonDTO(personService.updatePerson(person));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

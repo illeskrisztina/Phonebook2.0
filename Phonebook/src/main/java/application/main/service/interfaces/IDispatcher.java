@@ -4,6 +4,7 @@ import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.dto.ContactInfoDTO;
+import application.main.model.entity.dto.PersonDTO;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
 import org.springframework.stereotype.Service;
@@ -30,13 +31,13 @@ public interface IDispatcher {
 
     void deleteContact(String contact);
 
-    Person createPerson(Person person);
+    PersonDTO createPerson(Person person);
 
     SimplePersonDTO getPerson(int id);
 
     List<SimplePersonDTO> getAllPeople();
 
-    Person updatePerson(Person person);
+    PersonDTO updatePerson(Person person);
 
     void deletePerson(int id);
 }

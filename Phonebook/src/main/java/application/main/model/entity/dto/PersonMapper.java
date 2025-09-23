@@ -7,4 +7,6 @@ import org.mapstruct.Mapper;
 public interface PersonMapper {
     SimplePersonDTO personToSimplePersonDTO(Person person);
     Person simplePersonDTOToPerson(SimplePersonDTO simplePersonDTO);
+    PersonDTO personToPersonDTO(Person person);
+    Person personDTOToPerson(PersonDTO personDTO);
 }
