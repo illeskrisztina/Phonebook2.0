@@ -4,7 +4,7 @@ create table if not exists phonebook.address(
     id int primary key AUTO_INCREMENT,
     address varchar(200),
     person_id int,
-    type varchar(50) check (type = 'permanent' OR type = 'temporary') NOT NULL
+    type varchar(50) check (type = 'PERMANENT' OR type = 'TEMPORARY') NOT NULL
 );
 
 create table if not exists phonebook.person(
