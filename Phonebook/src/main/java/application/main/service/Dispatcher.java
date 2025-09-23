@@ -33,21 +33,15 @@ public class Dispatcher implements IDispatcher {
     public Address createAddress(int personId, Address address) {
         Address created = addressService.createAddress(address);
 
-        SimplePersonDTO simplePersonDTO = getPerson(personId);
-
         switch (address.getType()) {
             case AddressType.PERMANENT ->
-                personService.updatePerson(new Person()
-                        .setId(simplePersonDTO.getId())
-                        .setName(simplePersonDTO.getName())
-                        .setAge(simplePersonDTO.getAge())
-                        .setPermanentAddress(address));
+                personService.updatePerson(
+                        personService.getPerson(personId)
+                                .setPermanentAddress(address));
             case AddressType.TEMPORARY ->
-                    personService.updatePerson(new Person()
-                            .setId(simplePersonDTO.getId())
-                            .setName(simplePersonDTO.getName())
-                            .setAge(simplePersonDTO.getAge())
-                            .setTemporaryAddress(address));
+                    personService.updatePerson(
+                            personService.getPerson(personId)
+                                    .setTemporaryAddress(address));
             default -> throw new NoSuchAddressTypeException(address.getType() + " does not exist.");
         }
 
@@ -134,11 +128,13 @@ public class Dispatcher implements IDispatcher {
 
         List<ContactInfo> contacts = new ArrayList<>();
 
-        for (int i = 0; i < address.getContacts().size(); i++) {
-            if (address.getContacts().get(i) != null) {
-                contacts.add(address.getContacts().get(i));
+        address.getContacts().forEach(contact -> {
+            if(contact != null) {
+                contacts.add(contact);
             }
-        }
+        });
+
+
 
         return contacts;
     }
