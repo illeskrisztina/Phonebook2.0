@@ -151,10 +151,10 @@ class ContactInfoTest {
     }
 
     @Test
-    void deleting_contact_entity_from_database_returns_ok_status_code() {
+    void deleting_contact_entity_from_database_returns_no_content_status_code() {
         ResponseEntity<ContactInfo> response = restTemplate.exchange("/api/contact/davy_blue@gmail.com", HttpMethod.DELETE, null, ContactInfo.class);
 
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test

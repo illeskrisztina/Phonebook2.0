@@ -273,9 +273,9 @@ class AddressTest {
     }
 
     @Test
-    void deleting_address_entity_returns_ok_status_code() {
+    void deleting_address_entity_returns_no_content_status_code() {
         ResponseEntity<Address> deleted = restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, Address.class);
 
-        Assertions.assertEquals(HttpStatus.OK, deleted.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, deleted.getStatusCode());
     }
 }
