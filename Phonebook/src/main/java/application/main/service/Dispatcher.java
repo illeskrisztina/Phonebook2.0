@@ -3,6 +3,8 @@ package application.main.service;
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
+import application.main.model.entity.dto.AddressDTO;
+import application.main.model.entity.dto.AddressMapper;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.exception.NoSuchAddressTypeException;
@@ -26,10 +28,11 @@ public class Dispatcher implements IDispatcher {
     private final IContactService contactService;
 
     private final PersonMapper personMapper;
+    private final AddressMapper addressMapper;
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Address createAddress(int personId, Address address) {
+    public AddressDTO createAddress(int personId, Address address) {
         Address created = addressService.createAddress(address);
 
         switch (address.getType()) {
@@ -44,38 +47,38 @@ public class Dispatcher implements IDispatcher {
             default -> throw new NoSuchAddressTypeException(address.getType() + " does not exist.");
         }
 
-        return created;
+        return addressMapper.addressToAddressDTO(created);
     }
 
     @Override
-    public Address getAddress(int id) {
-        return addressService.getAddress(id);
+    public AddressDTO getAddress(int id) {
+        return addressMapper.addressToAddressDTO(addressService.getAddress(id));
     }
 
     @Override
-    public List<Address> getAllAddress(Integer personId) {
+    public List<AddressDTO> getAllAddress(Integer personId) {
         if(personId == null) {
-            return addressService.getAllAddress();
+            return addressService.getAllAddress().stream().map(addressMapper::addressToAddressDTO).toList();
         }
 
         Person person = personService.getPerson(personId);
 
-        List<Address> addresses = new ArrayList<>();
+        List<AddressDTO> addresses = new ArrayList<>();
 
         if(person.getPermanentAddress() != null) {
-            addresses.add(person.getPermanentAddress());
+            addresses.add(addressMapper.addressToAddressDTO(person.getPermanentAddress()));
         }
 
         if(person.getTemporaryAddress() != null) {
-            addresses.add(person.getTemporaryAddress());
+            addresses.add(addressMapper.addressToAddressDTO(person.getTemporaryAddress()));
         }
 
         return addresses;
     }
 
     @Override
-    public Address updateAddress(Address address) {
-        return addressService.updateAddress(address);
+    public AddressDTO updateAddress(Address address) {
+        return addressMapper.addressToAddressDTO(addressService.updateAddress(address));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

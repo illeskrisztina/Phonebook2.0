@@ -2,6 +2,7 @@ package application.main.service.interfaces;
 
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.model.entity.Person;
 import org.springframework.stereotype.Service;
@@ -10,13 +11,13 @@ import java.util.List;
 
 @Service
 public interface IDispatcher {
-    Address createAddress(int personId, Address address);
+    AddressDTO createAddress(int personId, Address address);
 
-    Address getAddress(int id);
+    AddressDTO getAddress(int id);
 
-    List<Address> getAllAddress(Integer personId);
+    List<AddressDTO> getAllAddress(Integer personId);
 
-    Address updateAddress(Address address);
+    AddressDTO updateAddress(Address address);
 
     void deleteAddress(int id);
 
