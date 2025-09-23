@@ -7,13 +7,13 @@ import java.util.List;
 
 @Service
 public interface IPersonService {
-    public Person createPerson(Person person);
+    Person createPerson(Person person);
 
-    public Person getPerson(int id);
+    Person getPerson(int id);
 
-    public List<Person> getAllPeople();
+    List<Person> getAllPeople();
 
-    public Person updatePerson(Person person);
+    Person updatePerson(Person person);
 
-    public void deletePerson(int id);
+    void deletePerson(int id);
 }

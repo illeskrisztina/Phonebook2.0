@@ -10,31 +10,31 @@ import java.util.List;
 
 @Service
 public interface IDispatcher {
-    public Address createAddress(int personId, Address address);
+    Address createAddress(int personId, Address address);
 
-    public Address getAddress(int id);
+    Address getAddress(int id);
 
-    public List<Address> getAllAddress(Integer personId);
+    List<Address> getAllAddress(Integer personId);
 
-    public Address updateAddress(Address address);
+    Address updateAddress(Address address);
 
-    public void deleteAddress(int id);
+    void deleteAddress(int id);
 
-    public ContactInfo addContact(ContactInfo contact, Integer addressId);
+    ContactInfo addContact(ContactInfo contact, Integer addressId);
 
-    public ContactInfo getContact(String contact);
+    ContactInfo getContact(String contact);
 
-    public List<ContactInfo> getAllContacts(Integer addressId);
+    List<ContactInfo> getAllContacts(Integer addressId);
 
-    public void deleteContact(String contact);
+    void deleteContact(String contact);
 
-    public Person createPerson(Person person);
+    Person createPerson(Person person);
 
-    public SimplePersonDTO getPerson(int id);
+    SimplePersonDTO getPerson(int id);
 
-    public List<SimplePersonDTO> getAllPeople();
+    List<SimplePersonDTO> getAllPeople();
 
-    public Person updatePerson(Person person);
+    Person updatePerson(Person person);
 
-    public void deletePerson(int id);
+    void deletePerson(int id);
 }

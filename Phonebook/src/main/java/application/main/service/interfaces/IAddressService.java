@@ -7,13 +7,13 @@ import java.util.List;
 
 @Service
 public interface IAddressService {
-    public Address createAddress(Address address);
+    Address createAddress(Address address);
 
-    public Address getAddress(int id);
+    Address getAddress(int id);
 
-    public List<Address> getAllAddress();
+    List<Address> getAllAddress();
 
-    public Address updateAddress(Address address);
+    Address updateAddress(Address address);
 
-    public void deleteAddress(int id);
+    void deleteAddress(int id);
 }
