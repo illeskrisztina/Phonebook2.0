@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class AddressService implements IAddressService {
 
     @Override
     public Address getAddress(int id) {
-        return addressDAO.findById(id).orElse(null);
+        return addressDAO.findById(id).orElseThrow(() -> new NoSuchElementException("Address with id " + id + " does not exist."));
     }
 
     @Override

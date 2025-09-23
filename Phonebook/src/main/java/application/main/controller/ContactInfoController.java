@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -36,14 +37,16 @@ public class ContactInfoController {
 
     @GetMapping("/contact/{contactId}")
     public ResponseEntity<ContactInfo> getContactInfo(@PathVariable(name = "contactId") String contactId) {
-        ContactInfo fetched = dispatcher.getContact(contactId);
-        if(fetched == null) {
+        try {
+            ContactInfo fetched = dispatcher.getContact(contactId);
+            return ResponseEntity.ok(fetched);
+        }
+        catch (NoSuchElementException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .header(ERROR_HEADER, "Contact information could not be retrieved.")
                     .build();
         }
-        return ResponseEntity.ok(fetched);
     }
 
     @GetMapping("/contact")

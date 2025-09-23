@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -36,14 +37,16 @@ public class AddressController {
 
     @GetMapping("addresses/{addressId}")
     public ResponseEntity<Address> getAddress(@PathVariable("addressId") int addressId) {
-        Address fetched = dispatcher.getAddress(addressId);
-        if (fetched == null) {
+        try {
+            Address fetched = dispatcher.getAddress(addressId);
+            return ResponseEntity.ok(fetched);
+        }
+        catch (NoSuchElementException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .header(ERROR_HEADER,"Address cannot be found.")
                     .build();
         }
-        return ResponseEntity.ok(fetched);
     }
 
     @GetMapping("/addresses")
