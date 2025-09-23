@@ -34,13 +34,9 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public Address deleteAddress(int id) {
-
-        Address deleted = addressDAO.findById(id).orElse(null);
-        if (deleted != null) {
+    public void deleteAddress(int id) {
+        if (addressDAO.existsById(id)) {
             addressDAO.deleteById(id);
         }
-
-        return deleted;
     }
 }

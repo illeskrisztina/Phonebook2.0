@@ -15,5 +15,5 @@ public interface IAddressService {
 
     public Address updateAddress(Address address);
 
-    public Address deleteAddress(int id);
+    public void deleteAddress(int id);
 }

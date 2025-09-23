@@ -64,14 +64,10 @@ public class AddressController {
     }
 
     @DeleteMapping("/addresses/{addressId}")
-    public ResponseEntity<Address> deleteAddress(@PathVariable("addressId") int addressId) {
-        Address deleted = dispatcher.deleteAddress(addressId);
-        if (deleted == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .header(ERROR_HEADER, "Address could not be deleted.")
-                    .build();
-        }
-        return ResponseEntity.ok(deleted);
+    public ResponseEntity<Void> deleteAddress(@PathVariable("addressId") int addressId) {
+        dispatcher.deleteAddress(addressId);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
