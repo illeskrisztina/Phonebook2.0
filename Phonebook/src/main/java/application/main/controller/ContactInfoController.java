@@ -53,13 +53,9 @@ public class ContactInfoController {
 
     @DeleteMapping("/contact/{contactId}")
     public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
-        ContactInfo deleted = dispatcher.deleteContact(contactId);
-        if(deleted == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .header(ERROR_HEADER, "Contact information could not be deleted.")
-                    .build();
-        }
-        return ResponseEntity.ok(deleted);
+        dispatcher.deleteContact(contactId);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

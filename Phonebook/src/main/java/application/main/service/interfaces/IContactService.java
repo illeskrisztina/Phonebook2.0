@@ -13,5 +13,5 @@ public interface IContactService {
 
     public List<ContactInfo> getAllContacts();
 
-    public ContactInfo deleteContact(String contact);
+    public void deleteContact(String contact);
 }
