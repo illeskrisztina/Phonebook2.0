@@ -1,6 +1,7 @@
 package application.main.controller;
 
 import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.ContactInfoDTO;
 import application.main.service.interfaces.IDispatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,8 @@ public class ContactInfoController {
     private static final String ERROR_HEADER = "Error";
 
     @PostMapping("/addresses/{addressId}/contacts")
-    public ResponseEntity<ContactInfo> addContactInfo(@PathVariable(name = "addressId") int addressId, @RequestBody ContactInfo contactInfo) {
-        ContactInfo created = dispatcher.addContact(contactInfo, addressId);
+    public ResponseEntity<ContactInfoDTO> addContactInfo(@PathVariable(name = "addressId") int addressId, @RequestBody ContactInfo contactInfo) {
+        ContactInfoDTO created = dispatcher.addContact(contactInfo, addressId);
         if(created == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -36,9 +37,9 @@ public class ContactInfoController {
     }
 
     @GetMapping("/contacts/{contactId}")
-    public ResponseEntity<ContactInfo> getContactInfo(@PathVariable(name = "contactId") String contactId) {
+    public ResponseEntity<ContactInfoDTO> getContactInfo(@PathVariable(name = "contactId") String contactId) {
         try {
-            ContactInfo fetched = dispatcher.getContact(contactId);
+            ContactInfoDTO fetched = dispatcher.getContact(contactId);
             return ResponseEntity.ok(fetched);
         }
         catch (NoSuchElementException e) {
@@ -50,7 +51,7 @@ public class ContactInfoController {
     }
 
     @GetMapping("/contacts")
-    public ResponseEntity<List<ContactInfo>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
+    public ResponseEntity<List<ContactInfoDTO>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
         return ResponseEntity.ok(dispatcher.getAllContacts(addressId));
     }
 

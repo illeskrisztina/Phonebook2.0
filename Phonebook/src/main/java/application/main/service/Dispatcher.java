@@ -3,10 +3,7 @@ package application.main.service;
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
-import application.main.model.entity.dto.AddressDTO;
-import application.main.model.entity.dto.AddressMapper;
-import application.main.model.entity.dto.PersonMapper;
-import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.dto.*;
 import application.main.model.exception.NoSuchAddressTypeException;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
@@ -29,6 +26,7 @@ public class Dispatcher implements IDispatcher {
 
     private final PersonMapper personMapper;
     private final AddressMapper addressMapper;
+    private final ContactInfoMapper contactInfoMapper;
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
@@ -102,7 +100,7 @@ public class Dispatcher implements IDispatcher {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public ContactInfo addContact(ContactInfo contact, Integer addressId) {
+    public ContactInfoDTO addContact(ContactInfo contact, Integer addressId) {
         ContactInfo created = contactService.addContact(contact);
 
         if(addressId != null) {
@@ -111,33 +109,31 @@ public class Dispatcher implements IDispatcher {
 
             addressService.updateAddress(address);
         }
-        return created;
+        return contactInfoMapper.contactInfoToContactInfoDTO(created);
     }
 
     @Override
-    public ContactInfo getContact(String contact) {
-        return contactService.getContact(contact);
+    public ContactInfoDTO getContact(String contact) {
+        return contactInfoMapper.contactInfoToContactInfoDTO(contactService.getContact(contact));
     }
 
 
 
     @Override
-    public List<ContactInfo> getAllContacts(Integer addressId) {
+    public List<ContactInfoDTO> getAllContacts(Integer addressId) {
         if(addressId == null) {
-            return contactService.getAllContacts();
+            return contactService.getAllContacts().stream().map(contactInfoMapper::contactInfoToContactInfoDTO).toList();
         }
 
         Address address = addressService.getAddress(addressId);
 
-        List<ContactInfo> contacts = new ArrayList<>();
+        List<ContactInfoDTO> contacts = new ArrayList<>();
 
         address.getContacts().forEach(contact -> {
             if(contact != null) {
-                contacts.add(contact);
+                contacts.add(contactInfoMapper.contactInfoToContactInfoDTO(contact));
             }
         });
-
-
 
         return contacts;
     }
