@@ -95,6 +95,7 @@ public class Dispatcher implements IDispatcher {
                     person.setTemporaryAddress(null);
                     personService.updatePerson(person);
                 });
+        addressService.deleteAddress(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

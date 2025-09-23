@@ -101,6 +101,7 @@ public class PersonController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePerson(@PathVariable("id") int id) {
         try {
+            dispatcher.deletePerson(id);
             return ResponseEntity
                     .noContent()
                     .build();
