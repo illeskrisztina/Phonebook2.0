@@ -1,7 +1,8 @@
 package application.main;
 
-import application.main.model.entity.Address;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.dto.ContactInfoDTO;
+import application.main.model.entity.dto.ContactInfoMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ class ContactInfoTest {
     ContactInfoDTO contactTest;
     @Autowired
     private TestRestTemplate restTemplate;
+    @Autowired
+    private ContactInfoMapper contactInfoMapper;
 
     @BeforeEach
     void setUp() {
@@ -98,10 +101,10 @@ class ContactInfoTest {
     void adding_contact_info_adds_it_to_correct_address() {
         restTemplate.postForEntity("/api/addresses/1/contacts", contactTest, ContactInfoDTO.class);
 
-        ResponseEntity<Address> response =  restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> response =  restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
         Assertions.assertNotNull(response.getBody().getContacts());
-        Assertions.assertTrue(response.getBody().getContacts().contains(contactTest));
+        Assertions.assertTrue(response.getBody().getContacts().contains(contactInfoMapper.contactInfoDTOToContactInfo(contactTest)));
     }
 
     @Test
