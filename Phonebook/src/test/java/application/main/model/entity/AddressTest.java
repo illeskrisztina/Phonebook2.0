@@ -1,6 +1,5 @@
 package application.main.model.entity;
 
-import application.main.model.entity.ContactInfo;
 import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.enums.AddressType;
 import org.junit.jupiter.api.Assertions;

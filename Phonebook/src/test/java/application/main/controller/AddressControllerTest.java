@@ -1,6 +1,6 @@
 package application.main.controller;
 
-import application.main.model.entity.Address;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.enums.AddressType;
 import application.main.service.interfaces.IDispatcher;
 import org.junit.jupiter.api.Assertions;
@@ -25,27 +25,27 @@ class AddressControllerTest {
     @Autowired
     private IDispatcher dispatcher;
 
-    private Address addressTest;
+    private AddressDTO addressTest;
 
     @BeforeEach
     void setUp() {
-        addressTest = new Address()
+        addressTest = new AddressDTO()
                 .setResidence("Hungary, Budapest, XIX. district")
                 .setType(AddressType.TEMPORARY);
     }
 
     @Test
     void adding_address_returns_created_status_code() {
-        ResponseEntity<Address> response = restTemplate.postForEntity("/api/people/1/addresses",  addressTest, Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.postForEntity("/api/people/1/addresses",  addressTest, AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
     void adding_address_saves_it_to_database() {
-        ResponseEntity<Address> saved = restTemplate.postForEntity("/api/people/1/addresses", addressTest, Address.class);
+        ResponseEntity<AddressDTO> saved = restTemplate.postForEntity("/api/people/1/addresses", addressTest, AddressDTO.class);
 
-        ResponseEntity<Address> response = restTemplate.getForEntity("/api/addresses/" + saved.getBody().getId(), Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.getForEntity("/api/addresses/" + saved.getBody().getId(), AddressDTO.class);
 
         Assertions.assertEquals("Hungary, Budapest, XIX. district", response.getBody().getResidence());
         Assertions.assertEquals(AddressType.TEMPORARY, saved.getBody().getType());
@@ -53,7 +53,7 @@ class AddressControllerTest {
 
     @Test
     void getting_address_from_database_returns_saved_entity() {
-        ResponseEntity<Address> response = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
 
         Assertions.assertEquals("Hungary, Budapest, 1194, Some street 13.", response.getBody().getResidence());
@@ -69,11 +69,11 @@ class AddressControllerTest {
 
     @Test
     void updating_address_entity_updates_it_in_the_database() {
-        ResponseEntity<Address> original = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> original = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
-        restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<Address>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), Address.class);
+        restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<AddressDTO>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), AddressDTO.class);
 
-        ResponseEntity<Address> updated = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> updated = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
         Assertions.assertEquals(AddressType.TEMPORARY, updated.getBody().getType());
         Assertions.assertEquals("Someplace far", updated.getBody().getResidence());
@@ -82,9 +82,9 @@ class AddressControllerTest {
 
     @Test
     void updating_address_entity_returns_ok_status_code() {
-        ResponseEntity<Address> original = restTemplate.getForEntity("/api/addresses/1", Address.class);
+        ResponseEntity<AddressDTO> original = restTemplate.getForEntity("/api/addresses/1", AddressDTO.class);
 
-        ResponseEntity<Address> response = restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<Address>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), Address.class);
+        ResponseEntity<AddressDTO> response = restTemplate.exchange("/api/addresses", HttpMethod.PUT, new HttpEntity<AddressDTO>(original.getBody().setType(AddressType.TEMPORARY).setResidence("Someplace far")), AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -93,22 +93,22 @@ class AddressControllerTest {
     void deleting_address_entity_deletes_it_from_the_database() {
         restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, Void.class);
 
-        ResponseEntity<Address> deleted = restTemplate.getForEntity("/api/addresses/2", Address.class);
+        ResponseEntity<AddressDTO> deleted = restTemplate.getForEntity("/api/addresses/2", AddressDTO.class);
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, deleted.getStatusCode());
     }
 
     @Test
-    void deleting_address_entity_returns_ok_status_code() {
-        ResponseEntity<Address> deleted = restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, Address.class);
+    void deleting_address_entity_returns_no_content_status_code() {
+        ResponseEntity<AddressDTO> deleted = restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, AddressDTO.class);
 
-        Assertions.assertEquals(HttpStatus.OK, deleted.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, deleted.getStatusCode());
     }
 
     @Test
     void deleting_temporary_address_entity_of_person_only_modifies_temporary_address() {
-        restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, Address.class);
-        List<Address> addresses = dispatcher.getAllAddress(2);
+        restTemplate.exchange("/api/addresses/2", HttpMethod.DELETE, null, AddressDTO.class);
+        List<AddressDTO> addresses = dispatcher.getAllAddress(2);
 
         Assertions.assertNotNull(addresses);
         Assertions.assertEquals(1, addresses.size());
@@ -118,8 +118,8 @@ class AddressControllerTest {
 
     @Test
     void deleting_permanent_address_entity_of_person_only_modifies_permanent_address() {
-        restTemplate.exchange("/api/addresses/3", HttpMethod.DELETE, null, Address.class);
-        List<Address> addresses = dispatcher.getAllAddress(2);
+        restTemplate.exchange("/api/addresses/3", HttpMethod.DELETE, null, AddressDTO.class);
+        List<AddressDTO> addresses = dispatcher.getAllAddress(2);
 
         Assertions.assertNotNull(addresses);
         Assertions.assertEquals(1, addresses.size());

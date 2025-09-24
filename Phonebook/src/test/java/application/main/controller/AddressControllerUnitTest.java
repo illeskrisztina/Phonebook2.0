@@ -1,6 +1,7 @@
 package application.main.controller;
 
 import application.main.model.entity.Address;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.enums.AddressType;
 import application.main.service.interfaces.IDispatcher;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,7 @@ class AddressControllerUnitTest {
     void when_creating_entity_if_entity_not_created_bad_request_status_code_returned() {
         when(dispatcher.createAddress(any(Integer.class), any(Address.class))).thenReturn(null);
 
-        ResponseEntity<Address> created = controller.addAddress(1, temporaryAddressTest);
+        ResponseEntity<AddressDTO> created = controller.addAddress(1, temporaryAddressTest);
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, created.getStatusCode());
     }
@@ -44,17 +45,8 @@ class AddressControllerUnitTest {
     void when_updating_address_entity_if_entity_returns_null_not_found_status_code_is_returned() {
         when(dispatcher.updateAddress(any(Address.class))).thenReturn(null);
 
-        ResponseEntity<Address> updated = controller.updateAddress(temporaryAddressTest);
+        ResponseEntity<AddressDTO> updated = controller.updateAddress(temporaryAddressTest);
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, updated.getStatusCode());
-    }
-
-    @Test
-    void when_deleting_address_entity_if_returned_object_is_null_not_found_status_code_is_returned() {
-        when(dispatcher.deleteAddress(any(Integer.class))).thenReturn(null);
-
-        ResponseEntity<Address> deleted = controller.deleteAddress(1);
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, deleted.getStatusCode());
     }
 }
