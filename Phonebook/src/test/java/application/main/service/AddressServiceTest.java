@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -51,12 +52,10 @@ class AddressServiceTest {
     }
 
     @Test
-    void getAddress_returns_null_if_repository_returns_null_without_issues() {
+    void getAddress_throws_exception_if_repository_returns_null() {
         when(repo.findById(1)).thenReturn(Optional.empty());
 
-        Address result = service.getAddress(1);
-
-        Assertions.assertNull(result);
+        Assertions.assertThrows(NoSuchElementException.class, () -> service.getAddress(1));
     }
 
     @Test
@@ -79,17 +78,17 @@ class AddressServiceTest {
 
     @Test
     void deleteAddress_calls_appropriate_repository_method() {
-        when(repo.findById(1)).thenReturn(Optional.of(addressTest));
+        when(repo.existsById(1)).thenReturn(true);
 
         service.deleteAddress(1);
 
-        verify(repo, times(1)).findById(1);
+        verify(repo, times(1)).existsById(1);
         verify(repo, times(1)).deleteById(1);
     }
 
     @Test
     void deleteAddress_does_not_call_delete_method_if_entity_does_not_exist() {
-        when(repo.findById(1)).thenReturn(Optional.empty());
+        lenient().when(repo.existsById(1)).thenReturn(false);
 
         service.deleteAddress(1);
 
