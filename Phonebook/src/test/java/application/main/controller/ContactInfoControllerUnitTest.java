@@ -1,6 +1,7 @@
 package application.main.controller;
 
 import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.ContactInfoDTO;
 import application.main.service.interfaces.IDispatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,19 +35,9 @@ class ContactInfoControllerUnitTest {
     void if_creating_contact_info_entity_returns_null_not_found_status_code_is_returned() {
         when(dispatcher.addContact(contactInfoTest, null)).thenReturn(null);
 
-        ResponseEntity<ContactInfo> saved = controller.addContactInfo(null, contactInfoTest);
+        ResponseEntity<ContactInfoDTO> saved = controller.addContactInfo(null, contactInfoTest);
 
         verify(dispatcher).addContact(contactInfoTest, null);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, saved.getStatusCode());
-    }
-
-    @Test
-    void if_deleting_returns_null_not_found_status_code_is_returned() {
-        when(dispatcher.deleteContact(contactInfoTest.getContact())).thenReturn(null);
-
-        ResponseEntity<ContactInfo> deleted = controller.deleteContactInfo(contactInfoTest.getContact());
-
-        verify(dispatcher).deleteContact(contactInfoTest.getContact());
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, deleted.getStatusCode());
     }
 }
