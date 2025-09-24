@@ -40,7 +40,7 @@ class AddressRepositoryTest {
 
         Assertions.assertNotNull(retrieved);
         Assertions.assertEquals("Hungary, Budapest, 1194, Some street 13.", retrieved.getResidence());
-        Assertions.assertEquals("permanent", retrieved.getType());
+        Assertions.assertEquals(AddressType.PERMANENT, retrieved.getType());
     }
 
     @Test
