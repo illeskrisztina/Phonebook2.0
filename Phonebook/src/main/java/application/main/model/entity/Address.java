@@ -1,117 +1,59 @@
 package application.main.model.entity;
 
+import application.main.model.entity.enums.AddressType;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Address
-{
-  private String residence;
-  private String type;
-  private int addressId;
-  private ArrayList<ContactInfo> contacts = new ArrayList<>();
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
+@Table(name = "address", schema = "phonebook")
+@Setter
+@Getter
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class Address implements  Serializable {
 
-  public Address()
-  {
-  }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
 
-  public Address(String residence)
-  {
-    this.residence = residence;
-    this.contacts = new ArrayList<>();
-  }
+    @Column(name = "address")
+    private String residence;
 
-  public Address(String residence, String type, int addressId)
-  {
-    this.residence = residence;
-    this.type = type;
-    this.addressId = addressId;
-    this.contacts = new ArrayList<>();
-  }
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private AddressType type;
 
-  public Address setResidence(String residence)
-  {
-    this.residence = residence;
-    return this;
-  }
 
-  public Address setType(String type)
-  {
-    this.type = type;
-    return this;
-  }
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "address_contacts", schema = "phonebook",
+            joinColumns = {
+            @JoinColumn(name = "address_id", referencedColumnName = "id")},
+            inverseJoinColumns = {
+            @JoinColumn(name = "contact", referencedColumnName = "contact")})
+    private List<ContactInfo> contacts = new ArrayList<>();
 
-  public Address setAddressId(int addressId)
-  {
-    this.addressId = addressId;
-    return this;
-  }
+    @OneToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person person;
 
-  public Address setContacts(List<ContactInfo> contacts)
-  {
-    this.contacts = new ArrayList<>(contacts);
-    return this;
-  }
 
-  public void addContact(ContactInfo contact)
-  {
-    contacts.add(contact);
-  }
 
-  public String getResidence()
-  {
-    return residence;
-  }
-
-  public List<ContactInfo> getContacts()
-  {
-    return new ArrayList<>(contacts);
-  }
-
-  public String getType()
-  {
-    return type;
-  }
-
-  public int getAddressId()
-  {
-    return addressId;
-  }
-
-  public ContactInfo removeContact(ContactInfo contact)
-  {
-    return contacts.remove(contacts.indexOf(contact));
-  }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(residence, type, addressId, contacts);
+    public void addContact(ContactInfo contact) {
+        contacts.add(contact);
     }
 
-    public boolean equals(Object obj)
-  {
-    if(obj == this)
-    {
-      return true;
+    public ContactInfo removeContact(ContactInfo contact) {
+        return contacts.remove(contacts.indexOf(contact));
     }
-    if(obj == null || obj.getClass() != this.getClass())
-    {
-      return false;
-    }
-
-    Address other = (Address) obj;
-    return other.residence.equals(this.residence) && other.contacts.containsAll(this.contacts);
-  }
-
-  public String toString()
-  {
-    String contactList = "";
-
-    for (int i = 0; i < contacts.size(); i++)
-    {
-      contactList = contactList.concat(contacts.get(i) + "\n");
-    }
-
-    return "Address: " + residence + "\nList of Contacts:\n";
-  }
 }

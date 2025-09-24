@@ -1,57 +1,37 @@
 package application.main.model.entity;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.*;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.Accessors;
 
-public class ContactInfo
-{
-  private String type;
-//  Something to format contacts so that they are uniform could be nice?
-  private String contact;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-  public ContactInfo setType(String type)
-  {
-    this.type = type;
-    return this;
-  }
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "contact")
+@Entity
+@Table(name = "contact_info", schema = "phonebook")
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@Setter
+@Accessors(chain = true)
+public class ContactInfo implements Serializable {
+    @Id
+    @Column(name = "contact")
+    private String contact;
 
-  public ContactInfo setContact(String contact)
-  {
-    this.contact = contact;
-    return this;
-  }
+    @Column(name = "type")
+    private String type;
 
-  public String getType()
-  {
-    return type;
-  }
-
-  public String getContact()
-  {
-    return contact;
-  }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, contact);
-    }
-
-    public boolean equals(Object obj)
-  {
-    if(obj == this)
-    {
-      return true;
-    }
-    if(obj == null || obj.getClass() != this.getClass())
-    {
-      return false;
-    }
-
-    ContactInfo other = (ContactInfo) obj;
-    return other.type.equals(this.type) && other.contact.equals(this.contact);
-  }
-
-  public String toString()
-  {
-    return type + ": " + contact;
-  }
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "address_contacts", schema = "phonebook",
+            joinColumns = {
+                    @JoinColumn(name = "contact", referencedColumnName = "contact")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "address_id", referencedColumnName = "id")})
+    private List<Address> addresses = new ArrayList<>();
 }

@@ -3,41 +3,41 @@ package application.main.service;
 import application.main.model.database.dao.AddressDAO;
 import application.main.model.entity.Address;
 import application.main.service.interfaces.IAddressService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
+@Service
+@RequiredArgsConstructor
 public class AddressService implements IAddressService {
-    private final AddressDAO addressDAO = AddressDAO.getInstance();
+    private final AddressDAO addressDAO;
 
     @Override
-    public Address createAddress(int personId, Address address) {
-        return addressDAO.createAddress(address, personId);
+    public Address createAddress(Address address) {
+        return addressDAO.save(address);
     }
 
     @Override
     public Address getAddress(int id) {
-        return addressDAO.getAddress(id);
+        return addressDAO.findById(id).orElseThrow(() -> new NoSuchElementException("Address with id " + id + " does not exist."));
     }
 
     @Override
-    public List<Address> getAllAddress(Integer personId) {
-        if(personId == null)
-        {
-            return addressDAO.getAllAddresses();
-        }
-        else
-        {
-            return addressDAO.getAllAddressesForPerson(personId);
-        }
+    public List<Address> getAllAddress() {
+        return addressDAO.findAll();
     }
 
     @Override
     public Address updateAddress(Address address) {
-        return addressDAO.updateAddress(address);
+        return addressDAO.save(address);
     }
 
     @Override
-    public Address deleteAddress(int id) {
-        return addressDAO.deleteAddress(id);
+    public void deleteAddress(int id) {
+        if (addressDAO.existsById(id)) {
+            addressDAO.deleteById(id);
+        }
     }
 }

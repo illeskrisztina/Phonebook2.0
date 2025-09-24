@@ -1,15 +1,17 @@
 package application.main.service.interfaces;
 
 import application.main.model.entity.ContactInfo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface IContactService {
-    public ContactInfo addContact(ContactInfo contact, Integer addressId);
+    ContactInfo addContact(ContactInfo contact);
 
-    public ContactInfo getContact(String contact);
+    ContactInfo getContact(String contact);
 
-    public List<ContactInfo> getAllContacts(Integer addressId);
+    List<ContactInfo> getAllContacts();
 
-    public ContactInfo deleteContact(String contact, int addressId);
+    void deleteContact(String contact);
 }

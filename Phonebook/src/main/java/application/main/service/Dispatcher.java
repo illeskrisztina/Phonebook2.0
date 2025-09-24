@@ -3,115 +3,179 @@ package application.main.service;
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
-import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.dto.*;
+import application.main.model.exception.NoSuchAddressTypeException;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
 import application.main.service.interfaces.IDispatcher;
 import application.main.service.interfaces.IPersonService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
+@Service
+@RequiredArgsConstructor
 public class Dispatcher implements IDispatcher {
-    private final IPersonService personService = new PersonService();
-    private final IAddressService addressService = new AddressService();
-    private final IContactService contactService = new ContactService();
+    private final IPersonService personService;
+    private final IAddressService addressService;
+    private final IContactService contactService;
 
+    private final PersonMapper personMapper;
+    private final AddressMapper addressMapper;
+    private final ContactInfoMapper contactInfoMapper;
+
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Address createAddress(int personId, Address address) {
-        return addressService.createAddress(personId, address);
+    public AddressDTO createAddress(int personId, Address address) {
+        Address created = addressService.createAddress(address);
+
+        switch (address.getType()) {
+            case PERMANENT ->
+                personService.updatePerson(
+                        personService.getPerson(personId)
+                                .setPermanentAddress(address));
+            case TEMPORARY ->
+                    personService.updatePerson(
+                            personService.getPerson(personId)
+                                    .setTemporaryAddress(address));
+            default -> throw new NoSuchAddressTypeException(address.getType() + " does not exist.");
+        }
+
+        return addressMapper.addressToAddressDTO(created);
     }
 
     @Override
-    public Address getAddress(int id) {
-        return addressService.getAddress(id);
+    public AddressDTO getAddress(int id) {
+        return addressMapper.addressToAddressDTO(addressService.getAddress(id));
     }
 
     @Override
-    public List<Address> getAllAddress(Integer personId) {
-        return addressService.getAllAddress(personId);
+    public List<AddressDTO> getAllAddress(Integer personId) {
+        if(personId == null) {
+            return addressService.getAllAddress().stream().map(addressMapper::addressToAddressDTO).toList();
+        }
+
+        Person person = personService.getPerson(personId);
+
+        List<AddressDTO> addresses = new ArrayList<>();
+
+        if(person.getPermanentAddress() != null) {
+            addresses.add(addressMapper.addressToAddressDTO(person.getPermanentAddress()));
+        }
+
+        if(person.getTemporaryAddress() != null) {
+            addresses.add(addressMapper.addressToAddressDTO(person.getTemporaryAddress()));
+        }
+
+        return addresses;
     }
 
     @Override
-    public Address updateAddress(Address address) {
-        return addressService.updateAddress(address);
+    public AddressDTO updateAddress(Address address) {
+        return addressMapper.addressToAddressDTO(addressService.updateAddress(address));
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void deleteAddress(int id) {
+        getAllContacts(id).forEach(contact ->
+            contactService.deleteContact(contact.getContact())
+        );
+
+        personService.getAllPeople().stream()
+                .filter(person ->
+                        (person.getTemporaryAddress() != null && person.getTemporaryAddress().getId() == id)
+                                || (person.getPermanentAddress() != null && person.getPermanentAddress().getId() == id))
+                .forEach(person -> {
+                    person.setPermanentAddress(null);
+                    person.setTemporaryAddress(null);
+                    personService.updatePerson(person);
+                });
+        addressService.deleteAddress(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public ContactInfoDTO addContact(ContactInfo contact, Integer addressId) {
+        ContactInfo created = contactService.addContact(contact);
+
+        if(addressId != null) {
+            Address address = addressService.getAddress(addressId);
+            address.addContact(contact);
+
+            addressService.updateAddress(address);
+        }
+        return contactInfoMapper.contactInfoToContactInfoDTO(created);
     }
 
     @Override
-    public Address deleteAddress(int id) {
-        return addressService.deleteAddress(id);
+    public ContactInfoDTO getContact(String contact) {
+        return contactInfoMapper.contactInfoToContactInfoDTO(contactService.getContact(contact));
+    }
+
+
+
+    @Override
+    public List<ContactInfoDTO> getAllContacts(Integer addressId) {
+        if(addressId == null) {
+            return contactService.getAllContacts().stream().map(contactInfoMapper::contactInfoToContactInfoDTO).toList();
+        }
+
+        Address address = addressService.getAddress(addressId);
+
+        List<ContactInfoDTO> contacts = new ArrayList<>();
+
+        address.getContacts().forEach(contact -> {
+            if(contact != null) {
+                contacts.add(contactInfoMapper.contactInfoToContactInfoDTO(contact));
+            }
+        });
+
+        return contacts;
     }
 
     @Override
-    public ContactInfo addContact(ContactInfo contact, Integer addressId) {
-        return contactService.addContact(contact, addressId);
+    public void deleteContact(String contact) {
+        contactService.deleteContact(contact);
     }
 
     @Override
-    public ContactInfo getContact(String contact) {
-        return null;
-    }
-
-    @Override
-    public List<ContactInfo> getAllContacts(Integer addressId) {
-        return contactService.getAllContacts(addressId);
-    }
-
-    @Override
-    public ContactInfo deleteContact(String contact, int addressId) {
-        return contactService.deleteContact(contact, addressId);
-    }
-
-    @Override
-    public Person createPerson(Person person) {
-        return personService.createPerson(person);
+    public PersonDTO createPerson(Person person) {
+        return personMapper.personToPersonDTO(personService.createPerson(person));
     }
 
     @Override
     public SimplePersonDTO getPerson(int id) {
-        return personService.getPerson(id);
+        return personMapper.personToSimplePersonDTO(personService.getPerson(id));
     }
 
     @Override
     public List<SimplePersonDTO> getAllPeople() {
-        return personService.getAllPeople();
+        return personService.getAllPeople().stream().map(personMapper::personToSimplePersonDTO).toList();
     }
 
     @Override
-    public Person updatePerson(Person person) {
-        return personService.updatePerson(person);
+    public PersonDTO updatePerson(Person person) {
+        return personMapper.personToPersonDTO(personService.updatePerson(person));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Person deletePerson(int id) {
-        Person person = new Person();
-
-        addressService.getAllAddress(id).forEach(address ->
+    public void deletePerson(int id) {
+        getAllAddress(id).forEach(address ->
         {
-            addressService.deleteAddress(address.getAddressId());
 
-            address.setContacts(contactService.getAllContacts(address.getAddressId()).stream().map(contactInfo ->
-            contactService.deleteContact(contactInfo.getContact(),  address.getAddressId())
-            ).toList());
+            getAllContacts(address.getId()).forEach(contactInfo ->
+            contactService.deleteContact(contactInfo.getContact())
+            );
 
-            switch (address.getType()){
-                case "permanent":
-                    person.setPermanentAddress(address);
-                    break;
-                case "temporary":
-                    person.setTemporaryAddress(address);
-                    break;
-                default:
-                    throw new NoSuchElementException("The address type " + address.getType() + " does not exist");
-            }
+            addressService.deleteAddress(address.getId());
         });
 
-        Person deleted = personService.deletePerson(id);
-
-        person.setName(deleted.getName())
-                .setAge(deleted.getAge())
-                .setId(deleted.getId());
-
-        return person;
+        personService.deletePerson(id);
     }
 }

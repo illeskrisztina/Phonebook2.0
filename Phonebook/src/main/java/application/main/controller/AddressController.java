@@ -1,57 +1,77 @@
 package application.main.controller;
 
 import application.main.model.entity.Address;
-import application.main.service.Dispatcher;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.service.interfaces.IDispatcher;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
+@Slf4j
 public class AddressController {
-    private IDispatcher dispatcher = new Dispatcher();
+    private final IDispatcher dispatcher;
+    private static final String ERROR_HEADER = "Error";
 
     @PostMapping("/people/{personId}/addresses")
-    public ResponseEntity<Address> addAddress(@PathVariable("personId") int personId, @RequestBody Address address) {
-        Address created = dispatcher.createAddress(personId, address);
+    public ResponseEntity<AddressDTO> addAddress(@PathVariable("personId") int personId, @RequestBody Address address) {
+        AddressDTO created = dispatcher.createAddress(personId, address);
         if (created == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .header(ERROR_HEADER, "Entity could not be created.")
+                    .build();
         }
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.LOCATION, "addresses/" + created.getId())
+                .body(created);
     }
 
     @GetMapping("addresses/{addressId}")
-    public ResponseEntity<Address> getAddress(@PathVariable("addressId") int addressId) {
-        Address fetched = dispatcher.getAddress(addressId);
-        if (fetched == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<AddressDTO> getAddress(@PathVariable("addressId") int addressId) {
+        try {
+            AddressDTO fetched = dispatcher.getAddress(addressId);
+            return ResponseEntity.ok(fetched);
         }
-        return new ResponseEntity<>(fetched, HttpStatus.FOUND);
+        catch (NoSuchElementException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER,"Address cannot be found.")
+                    .build();
+        }
     }
 
     @GetMapping("/addresses")
-    public ResponseEntity<List<Address>> getAddresses(@RequestParam(name = "personId", required = false) Integer personId) {
-        return new ResponseEntity<>(dispatcher.getAllAddress(personId), HttpStatus.OK);
+    public ResponseEntity<List<AddressDTO>> getAddresses(@RequestParam(name = "personId", required = false) Integer personId) {
+        return ResponseEntity.ok(dispatcher.getAllAddress(personId));
     }
 
     @PutMapping("/addresses")
-    public ResponseEntity<Address> updateAddress(@RequestBody Address address) {
-        Address updated = dispatcher.updateAddress(address);
+    public ResponseEntity<AddressDTO> updateAddress(@RequestBody Address address) {
+        AddressDTO updated = dispatcher.updateAddress(address);
         if (updated == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header(ERROR_HEADER, "Address could not be updated.")
+                    .build();
         }
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/addresses/{addressId}")
-    public ResponseEntity<Address> deleteAddress(@PathVariable("addressId") int addressId) {
-        Address deleted = dispatcher.deleteAddress(addressId);
-        if (deleted == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(deleted, HttpStatus.OK);
+    public ResponseEntity<Void> deleteAddress(@PathVariable("addressId") int addressId) {
+        dispatcher.deleteAddress(addressId);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

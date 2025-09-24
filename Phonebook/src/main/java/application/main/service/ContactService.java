@@ -1,43 +1,39 @@
 package application.main.service;
 
 import application.main.model.database.dao.ContactInfoDAO;
-import application.main.model.database.interfaces.IContactInfoDAO;
 import application.main.model.entity.ContactInfo;
 import application.main.service.interfaces.IContactService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
+@Service
+@RequiredArgsConstructor
 public class ContactService implements IContactService {
-    private final IContactInfoDAO contactInfoDAO = ContactInfoDAO.getInstance();
+    private final ContactInfoDAO contactInfoDAO;
 
     @Override
-    public ContactInfo addContact(ContactInfo contact, Integer addressId) {
-        ContactInfo added = contactInfoDAO.createContactInfo(contact);
-
-        if(addressId != null)
-        {
-            contactInfoDAO.addContactInfoToAddress(added.getContact(), addressId);
-        }
-        return added;
+    public ContactInfo addContact(ContactInfo contact) {
+        return contactInfoDAO.save(contact);
     }
 
     @Override
     public ContactInfo getContact(String contact) {
-        return contactInfoDAO.getContactInfo(contact);
+        return contactInfoDAO.findById(contact)
+                .orElseThrow(() -> new NoSuchElementException("Contact " + contact + " does not exist."));
     }
 
     @Override
-    public List<ContactInfo> getAllContacts(Integer addressId) {
-        if (addressId == null) {
-            return contactInfoDAO.getAllContactInfo();
-        }
-        else {
-            return contactInfoDAO.getAllContactInfoForAddress(addressId);
-        }
+    public List<ContactInfo> getAllContacts() {
+        return contactInfoDAO.findAll();
     }
 
     @Override
-    public ContactInfo deleteContact(String contact, int addressId) {
-        return contactInfoDAO.deleteContactInfo(contact, addressId);
+    public void deleteContact(String contact) {
+        if(contactInfoDAO.existsById(contact)) {
+            contactInfoDAO.deleteById(contact);
+        }
     }
 }
