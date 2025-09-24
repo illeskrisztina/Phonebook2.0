@@ -1,5 +1,6 @@
 package application.main.model.entity;
 
+import application.main.model.entity.enums.AddressType;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -30,10 +31,11 @@ public class Address implements  Serializable {
     private String residence;
 
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private AddressType type;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "address_contacts", schema = "phonebook",
             joinColumns = {
             @JoinColumn(name = "address_id", referencedColumnName = "id")},

@@ -3,9 +3,7 @@ package application.main.service;
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
-import application.main.model.entity.dto.PersonMapper;
-import application.main.model.entity.dto.SimplePersonDTO;
-import application.main.model.entity.enums.AddressType;
+import application.main.model.entity.dto.*;
 import application.main.model.exception.NoSuchAddressTypeException;
 import application.main.service.interfaces.IAddressService;
 import application.main.service.interfaces.IContactService;
@@ -27,54 +25,50 @@ public class Dispatcher implements IDispatcher {
     private final IContactService contactService;
 
     private final PersonMapper personMapper;
+    private final AddressMapper addressMapper;
+    private final ContactInfoMapper contactInfoMapper;
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Address createAddress(int personId, Address address) {
+    public AddressDTO createAddress(int personId, Address address) {
         Address created = addressService.createAddress(address);
 
-        SimplePersonDTO simplePersonDTO = getPerson(personId);
-
         switch (address.getType()) {
-            case AddressType.PERMANENT ->
-                personService.updatePerson(new Person()
-                        .setId(simplePersonDTO.getId())
-                        .setName(simplePersonDTO.getName())
-                        .setAge(simplePersonDTO.getAge())
-                        .setPermanentAddress(address));
-            case AddressType.TEMPORARY ->
-                    personService.updatePerson(new Person()
-                            .setId(simplePersonDTO.getId())
-                            .setName(simplePersonDTO.getName())
-                            .setAge(simplePersonDTO.getAge())
-                            .setTemporaryAddress(address));
+            case PERMANENT ->
+                personService.updatePerson(
+                        personService.getPerson(personId)
+                                .setPermanentAddress(address));
+            case TEMPORARY ->
+                    personService.updatePerson(
+                            personService.getPerson(personId)
+                                    .setTemporaryAddress(address));
             default -> throw new NoSuchAddressTypeException(address.getType() + " does not exist.");
         }
 
-        return created;
+        return addressMapper.addressToAddressDTO(created);
     }
 
     @Override
-    public Address getAddress(int id) {
-        return addressService.getAddress(id);
+    public AddressDTO getAddress(int id) {
+        return addressMapper.addressToAddressDTO(addressService.getAddress(id));
     }
 
     @Override
-    public List<Address> getAllAddress(Integer personId) {
+    public List<AddressDTO> getAllAddress(Integer personId) {
         if(personId == null) {
-            return addressService.getAllAddress();
+            return addressService.getAllAddress().stream().map(addressMapper::addressToAddressDTO).toList();
         }
 
         Person person = personService.getPerson(personId);
 
-        List<Address> addresses = new ArrayList<>();
+        List<AddressDTO> addresses = new ArrayList<>();
 
         if(person.getPermanentAddress() != null) {
-            addresses.add(person.getPermanentAddress());
+            addresses.add(addressMapper.addressToAddressDTO(person.getPermanentAddress()));
         }
 
         if(person.getTemporaryAddress() != null) {
-            addresses.add(person.getTemporaryAddress());
+            addresses.add(addressMapper.addressToAddressDTO(person.getTemporaryAddress()));
         }
 
         return addresses;
@@ -86,7 +80,7 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public Address deleteAddress(int id) {
+    public void deleteAddress(int id) {
         getAllContacts(id).forEach(contact ->
             contactService.deleteContact(contact.getContact())
         );
@@ -104,13 +98,12 @@ public class Dispatcher implements IDispatcher {
                     }
                     personService.updatePerson(person);
                 });
-
-        return addressService.deleteAddress(id);
+        addressService.deleteAddress(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public ContactInfo addContact(ContactInfo contact, Integer addressId) {
+    public ContactInfoDTO addContact(ContactInfo contact, Integer addressId) {
         ContactInfo created = contactService.addContact(contact);
 
         if(addressId != null) {
@@ -119,35 +112,35 @@ public class Dispatcher implements IDispatcher {
 
             addressService.updateAddress(address);
         }
-        return created;
+        return contactInfoMapper.contactInfoToContactInfoDTO(created);
     }
 
     @Override
-    public ContactInfo getContact(String contact) {
-        return contactService.getContact(contact);
+    public ContactInfoDTO getContact(String contact) {
+        return contactInfoMapper.contactInfoToContactInfoDTO(contactService.getContact(contact));
     }
 
 
 
     @Override
-    public List<ContactInfo> getAllContacts(Integer addressId) {
+    public List<ContactInfoDTO> getAllContacts(Integer addressId) {
         if(addressId == null) {
-            return contactService.getAllContacts();
+            return contactService.getAllContacts().stream().map(contactInfoMapper::contactInfoToContactInfoDTO).toList();
         }
 
         Address address = addressService.getAddress(addressId);
 
-        return new ArrayList<>(address.getContacts());
+        return address.getContacts().stream().map(contact -> contactInfoMapper::contactInfoToContactInfoDTO).toList();
     }
 
     @Override
-    public ContactInfo deleteContact(String contact) {
-        return contactService.deleteContact(contact);
+    public void deleteContact(String contact) {
+        contactService.deleteContact(contact);
     }
 
     @Override
-    public Person createPerson(Person person) {
-        return personService.createPerson(person);
+    public PersonDTO createPerson(Person person) {
+        return personMapper.personToPersonDTO(personService.createPerson(person));
     }
 
     @Override
@@ -161,35 +154,23 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public Person updatePerson(Person person) {
-        return personService.updatePerson(person);
+    public PersonDTO updatePerson(Person person) {
+        return personMapper.personToPersonDTO(personService.updatePerson(person));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public Person deletePerson(int id) {
-        Person person = new Person();
-
+    public void deletePerson(int id) {
         getAllAddress(id).forEach(address ->
         {
-            switch (address.getType()){
-                case AddressType.PERMANENT ->
-                    person.setPermanentAddress(address);
-                case AddressType.TEMPORARY ->
-                    person.setTemporaryAddress(address);
-                default ->
-                    throw new NoSuchAddressTypeException("The address type " + address.getType() + " does not exist");
-            }
 
-            deleteAddress(address.getId());
+            getAllContacts(address.getId()).forEach(contactInfo ->
+            contactService.deleteContact(contactInfo.getContact())
+            );
+
+            addressService.deleteAddress(address.getId());
         });
 
-        Person deleted = personService.deletePerson(id);
-
-        person.setName(deleted.getName())
-                .setAge(deleted.getAge())
-                .setId(deleted.getId());
-
-        return person;
+        personService.deletePerson(id);
     }
 }

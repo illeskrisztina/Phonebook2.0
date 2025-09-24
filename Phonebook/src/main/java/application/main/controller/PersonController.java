@@ -1,6 +1,7 @@
 package application.main.controller;
 
 import application.main.model.entity.Person;
+import application.main.model.entity.dto.PersonDTO;
 import application.main.model.entity.dto.SimplePersonDTO;
 import application.main.service.interfaces.IDispatcher;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class PersonController {
     private static final String ERROR_HEADER = "Error";
 
     @PostMapping
-    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+    public ResponseEntity<PersonDTO> createPerson(@RequestBody Person person) {
         try {
-            Person created = dispatcher.createPerson(person);
+            PersonDTO created = dispatcher.createPerson(person);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .header(HttpHeaders.LOCATION, "/" + created.getId())
@@ -79,9 +80,9 @@ public class PersonController {
     }
 
     @PutMapping
-    public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
+    public ResponseEntity<PersonDTO> updatePerson(@RequestBody Person person) {
         try {
-            Person updated = dispatcher.updatePerson(person);
+            PersonDTO updated = dispatcher.updatePerson(person);
             return ResponseEntity.ok(updated);
         } catch (NoSuchElementException f) {
             log.error(f.getMessage());
@@ -99,10 +100,12 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Person> deletePerson(@PathVariable("id") int id) {
+    public ResponseEntity<Void> deletePerson(@PathVariable("id") int id) {
         try {
-            Person deleted = dispatcher.deletePerson(id);
-            return ResponseEntity.ok(deleted);
+            dispatcher.deletePerson(id);
+            return ResponseEntity
+                    .noContent()
+                    .build();
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity

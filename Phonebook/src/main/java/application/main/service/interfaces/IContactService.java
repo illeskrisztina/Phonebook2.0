@@ -7,11 +7,11 @@ import java.util.List;
 
 @Service
 public interface IContactService {
-    public ContactInfo addContact(ContactInfo contact);
+    ContactInfo addContact(ContactInfo contact);
 
-    public ContactInfo getContact(String contact);
+    ContactInfo getContact(String contact);
 
-    public List<ContactInfo> getAllContacts();
+    List<ContactInfo> getAllContacts();
 
-    public ContactInfo deleteContact(String contact);
+    void deleteContact(String contact);
 }

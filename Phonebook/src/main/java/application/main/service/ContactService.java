@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,8 @@ public class ContactService implements IContactService {
 
     @Override
     public ContactInfo getContact(String contact) {
-        return contactInfoDAO.findById(contact).orElse(null);
+        return contactInfoDAO.findById(contact)
+                .orElseThrow(() -> new NoSuchElementException("Contact " + contact + " does not exist."));
     }
 
     @Override
@@ -29,13 +31,9 @@ public class ContactService implements IContactService {
     }
 
     @Override
-    public ContactInfo deleteContact(String contact) {
-        ContactInfo deleted =  getContact(contact);
-        if(deleted != null) {
+    public void deleteContact(String contact) {
+        if(contactInfoDAO.existsById(contact)) {
             contactInfoDAO.deleteById(contact);
-            return deleted;
         }
-
-        return null;
     }
 }

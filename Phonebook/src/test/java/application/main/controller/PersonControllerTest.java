@@ -1,6 +1,7 @@
 package application.main.controller;
 
-import application.main.model.entity.Person;
+import application.main.model.entity.Address;
+import application.main.model.entity.dto.PersonDTO;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
 import org.junit.jupiter.api.Assertions;
@@ -17,12 +18,11 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class PersonControllerTest {
 
-    private Person personTest;
+    private PersonDTO personTest;
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
@@ -30,21 +30,21 @@ class PersonControllerTest {
 
     @BeforeEach
     void setUp() {
-        personTest = new Person()
+        personTest = new PersonDTO()
                 .setAge(25)
                 .setName("Melanie");
     }
 
     @Test
     void adding_person_returns_created_status_code() {
-        ResponseEntity<Person> response = restTemplate.postForEntity("/api/people",  personTest, Person.class);
+        ResponseEntity<PersonDTO> response = restTemplate.postForEntity("/api/people",  personTest, PersonDTO.class);
 
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
     void adding_person_to_database_actually_adds_entity(){
-        ResponseEntity<Person> added = restTemplate.postForEntity("/api/people", personTest, Person.class);
+        ResponseEntity<PersonDTO> added = restTemplate.postForEntity("/api/people", personTest, PersonDTO.class);
 
         ResponseEntity<SimplePersonDTO> response = restTemplate.getForEntity("/api/people/" + added.getBody().getId(), SimplePersonDTO.class);
 
@@ -92,7 +92,7 @@ class PersonControllerTest {
     void updating_test_person_updates_entity() {
         ResponseEntity<SimplePersonDTO> response = restTemplate.getForEntity("/api/people/1",  SimplePersonDTO.class);
 
-        restTemplate.exchange("/api/people", HttpMethod.PUT, new HttpEntity<>(mapper.simplePersonDTOToPerson(response.getBody().setName("Margaret").setAge(12))) , Person.class);
+        restTemplate.exchange("/api/people", HttpMethod.PUT, new HttpEntity<>(mapper.simplePersonDTOToPerson(response.getBody().setName("Margaret").setAge(12))) , PersonDTO.class);
 
         ResponseEntity<SimplePersonDTO> updated = restTemplate.getForEntity("/api/people/1", SimplePersonDTO.class);
 
@@ -105,7 +105,7 @@ class PersonControllerTest {
     void deleting_person_removes_them_from_database() {
         restTemplate.exchange("/api/people/1", HttpMethod.DELETE, null, Void.class);
 
-        ResponseEntity<Person> deleted = restTemplate.getForEntity("/api/people/1", Person.class);
+        ResponseEntity<PersonDTO> deleted = restTemplate.getForEntity("/api/people/1", PersonDTO.class);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, deleted.getStatusCode());
     }
 }

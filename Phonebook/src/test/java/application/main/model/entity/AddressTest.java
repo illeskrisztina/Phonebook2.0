@@ -1,5 +1,7 @@
 package application.main.model.entity;
 
+import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.enums.AddressType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 class AddressTest {
-    private Address addressTest;
+    private AddressDTO addressTest;
 
     @BeforeEach
      void setUp() {
-        addressTest = new Address()
+        addressTest = new AddressDTO()
                 .setResidence("Hungary, Budapest, XIX. district")
                 .setType(AddressType.TEMPORARY);
     }
@@ -152,7 +154,7 @@ class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address().setResidence("Hungary, Budapest, XIX. district").setType(AddressType.TEMPORARY);
+        AddressDTO other = new AddressDTO().setResidence("Hungary, Budapest, XIX. district").setType(AddressType.TEMPORARY);
 
         other.addContact(new ContactInfo()
                 .setType("hi")
@@ -183,13 +185,13 @@ class AddressTest {
         addressTest.addContact(contact2);
         addressTest.addContact(contact3);
 
-        Address other = new Address()
+        AddressDTO other = new AddressDTO()
                 .setResidence("some address");
 
         other.addContact(new ContactInfo()
                 .setType("hi")
                 .setContact("hello"));
 
-        Assertions.assertEquals(false, other.equals(addressTest));
+        Assertions.assertNotEquals(true, other.equals(addressTest));
     }
 }

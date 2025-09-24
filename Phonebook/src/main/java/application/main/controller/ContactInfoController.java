@@ -1,6 +1,7 @@
 package application.main.controller;
 
 import application.main.model.entity.ContactInfo;
+import application.main.model.entity.dto.ContactInfoDTO;
 import application.main.service.interfaces.IDispatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -19,9 +21,9 @@ public class ContactInfoController {
     private final IDispatcher dispatcher;
     private static final String ERROR_HEADER = "Error";
 
-    @PostMapping("/address/{addressId}/contact")
-    public ResponseEntity<ContactInfo> addContactInfo(@PathVariable(name = "addressId", required = false) Integer addressId, @RequestBody ContactInfo contactInfo) {
-        ContactInfo created = dispatcher.addContact(contactInfo, addressId);
+    @PostMapping("/addresses/{addressId}/contacts")
+    public ResponseEntity<ContactInfoDTO> addContactInfo(@PathVariable(name = "addressId", required = false) Integer addressId, @RequestBody ContactInfo contactInfo) {
+        ContactInfoDTO created = dispatcher.addContact(contactInfo, addressId);
         if(created == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -34,32 +36,30 @@ public class ContactInfoController {
                 .body(created);
     }
 
-    @GetMapping("/contact/{contactId}")
-    public ResponseEntity<ContactInfo> getContactInfo(@PathVariable(name = "contactId") String contactId) {
-        ContactInfo fetched = dispatcher.getContact(contactId);
-        if(fetched == null) {
+    @GetMapping("/contacts/{contactId}")
+    public ResponseEntity<ContactInfoDTO> getContactInfo(@PathVariable(name = "contactId") String contactId) {
+        try {
+            ContactInfoDTO fetched = dispatcher.getContact(contactId);
+            return ResponseEntity.ok(fetched);
+        }
+        catch (NoSuchElementException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .header(ERROR_HEADER, "Contact information could not be retrieved.")
                     .build();
         }
-        return ResponseEntity.ok(fetched);
     }
 
-    @GetMapping("/contact")
-    public ResponseEntity<List<ContactInfo>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
+    @GetMapping("/contacts")
+    public ResponseEntity<List<ContactInfoDTO>> getAllContactInfo(@RequestParam(name = "addressId", required = false) Integer addressId) {
         return ResponseEntity.ok(dispatcher.getAllContacts(addressId));
     }
 
-    @DeleteMapping("/contact/{contactId}")
-    public ResponseEntity<ContactInfo> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
-        ContactInfo deleted = dispatcher.deleteContact(contactId);
-        if(deleted == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .header(ERROR_HEADER, "Contact information could not be deleted.")
-                    .build();
-        }
-        return ResponseEntity.ok(deleted);
+    @DeleteMapping("/contacts/{contactId}")
+    public ResponseEntity<Void> deleteContactInfo(@PathVariable(name = "contactId") String contactId) {
+        dispatcher.deleteContact(contactId);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

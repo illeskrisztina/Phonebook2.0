@@ -3,10 +3,10 @@ insert into phonebook.people(name, age) values ('Mary Hopkins', 67);
 insert into phonebook.people(name, age) values ('David Jones', 16);
 
 
-insert into phonebook.address(address, person_id, type) values ('Hungary, Budapest, 1194, Some street 13.', 1, 'permanent');
-insert into phonebook.address(address, person_id, type) values ('Jozefa Kozaceka 2068/29, 960 01 Zvolen, Slovakia', 2, 'permanent');
-insert into phonebook.address(address, person_id, type) values ('Hungary, Balatonboglar, Rozsa u. 37, 8630', 2, 'temporary');
-insert into phonebook.address(address, person_id, type) values ('Aby Baekgardsvej 14, 8230 Aarhus, Denmark', 3, 'permanent');
+insert into phonebook.address(address, person_id, type) values ('Hungary, Budapest, 1194, Some street 13.', 1, 'PERMANENT');
+insert into phonebook.address(address, person_id, type) values ('Jozefa Kozaceka 2068/29, 960 01 Zvolen, Slovakia', 2, 'PERMANENT');
+insert into phonebook.address(address, person_id, type) values ('Hungary, Balatonboglar, Rozsa u. 37, 8630', 2, 'TEMPORARY');
+insert into phonebook.address(address, person_id, type) values ('Aby Baekgardsvej 14, 8230 Aarhus, Denmark', 3, 'PERMANENT');
 
 
 insert into phonebook.contact_info(type, contact) values ('mobile phone', '+36 20 234 5678')
