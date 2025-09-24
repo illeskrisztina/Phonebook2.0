@@ -62,22 +62,20 @@ class ContactInfoServiceTest {
 
     @Test
     void deleting_contact_calls_appropriate_repository_method() {
-        when(repo.findById(contactInfoTest.getContact())).thenReturn(Optional.of(contactInfoTest));
+        when(repo.existsById(contactInfoTest.getContact())).thenReturn(true);
 
-        ContactInfo deleted = service.deleteContact(contactInfoTest.getContact());
+        service.deleteContact(contactInfoTest.getContact());
 
-        verify(repo, times(1)).findById(contactInfoTest.getContact());
+        verify(repo, times(1)).existsById(contactInfoTest.getContact());
         verify(repo, times(1)).deleteById(contactInfoTest.getContact());
-        Assertions.assertEquals(contactInfoTest, deleted);
     }
 
     @Test
     void deleting_non_existent_entity_from_database_returns_null() {
-        when(repo.findById(contactInfoTest.getContact())).thenReturn(Optional.empty());
+        lenient().when(repo.existsById(contactInfoTest.getContact())).thenReturn(false);
 
-        ContactInfo deleted = service.deleteContact(contactInfoTest.getContact());
+        service.deleteContact(contactInfoTest.getContact());
 
         verify(repo, times(0)).deleteById(contactInfoTest.getContact());
-        Assertions.assertNull(deleted);
     }
 }
