@@ -1,15 +1,16 @@
 package application.main.controller;
 
 import application.main.model.entity.Person;
+import application.main.model.entity.dto.PersonDTO;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
-import application.main.model.exception.DatabaseConnectionException;
 import application.main.service.Dispatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ class PersonControllerUnitTest {
     void when_creating_person_if_error_is_thrown_conflict_status_code_returned() {
         lenient().when(dispatcher.createPerson(any(Person.class))).thenThrow(NoSuchElementException.class);
 
-        ResponseEntity<Person> response = controller.createPerson(new Person());
+        ResponseEntity<PersonDTO> response = controller.createPerson(new Person());
 
         verify(dispatcher,  times(1)).createPerson(any(Person.class));
         Assertions.assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
@@ -54,7 +55,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_exception_is_thrown_for_getPerson_returns_bad_request_status_code() {
-        lenient().when(dispatcher.getPerson(1)).thenThrow(new DatabaseConnectionException("Test"));
+        lenient().when(dispatcher.getPerson(1)).thenThrow(new RuntimeException("Test"));
 
         ResponseEntity<SimplePersonDTO> response = controller.getPerson(1);
 
@@ -64,7 +65,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_exception_is_thrown_for_getAllPeople_returns_not_found_status_code() {
-        lenient().when(dispatcher.getAllPeople()).thenThrow(new DatabaseConnectionException("Test"));
+        lenient().when(dispatcher.getAllPeople()).thenThrow(new NoSuchElementException("Test"));
 
         ResponseEntity<List<SimplePersonDTO>> response = controller.getAllPeople();
 
@@ -76,7 +77,7 @@ class PersonControllerUnitTest {
     void when_updating_person_when_no_element_is_found_exception_is_thrown() {
         lenient().when(dispatcher.updatePerson(any(Person.class))).thenThrow(NoSuchElementException.class);
 
-        ResponseEntity<Person> response = controller.updatePerson(new Person());
+        ResponseEntity<PersonDTO> response = controller.updatePerson(new Person());
 
         verify(dispatcher,  times(1)).updatePerson(any(Person.class));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -84,9 +85,9 @@ class PersonControllerUnitTest {
 
     @Test
     void when_generic_exception_is_thrown_during_updating_person_not_found_status_code_is_returned() {
-        lenient().when(dispatcher.updatePerson(any(Person.class))).thenThrow(DatabaseConnectionException.class);
+        lenient().when(dispatcher.updatePerson(any(Person.class))).thenThrow(RuntimeException.class);
 
-        ResponseEntity<Person> response = controller.updatePerson(new Person());
+        ResponseEntity<PersonDTO> response = controller.updatePerson(new Person());
 
         verify(dispatcher,  times(1)).updatePerson(any(Person.class));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -94,9 +95,9 @@ class PersonControllerUnitTest {
 
     @Test
     void when_generic_exception_is_thrown_during_delete_person_not_found_status_code_is_returned() {
-        lenient().when(dispatcher.deletePerson(1)).thenThrow(NoSuchElementException.class);
+        Mockito.doThrow(NoSuchElementException.class).when(dispatcher).deletePerson(any(Integer.class));
 
-        ResponseEntity<Person> response = controller.deletePerson(1);
+        ResponseEntity<Void> response = controller.deletePerson(1);
 
         verify(dispatcher,  times(1)).deletePerson(1);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());

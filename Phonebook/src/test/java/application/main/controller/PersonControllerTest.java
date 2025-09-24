@@ -1,6 +1,5 @@
 package application.main.controller;
 
-import application.main.model.entity.Address;
 import application.main.model.entity.dto.PersonDTO;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
