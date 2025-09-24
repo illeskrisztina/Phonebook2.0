@@ -10,7 +10,7 @@ create table phonebook.address(
     id int identity(1, 1) primary key,
     address varchar(200) NOT NULL,
     person_id int NOT NULL,
-    type varchar(50) check (type = 'permanent' OR type = 'temporary') NOT NULL,
+    type varchar(50) check (type = 'PERMANENT' OR type = 'TEMPORARY') NOT NULL,
     FOREIGN KEY (person_id) references phonebook.person(id)
 );
 
