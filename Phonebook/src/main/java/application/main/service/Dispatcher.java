@@ -75,8 +75,8 @@ public class Dispatcher implements IDispatcher {
     }
 
     @Override
-    public Address updateAddress(Address address) {
-        return addressService.updateAddress(address);
+    public AddressDTO updateAddress(Address address) {
+        return addressMapper.addressToAddressDTO(addressService.updateAddress(address));
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Dispatcher implements IDispatcher {
 
         Address address = addressService.getAddress(addressId);
 
-        return address.getContacts().stream().map(contact -> contactInfoMapper::contactInfoToContactInfoDTO).toList();
+        return address.getContacts().stream().map(contactInfoMapper::contactInfoToContactInfoDTO).toList();
     }
 
     @Override

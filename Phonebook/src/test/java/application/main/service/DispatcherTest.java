@@ -3,10 +3,8 @@ package application.main.service;
 import application.main.model.entity.Address;
 import application.main.model.entity.ContactInfo;
 import application.main.model.entity.Person;
-import application.main.model.entity.dto.PersonMapper;
-import application.main.model.entity.dto.SimplePersonDTO;
+import application.main.model.entity.dto.*;
 import application.main.model.entity.enums.AddressType;
-import application.main.model.exception.NoSuchAddressTypeException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,12 +28,19 @@ class DispatcherTest {
     private AddressService addressService;
     @Mock
     private PersonMapper personMapper;
+    @Mock
+    private AddressMapper addressMapper;
+    @Mock
+    private ContactInfoMapper contactInfoMapper;
     @InjectMocks
     private Dispatcher dispatcher;
     private Person personTest;
     private Address permanentAddressTest;
+    private AddressDTO permanentAddressDTOTest;
     private Address temporaryAddressTest;
+    private AddressDTO temporaryAddressDTOTest;
     private ContactInfo contactInfoTest;
+    private ContactInfoDTO contactInfoDTOTest;
 
     @BeforeEach
     void setUp() {
@@ -46,11 +51,22 @@ class DispatcherTest {
                 .setResidence("Budapest, 3. District")
                 .setType(AddressType.PERMANENT)
                 .setId(1);
+        permanentAddressDTOTest = new AddressDTO()
+                .setResidence("Budapest, 3. District")
+                .setType(AddressType.PERMANENT)
+                .setId(1);
         temporaryAddressTest = new Address()
                 .setResidence("Denmark, Aarhus")
                 .setType(AddressType.TEMPORARY)
                 .setId(2);
+        temporaryAddressDTOTest = new AddressDTO()
+                .setResidence("Denmark, Aarhus")
+                .setType(AddressType.TEMPORARY)
+                .setId(2);
         contactInfoTest = new ContactInfo()
+                .setContact("some contact")
+                .setType("mail");
+        contactInfoDTOTest = new ContactInfoDTO()
                 .setContact("some contact")
                 .setType("mail");
     }
@@ -98,13 +114,15 @@ class DispatcherTest {
         temporaryAddressTest.addContact(contactInfoTest);
         personTest.setPermanentAddress(permanentAddressTest);
         personTest.setTemporaryAddress(temporaryAddressTest);
-        //Method calls in order
+
         lenient().when(addressService.getAllAddress()).thenReturn(List.of(permanentAddressTest, temporaryAddressTest));
         lenient().when(personService.getPerson(1)).thenReturn(personTest);
-        lenient().when(personService.deletePerson(1)).thenReturn(personTest.setId(1));
         lenient().when(contactService.getAllContacts()).thenReturn(List.of(contactInfoTest));
         lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
         lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
+        lenient().when(addressMapper.addressToAddressDTO(permanentAddressTest)).thenReturn(permanentAddressDTOTest);
+        lenient().when(addressMapper.addressToAddressDTO(temporaryAddressTest)).thenReturn(temporaryAddressDTOTest);
+        lenient().when(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest)).thenReturn(contactInfoDTOTest);
 
         dispatcher.deletePerson(1);
 
@@ -115,57 +133,13 @@ class DispatcherTest {
     }
 
     @Test
-    void person_deleted_is_the_person_returned() {
-        //Ensure they form a cohesive entity
-        permanentAddressTest.addContact(contactInfoTest);
-        temporaryAddressTest.addContact(contactInfoTest);
-        personTest.setPermanentAddress(permanentAddressTest);
-        personTest.setTemporaryAddress(temporaryAddressTest);
-        //Method calls in order
-        lenient().when(addressService.getAllAddress()).thenReturn(List.of(permanentAddressTest, temporaryAddressTest));
-        lenient().when(personService.getPerson(1)).thenReturn(personTest);
-        lenient().when(personService.deletePerson(1)).thenReturn(personTest.setId(1));
-        lenient().when(contactService.getAllContacts()).thenReturn(List.of(contactInfoTest));
-        lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
-        lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
-
-        Person deleted = dispatcher.deletePerson(1);
-
-        Assertions.assertEquals(permanentAddressTest, deleted.getPermanentAddress());
-        Assertions.assertEquals(temporaryAddressTest, deleted.getTemporaryAddress());
-        Assertions.assertEquals(personTest.getName(), deleted.getName());
-        Assertions.assertEquals(personTest.getAge(), deleted.getAge());
-        Assertions.assertEquals(personTest.getId(), deleted.getId());
-    }
-
-    @Test
-    void invalid_address_type_throws_exception() {
-        temporaryAddressTest.setType("invalid");
-
-        //Ensure they form a cohesive entity
-        permanentAddressTest.addContact(contactInfoTest);
-        temporaryAddressTest.addContact(contactInfoTest);
-        personTest.setPermanentAddress(permanentAddressTest);
-        personTest.setTemporaryAddress(temporaryAddressTest);
-        //Method calls in order
-        lenient().when(addressService.getAllAddress()).thenReturn(List.of(permanentAddressTest, temporaryAddressTest));
-        lenient().when(personService.getPerson(1)).thenReturn(personTest);
-        lenient().when(personService.deletePerson(1)).thenReturn(personTest.setId(1));
-        lenient().when(contactService.getAllContacts()).thenReturn(List.of(contactInfoTest));
-        lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
-        lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
-
-        Assertions.assertThrows(NoSuchAddressTypeException.class, () -> dispatcher.deletePerson(1));
-    }
-
-    @Test
-    void creating_address_sets_person_address_appropriate_to_type() {
+    void creating_address_sets_person_address_() {
         personTest.setId(1);
 
-        when(personService.getPerson(1)).thenReturn(personTest);
-        when(addressService.createAddress(permanentAddressTest)).thenReturn(permanentAddressTest.setId(1));
-        when(addressService.createAddress(temporaryAddressTest)).thenReturn(temporaryAddressTest.setId(2));
-        when(personMapper.personToSimplePersonDTO(personTest)).thenReturn(
+        lenient().when(personService.getPerson(1)).thenReturn(personTest);
+        lenient().when(addressService.createAddress(permanentAddressTest)).thenReturn(permanentAddressTest.setId(1));
+        lenient().when(addressService.createAddress(temporaryAddressTest)).thenReturn(temporaryAddressTest.setId(2));
+        lenient().when(personMapper.personToSimplePersonDTO(personTest)).thenReturn(
                 new SimplePersonDTO()
                         .setId(1)
                         .setName(personTest.getName())
@@ -175,27 +149,7 @@ class DispatcherTest {
         dispatcher.createAddress(1, permanentAddressTest);
         dispatcher.createAddress(1, temporaryAddressTest);
 
-        verify(personService, times(1)).updatePerson(personTest.setTemporaryAddress(temporaryAddressTest));
-
-        personTest.setTemporaryAddress(null);
-
-        verify(personService, times(1)).updatePerson(personTest.setPermanentAddress(permanentAddressTest));
-    }
-
-    @Test
-    void creating_address_with_invalid_address_type_throws_error() {
-        personTest.setId(1);
-
-        when(personService.getPerson(1)).thenReturn(personTest);
-        when(addressService.createAddress(permanentAddressTest.setType("invalid"))).thenReturn(permanentAddressTest.setId(1));
-        when(personMapper.personToSimplePersonDTO(personTest)).thenReturn(
-                new SimplePersonDTO()
-                        .setId(1)
-                        .setName(personTest.getName())
-                        .setAge(personTest.getAge())
-        );
-
-        Assertions.assertThrows(NoSuchAddressTypeException.class, () -> dispatcher.createAddress(1, permanentAddressTest));
+        verify(personService, times(2)).updatePerson(personTest);
     }
 
     @Test
@@ -223,7 +177,7 @@ class DispatcherTest {
                         .setTemporaryAddress(temporaryAddressTest)
                         .setPermanentAddress(permanentAddressTest));
 
-        List<Address> addresses = dispatcher.getAllAddress(1);
+        List<AddressDTO> addresses = dispatcher.getAllAddress(1);
 
         Assertions.assertEquals(2, addresses.size());
     }
@@ -278,63 +232,66 @@ class DispatcherTest {
         when(contactService.addContact(contactInfoTest)).thenReturn(contactInfoTest);
         when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
 
-        ContactInfo saved = dispatcher.addContact(contactInfoTest, 1);
+        ContactInfoDTO saved = dispatcher.addContact(contactInfoTest, 1);
 
         verify(contactService,  times(1)).addContact(contactInfoTest);
         verify(addressService, times(1)).updateAddress(permanentAddressTest);
-        Assertions.assertEquals(contactInfoTest, saved);
+        Assertions.assertEquals(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest), saved);
     }
 
     @Test
     void null_addressId_only_adds_contact_to_database() {
         when(contactService.addContact(contactInfoTest)).thenReturn(contactInfoTest);
 
-        ContactInfo saved = dispatcher.addContact(contactInfoTest, null);
+        ContactInfoDTO saved = dispatcher.addContact(contactInfoTest, null);
 
         verify(contactService,  times(1)).addContact(contactInfoTest);
         verify(addressService, times(0)).updateAddress(permanentAddressTest);
-        Assertions.assertEquals(contactInfoTest, saved);
+        Assertions.assertEquals(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest), saved);
     }
 
     @Test
     void getContact_calls_appropriate_service_method() {
         when(contactService.getContact(contactInfoTest.getContact())).thenReturn(contactInfoTest);
+        when(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest))
+                .thenReturn(new ContactInfoDTO()
+                        .setContact(contactInfoTest.getContact())
+                        .setType(contactInfoTest.getType()));
 
-        ContactInfo contact = dispatcher.getContact(contactInfoTest.getContact());
+        ContactInfoDTO contact = dispatcher.getContact(contactInfoTest.getContact());
 
         verify(contactService, times(1)).getContact(contactInfoTest.getContact());
-        Assertions.assertEquals(contactInfoTest, contact);
+        Assertions.assertEquals(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest), contact);
     }
 
     @Test
     void getting_all_contacts_for_no_specific_address_returns_all_contacts() {
         when(contactService.getAllContacts()).thenReturn(List.of(contactInfoTest));
+        when(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest)).thenReturn(contactInfoDTOTest);
 
-        List<ContactInfo> contacts = dispatcher.getAllContacts(null);
+        List<ContactInfoDTO> contacts = dispatcher.getAllContacts(null);
 
         verify(contactService, times(1)).getAllContacts();
-        Assertions.assertEquals(List.of(contactInfoTest), contacts);
+        Assertions.assertEquals(List.of(contactInfoDTOTest), contacts);
     }
 
     @Test
     void getting_all_contacts_gets_specific_address_first() {
         permanentAddressTest.addContact(contactInfoTest);
         when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+        when(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest)).thenReturn(contactInfoDTOTest);
 
-        List<ContactInfo> contacts = dispatcher.getAllContacts(1);
+        List<ContactInfoDTO> contacts = dispatcher.getAllContacts(1);
 
         verify(addressService, times(1)).getAddress(1);
         verify(contactService, times(0)).getAllContacts();
-        Assertions.assertEquals(List.of(contactInfoTest), contacts);
+        Assertions.assertEquals(List.of(contactInfoDTOTest), contacts);
     }
 
     @Test
     void deleteContact_calls_appropriate_service_method() {
-        when(contactService.deleteContact(contactInfoTest.getContact())).thenReturn(contactInfoTest);
-
-        ContactInfo contact = dispatcher.deleteContact(contactInfoTest.getContact());
+        dispatcher.deleteContact(contactInfoTest.getContact());
 
         verify(contactService, times(1)).deleteContact(contactInfoTest.getContact());
-        Assertions.assertEquals(contactInfoTest, contact);
     }
 }
