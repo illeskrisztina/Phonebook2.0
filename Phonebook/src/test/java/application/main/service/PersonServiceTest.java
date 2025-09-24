@@ -82,21 +82,21 @@ class PersonServiceTest {
 
     @Test
     void deletePerson_if_person_exists_calls_repository_method() {
-        when(repo.findById(1)).thenReturn(Optional.of(personTest));
+        when(repo.existsById(1)).thenReturn(true);
 
         service.deletePerson(1);
 
-        verify(repo, times(1)).findById(1);
+        verify(repo, times(1)).existsById(1);
         verify(repo, times(1)).deleteById(1);
     }
 
     @Test
     void deletePerson_calls_none_if_person_does_not_exist() {
-        when(repo.findById(1)).thenReturn(Optional.empty());
+        when(repo.existsById(1)).thenReturn(false);
 
         service.deletePerson(1);
 
-        verify(repo, times(1)).findById(1);
+        verify(repo, times(1)).existsById(1);
         verify(repo, times(0)).deleteById(1);
     }
 }
