@@ -1,0 +1,27 @@
+version: "1.0.0"
+services:
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    restart: "always"
+    container_name: "phonebook-db"
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      # Temporary. Password should probably not be hardcoded here.
+      SA_PASSWORD: "Something4N0w"
+  server:
+    image: "application/phonebook:2.0.6"
+    build:
+      context: ./
+    container_name: "phonebook-server"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:sqlserver://db:1433;databaseName=master;encrypt=true;trustServerCertificate=true;"
+      SPRING_DATASOURCE_USERNAME: "sa"
+      SPRING_DATASOURCE_PASSWORD: "Something4N0w"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: dbo
