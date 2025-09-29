@@ -2,6 +2,11 @@ version: "1.0.0"
 services:
   db:
     image: "mcr.microsoft.com/mssql/server"
+    healthcheck:
+      test: ["CMD", "opt/mssql-tools18/bin/sqlcmd", "-U", "sa", "-P", "Something4N0w", "-C", "-Q", "\"SELECT 1\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     restart: "always"
     container_name: "phonebook-db"
     ports:
@@ -20,7 +25,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://db:1433;databaseName=master;encrypt=true;trustServerCertificate=true;"
       SPRING_DATASOURCE_USERNAME: "sa"
