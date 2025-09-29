@@ -46,7 +46,7 @@ public class PersonController {
             if (person == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .header("Person with id " + id + " not found.")
+                        .header(ERROR_HEADER,"Person with id " + id + " not found.")
                         .build();
             }
             return ResponseEntity.ok(person);
@@ -54,7 +54,7 @@ public class PersonController {
             log.error(f.getMessage());
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .header(ERROR_HEADER, "Could not find the right person to update.")
+                    .header(ERROR_HEADER, "Could not find the right person.")
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());

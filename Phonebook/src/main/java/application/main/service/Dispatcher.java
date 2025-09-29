@@ -79,7 +79,6 @@ public class Dispatcher implements IDispatcher {
         return addressMapper.addressToAddressDTO(addressService.updateAddress(address));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteAddress(int id) {
         getAllContacts(id).forEach(contact ->
@@ -91,8 +90,12 @@ public class Dispatcher implements IDispatcher {
                         (person.getTemporaryAddress() != null && person.getTemporaryAddress().getId() == id)
                                 || (person.getPermanentAddress() != null && person.getPermanentAddress().getId() == id))
                 .forEach(person -> {
-                    person.setPermanentAddress(null);
-                    person.setTemporaryAddress(null);
+                    if(person.getPermanentAddress() != null && person.getPermanentAddress().getId() == id) {
+                        person.setPermanentAddress(null);
+                    }
+                    if(person.getTemporaryAddress() != null && person.getTemporaryAddress().getId() == id) {
+                        person.setTemporaryAddress(null);
+                    }
                     personService.updatePerson(person);
                 });
         addressService.deleteAddress(id);
@@ -127,15 +130,7 @@ public class Dispatcher implements IDispatcher {
 
         Address address = addressService.getAddress(addressId);
 
-        List<ContactInfoDTO> contacts = new ArrayList<>();
-
-        address.getContacts().forEach(contact -> {
-            if(contact != null) {
-                contacts.add(contactInfoMapper.contactInfoToContactInfoDTO(contact));
-            }
-        });
-
-        return contacts;
+        return address.getContacts().stream().map(contactInfoMapper::contactInfoToContactInfoDTO).toList();
     }
 
     @Override
