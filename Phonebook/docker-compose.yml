@@ -6,6 +6,8 @@ services:
     container_name: "phonebook-db"
     ports:
       - "1433:1433"
+    volumes:
+        - db:/phonebook_data
     environment:
       ACCEPT_EULA: "Y"
       # Temporary. Password should probably not be hardcoded here.
@@ -23,5 +25,8 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://db:1433;databaseName=master;encrypt=true;trustServerCertificate=true;"
       SPRING_DATASOURCE_USERNAME: "sa"
       SPRING_DATASOURCE_PASSWORD: "Something4N0w"
-      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "none"
       SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: dbo
+volumes:
+  db:
+    driver: local
