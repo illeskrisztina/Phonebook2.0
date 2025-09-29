@@ -1,10 +1,8 @@
-package application.main;
+package application.main.controller;
 
-import application.main.model.entity.Address;
 import application.main.model.entity.dto.PersonDTO;
 import application.main.model.entity.dto.PersonMapper;
 import application.main.model.entity.dto.SimplePersonDTO;
-import application.main.model.entity.enums.AddressType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,9 +19,9 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class PersonTest {
+class PersonControllerTest {
+
     private PersonDTO personTest;
-    private Address temporaryAddress;
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
@@ -34,39 +32,6 @@ class PersonTest {
         personTest = new PersonDTO()
                 .setAge(25)
                 .setName("Melanie");
-        temporaryAddress = new Address()
-                .setType(AddressType.TEMPORARY)
-                .setResidence("other address");
-    }
-
-    @Test
-    void name_can_be_set() {
-        personTest.setName("David");
-
-        Assertions.assertEquals("David", personTest.getName());
-    }
-
-    @Test
-    void age_can_be_set() {
-        personTest.setAge(55);
-
-        Assertions.assertEquals(55, personTest.getAge());
-    }
-
-    @Test
-    void id_can_be_set() {
-        personTest.setId(4);
-
-        Assertions.assertEquals(4, personTest.getId());
-    }
-
-    @Test
-    void temporary_address_can_be_set() {
-        personTest.setTemporaryAddress(new Address()
-                .setType(AddressType.TEMPORARY)
-                .setResidence("other address"));
-
-        Assertions.assertEquals(temporaryAddress, personTest.getTemporaryAddress());
     }
 
     @Test

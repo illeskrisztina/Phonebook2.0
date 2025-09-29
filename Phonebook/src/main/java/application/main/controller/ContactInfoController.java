@@ -22,7 +22,7 @@ public class ContactInfoController {
     private static final String ERROR_HEADER = "Error";
 
     @PostMapping("/addresses/{addressId}/contacts")
-    public ResponseEntity<ContactInfoDTO> addContactInfo(@PathVariable(name = "addressId") int addressId, @RequestBody ContactInfo contactInfo) {
+    public ResponseEntity<ContactInfoDTO> addContactInfo(@PathVariable(name = "addressId", required = false) Integer addressId, @RequestBody ContactInfo contactInfo) {
         ContactInfoDTO created = dispatcher.addContact(contactInfo, addressId);
         if(created == null) {
             return ResponseEntity

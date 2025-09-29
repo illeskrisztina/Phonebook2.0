@@ -1,4 +1,4 @@
-package application.main;
+package application.main.controller;
 
 import application.main.model.entity.dto.AddressDTO;
 import application.main.model.entity.dto.ContactInfoDTO;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ContactInfoTest {
+class ContactInfoControllerTest {
     ContactInfoDTO contactTest;
     @Autowired
     private TestRestTemplate restTemplate;
@@ -31,53 +31,6 @@ class ContactInfoTest {
         contactTest = new ContactInfoDTO()
                 .setType("mobile phone")
                 .setContact("+36 1 234 5678");
-    }
-
-    @Test
-    void created_object_not_null() {
-        Assertions.assertNotNull(contactTest);
-    }
-
-    @Test
-    void created_object_has_correct_contact_type() {
-        Assertions.assertEquals("mobile phone", contactTest.getType());
-    }
-
-    @Test
-    void created_object_has_correct_contact() {
-        Assertions.assertEquals("+36 1 234 5678", contactTest.getContact());
-    }
-
-    @Test
-    void created_object_type_can_be_set() {
-        contactTest.setType("email");
-
-        Assertions.assertEquals("email", contactTest.getType());
-    }
-
-    @Test
-    void created_object_contact_can_be_set() {
-        contactTest.setContact("hi@gmail.com");
-
-        Assertions.assertEquals("hi@gmail.com", contactTest.getContact());
-    }
-
-    @Test
-    void different_objects_same_attributes_are_equal() {
-        ContactInfoDTO other = new ContactInfoDTO()
-                .setType("mobile phone")
-                .setContact("+36 1 234 5678");
-
-        Assertions.assertEquals(true, other.equals(contactTest));
-    }
-
-    @Test
-    void different_objects_different_attributes_not_equal() {
-        ContactInfoDTO other = new ContactInfoDTO()
-                .setType("email")
-                .setContact("hi@gmail.com");
-
-        Assertions.assertEquals(false, other.equals(contactTest));
     }
 
     @Test
