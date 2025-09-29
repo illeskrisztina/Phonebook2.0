@@ -72,7 +72,7 @@ class ContactInfoServiceTest {
 
     @Test
     void deleting_non_existent_entity_from_database_returns_null() {
-        lenient().when(repo.existsById(contactInfoTest.getContact())).thenReturn(false);
+        when(repo.existsById(contactInfoTest.getContact())).thenReturn(false);
 
         service.deleteContact(contactInfoTest.getContact());
 

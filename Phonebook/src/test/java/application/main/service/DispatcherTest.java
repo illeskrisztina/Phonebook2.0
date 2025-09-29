@@ -115,14 +115,12 @@ class DispatcherTest {
         personTest.setPermanentAddress(permanentAddressTest);
         personTest.setTemporaryAddress(temporaryAddressTest);
 
-        lenient().when(addressService.getAllAddress()).thenReturn(List.of(permanentAddressTest, temporaryAddressTest));
-        lenient().when(personService.getPerson(1)).thenReturn(personTest);
-        lenient().when(contactService.getAllContacts()).thenReturn(List.of(contactInfoTest));
-        lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
-        lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
-        lenient().when(addressMapper.addressToAddressDTO(permanentAddressTest)).thenReturn(permanentAddressDTOTest);
-        lenient().when(addressMapper.addressToAddressDTO(temporaryAddressTest)).thenReturn(temporaryAddressDTOTest);
-        lenient().when(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest)).thenReturn(contactInfoDTOTest);
+        when(personService.getPerson(1)).thenReturn(personTest);
+        when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+        when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
+        when(addressMapper.addressToAddressDTO(permanentAddressTest)).thenReturn(permanentAddressDTOTest);
+        when(addressMapper.addressToAddressDTO(temporaryAddressTest)).thenReturn(temporaryAddressDTOTest);
+        when(contactInfoMapper.contactInfoToContactInfoDTO(contactInfoTest)).thenReturn(contactInfoDTOTest);
 
         dispatcher.deletePerson(1);
 
@@ -136,15 +134,9 @@ class DispatcherTest {
     void creating_address_sets_person_address_() {
         personTest.setId(1);
 
-        lenient().when(personService.getPerson(1)).thenReturn(personTest);
-        lenient().when(addressService.createAddress(permanentAddressTest)).thenReturn(permanentAddressTest.setId(1));
-        lenient().when(addressService.createAddress(temporaryAddressTest)).thenReturn(temporaryAddressTest.setId(2));
-        lenient().when(personMapper.personToSimplePersonDTO(personTest)).thenReturn(
-                new SimplePersonDTO()
-                        .setId(1)
-                        .setName(personTest.getName())
-                        .setAge(personTest.getAge())
-        );
+        when(personService.getPerson(1)).thenReturn(personTest);
+        when(addressService.createAddress(permanentAddressTest)).thenReturn(permanentAddressTest.setId(1));
+        when(addressService.createAddress(temporaryAddressTest)).thenReturn(temporaryAddressTest.setId(2));
 
         dispatcher.createAddress(1, permanentAddressTest);
         dispatcher.createAddress(1, temporaryAddressTest);
@@ -196,9 +188,9 @@ class DispatcherTest {
         personTest.setTemporaryAddress(temporaryAddressTest);
         personTest.setPermanentAddress(permanentAddressTest);
 
-        lenient().when(personService.getAllPeople()).thenReturn(List.of(personTest));
-        lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
-        lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
+        when(personService.getAllPeople()).thenReturn(List.of(personTest));
+        when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+        when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
 
         dispatcher.deleteAddress(1);
         dispatcher.deleteAddress(2);
@@ -215,9 +207,9 @@ class DispatcherTest {
                 .setAge(35)
                 .setId(2);
 
-        lenient().when(personService.getAllPeople()).thenReturn(List.of(personTest2, personTest));
-        lenient().when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
-        lenient().when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
+        when(personService.getAllPeople()).thenReturn(List.of(personTest2, personTest));
+        when(addressService.getAddress(1)).thenReturn(permanentAddressTest);
+        when(addressService.getAddress(2)).thenReturn(temporaryAddressTest);
 
         dispatcher.deleteAddress(1);
         dispatcher.deleteAddress(2);

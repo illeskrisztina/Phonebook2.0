@@ -35,7 +35,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_creating_person_if_error_is_thrown_conflict_status_code_returned() {
-        lenient().when(dispatcher.createPerson(any(Person.class))).thenThrow(NoSuchElementException.class);
+        when(dispatcher.createPerson(any(Person.class))).thenThrow(NoSuchElementException.class);
 
         ResponseEntity<PersonDTO> response = controller.createPerson(new Person());
 
@@ -45,7 +45,7 @@ class PersonControllerUnitTest {
 
     @Test
     void if_dispatcher_returns_null_for_getPerson_not_found_is_returned() {
-        lenient().when(dispatcher.getPerson(1)).thenReturn(null);
+        when(dispatcher.getPerson(1)).thenReturn(null);
 
         ResponseEntity<SimplePersonDTO> response = controller.getPerson(1);
 
@@ -55,7 +55,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_exception_is_thrown_for_getPerson_returns_bad_request_status_code() {
-        lenient().when(dispatcher.getPerson(1)).thenThrow(new RuntimeException("Test"));
+        when(dispatcher.getPerson(1)).thenThrow(new RuntimeException("Test"));
 
         ResponseEntity<SimplePersonDTO> response = controller.getPerson(1);
 
@@ -65,7 +65,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_exception_is_thrown_for_getAllPeople_returns_not_found_status_code() {
-        lenient().when(dispatcher.getAllPeople()).thenThrow(new NoSuchElementException("Test"));
+        when(dispatcher.getAllPeople()).thenThrow(new NoSuchElementException("Test"));
 
         ResponseEntity<List<SimplePersonDTO>> response = controller.getAllPeople();
 
@@ -75,7 +75,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_updating_person_when_no_element_is_found_exception_is_thrown() {
-        lenient().when(dispatcher.updatePerson(any(Person.class))).thenThrow(NoSuchElementException.class);
+        when(dispatcher.updatePerson(any(Person.class))).thenThrow(NoSuchElementException.class);
 
         ResponseEntity<PersonDTO> response = controller.updatePerson(new Person());
 
@@ -85,7 +85,7 @@ class PersonControllerUnitTest {
 
     @Test
     void when_generic_exception_is_thrown_during_updating_person_not_found_status_code_is_returned() {
-        lenient().when(dispatcher.updatePerson(any(Person.class))).thenThrow(RuntimeException.class);
+        when(dispatcher.updatePerson(any(Person.class))).thenThrow(RuntimeException.class);
 
         ResponseEntity<PersonDTO> response = controller.updatePerson(new Person());
 

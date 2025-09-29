@@ -88,7 +88,7 @@ class AddressServiceTest {
 
     @Test
     void deleteAddress_does_not_call_delete_method_if_entity_does_not_exist() {
-        lenient().when(repo.existsById(1)).thenReturn(false);
+        when(repo.existsById(1)).thenReturn(false);
 
         service.deleteAddress(1);
 
