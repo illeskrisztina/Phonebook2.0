@@ -4,7 +4,7 @@ services:
     image: "mcr.microsoft.com/mssql/server"
     healthcheck:
       test: ["CMD", "opt/mssql-tools18/bin/sqlcmd", "-U", "sa", "-P", "Something4N0w", "-C", "-Q", "\"SELECT 1\""]
-      interval: 30s
+      interval: 20s
       timeout: 10s
       retries: 5
     restart: "always"
@@ -18,7 +18,7 @@ services:
       # Temporary. Password should probably not be hardcoded here.
       SA_PASSWORD: "Something4N0w"
   server:
-    image: "application/phonebook:2.0.6"
+    image: "application/phonebook:2.0.7"
     build:
       context: ./
     container_name: "phonebook-server"
@@ -32,7 +32,7 @@ services:
       SPRING_DATASOURCE_USERNAME: "sa"
       SPRING_DATASOURCE_PASSWORD: "Something4N0w"
       SPRING_JPA_HIBERNATE_DDL_AUTO: "none"
-      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: dbo
+
 volumes:
   db:
     driver: local
