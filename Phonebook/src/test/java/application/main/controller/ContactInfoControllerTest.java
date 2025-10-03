@@ -87,7 +87,7 @@ class ContactInfoControllerTest {
     void getting_all_contacts_returns_correct_saved_contacts() {
         ResponseEntity<List> response = restTemplate.getForEntity("/api/contacts", List.class);
 
-        Assertions.assertEquals(3, response.getBody().size());
+        Assertions.assertEquals(4, response.getBody().size());
     }
 
     @Test
