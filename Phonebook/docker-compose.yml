@@ -1,0 +1,38 @@
+version: "1.0.0"
+services:
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    healthcheck:
+      test: ["CMD", "opt/mssql-tools18/bin/sqlcmd", "-U", "sa", "-P", "Something4N0w", "-C", "-Q", "\"SELECT 1\""]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    restart: "always"
+    container_name: "phonebook-db"
+    ports:
+      - "1433:1433"
+    volumes:
+        - db:/phonebook_data
+    environment:
+      ACCEPT_EULA: "Y"
+      # Temporary. Password should probably not be hardcoded here.
+      SA_PASSWORD: "Something4N0w"
+  server:
+    image: "application/phonebook:2.0.7"
+    build:
+      context: ./
+    container_name: "phonebook-server"
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:sqlserver://db:1433;databaseName=master;encrypt=true;trustServerCertificate=true;"
+      SPRING_DATASOURCE_USERNAME: "sa"
+      SPRING_DATASOURCE_PASSWORD: "Something4N0w"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "none"
+
+volumes:
+  db:
+    driver: local

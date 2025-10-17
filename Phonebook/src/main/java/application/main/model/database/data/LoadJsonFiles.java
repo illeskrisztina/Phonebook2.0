@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -19,11 +20,13 @@ public class LoadJsonFiles {
     private final ObjectMapper mapper = new ObjectMapper();
     private final Dispatcher dispatcher;
     private final Logger logger = LoggerFactory.getLogger(LoadJsonFiles.class);
+    @Value("${application.working-dir-path}")
+    private String path;
 
     @EventListener(ApplicationReadyEvent.class)
     public void readJsonFiles() {
         try{
-            ContactInfo contact = mapper.readValue(new File(System.getProperty("user.dir") + "/Phonebook/src/main/resources/contact.json"), ContactInfo.class);
+            ContactInfo contact = mapper.readValue(new File(path + "/src/main/resources/contact.json"), ContactInfo.class);
 
             dispatcher.addContact(contact, null);
         }
