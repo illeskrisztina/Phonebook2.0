@@ -2,9 +2,6 @@ name: Automatic Versioning
 
 on:
   push:
-    branches:
-      - 'main'
-      - 'develop'
 
 jobs:
   versioning:
@@ -24,3 +21,7 @@ jobs:
 
       - name: Install Maven
         run: sudo apt-get install -y maven
+
+      - name: Get current version
+        id: version
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
