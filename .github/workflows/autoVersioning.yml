@@ -29,4 +29,4 @@ jobs:
           echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
 
       - name: Show extracted Maven project version
-        run: echo ${{ steps.version.outputs.version }}
+        run: echo Original version ${{ steps.version.outputs.version }}
