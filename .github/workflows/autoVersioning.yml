@@ -25,6 +25,7 @@ jobs:
       - name: Get current version
         id: version
         run: |
+          cd Phonebook
           echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
 
       - name: Show extracted Maven project version
