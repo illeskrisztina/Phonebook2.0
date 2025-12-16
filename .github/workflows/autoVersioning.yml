@@ -1,0 +1,26 @@
+name: Automatic Versioning
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    env:
+      ENTERPRISE_REPO: "https://github.com/Kesmarki-Dev/Enterprise.git"
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '21'
+
+      - name: Install Maven
+        run: sudo apt-get install -y maven
