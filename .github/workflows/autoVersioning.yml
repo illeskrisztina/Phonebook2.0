@@ -34,6 +34,7 @@ jobs:
       - name: Check branch
         id: branches
         run: |
+          cd Phonebook
           echo ::set-output name=branch::$(mvn -q -Dexec.executable=echo -Dexec.args='${GITHUB_REF##*/}' --non-recursive exec:exec)
 
       - name: Show branch name
