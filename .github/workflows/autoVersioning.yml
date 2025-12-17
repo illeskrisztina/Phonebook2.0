@@ -37,5 +37,5 @@ jobs:
           echo Commit message ${{ env.COMMIT_MESSAGE }}
 
       - name: Increment minor version on main
-        if: "env.BRANCH == 'automated-versioning-trial' && contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))"
+        if: "${env.BRANCH} == 'automated-versioning-trial' && contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))"
         run: echo "Is bugfix / hotfix"
