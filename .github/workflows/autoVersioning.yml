@@ -36,6 +36,6 @@ jobs:
           echo Currnet branch ${{ env.BRANCH }}
           echo Commit message ${{ env.COMMIT_MESSAGE }}
 
-      - name: Increment minor version on
+      - name: Increment minor version on main
         if: "contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))"
         run: echo "Is bugfix / hotfix"
