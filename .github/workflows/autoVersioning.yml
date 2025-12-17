@@ -29,8 +29,19 @@ jobs:
           echo "VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_ENV
           echo "BRANCH=$(mvn -q -Dexec.executable=echo -Dexec.args='${GITHUB_REF##*/}' --non-recursive exec:exec)" >> $GITHUB_ENV
 
-
       - name: Show extracted Maven project version and branch
         run: |
           echo Original version ${{ env.VERSION }}
           echo Currnet branch ${{ env.BRANCH }}
+
+      - name: Increment minor version on
+        run: |
+          echo "GITHUB_WORKFLOW:$GITHUB_WORKFLOW"
+          echo "GITHUB_EVENT_NAME:$GITHUB_EVENT_NAME"
+          echo "GITHUB_EVENT_PATH:$GITHUB_EVENT_PATH"
+          echo "GITHUB_WORKSPACE:$GITHUB_WORKSPACE"
+          echo "GITHUB_SHA:$GITHUB_SHA"
+          echo "GITHUB_REF:$GITHUB_REF"
+          echo "GITHUB_HEAD_REF:$GITHUB_HEAD_REF"
+          
+          
