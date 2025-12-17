@@ -28,15 +28,14 @@ jobs:
           cd Phonebook
           echo "VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_ENV
           echo "BRANCH=$(mvn -q -Dexec.executable=echo -Dexec.args='${GITHUB_REF##*/}' --non-recursive exec:exec)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
 
       - name: Show extracted Maven project version and branch
         run: |
           echo Original version ${{ env.VERSION }}
           echo Currnet branch ${{ env.BRANCH }}
+          echo Commit message ${{ env.COMMIT_MESSAGE }}
 
       - name: Increment minor version on
-        run: |
-          echo "${{ github.event.head_commit.message }}"
-
-          
-          
+        if: "contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))"
+        run: echo "Is bugfix / hotfix"
