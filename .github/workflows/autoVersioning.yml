@@ -30,3 +30,9 @@ jobs:
 
       - name: Show extracted Maven project version
         run: echo Original version ${{ steps.version.outputs.version }}
+
+      - name: Check branch
+        id: branches
+        run: |
+          echo "Current branch: ${GITHUB_REF##*/}"
+       
