@@ -34,5 +34,8 @@ jobs:
       - name: Check branch
         id: branches
         run: |
-          echo "Current branch: ${GITHUB_REF##*/}"
+          echo ::set-output name=branch::$(mvn -q -Dexec.executable=echo -Dexec.args='${GITHUB_REF##*/}' --non-recursive exec:exec)
+
+      - name: Show branch name
+        run: echo Currnet branch ${{ steps.branches.outputs.branch }}
        
