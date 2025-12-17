@@ -37,7 +37,7 @@ jobs:
 
       - name: Increment minor version on main
         run: |
-          if [ github.ref_name == 'main' && contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix')) ]
+          if [ github.ref_name == 'main' && contains(${{ env.COMMIT_MESSAGE }}, 'Merge pull request') && (contains(${{ env.COMMIT_MESSAGE }}, 'hotfix') || contains(${{ env.COMMIT_MESSAGE }}, 'bugfix')) ]
             echo "Is bugfix / hotfix"
           fi
           echo "step ran"
