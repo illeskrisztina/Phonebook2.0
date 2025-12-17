@@ -26,11 +26,11 @@ jobs:
         id: vars
         run: |
           cd Phonebook
-          echo "{name=version} = {$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)}" >> $GITHUB_OUTPUT
+          echo "VERSION = $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
           echo "name=branch::$(mvn -q -Dexec.executable=echo -Dexec.args='${GITHUB_REF##*/}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
 
 
       - name: Show extracted Maven project version and branch
         run: |
-          echo Original version ${{ steps.vars.outputs.version }}
+          echo Original version $VERSION
           echo Currnet branch ${{ steps.vars.outputs.branch }}
