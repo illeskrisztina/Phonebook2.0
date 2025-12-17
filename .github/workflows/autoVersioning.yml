@@ -36,7 +36,7 @@ jobs:
 
       - name: Increment minor version on
         run: |
-          echo github.event.head_commit.message
+          echo "${github.event.head_commit.message}"
 
           
           
