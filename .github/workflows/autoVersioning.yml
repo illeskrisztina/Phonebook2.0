@@ -49,7 +49,7 @@ jobs:
           PATCH_PARTS[0]=0
           patch=""
           for part in "${PATCH_PARTS[@]}"; do
-            patch="${patch}.$i"
+            patch="${patch}.${i}"
           done
 
           echo "${PATCH_PARTS[0]}"
