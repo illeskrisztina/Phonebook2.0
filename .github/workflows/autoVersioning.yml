@@ -43,7 +43,7 @@ jobs:
           echo "$major"
           echo "$minor"
           echo "$patch"
-          minor = $(( minor + 1 ))
+          $minor = $(( minor + 1 ))
           
           IFS='-' read -ra PATCH_PARTS <<< "$patch"
           for i in "${PATCH_PARTS[@]}"; do
