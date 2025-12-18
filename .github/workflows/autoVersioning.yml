@@ -43,4 +43,5 @@ jobs:
           echo "$major"
           echo "$minor"
           echo "$patch"
-          echo "new minor $((minor + 1))"
+          minor = $(( minor + 1 ))
+          echo "new minor $minor"
