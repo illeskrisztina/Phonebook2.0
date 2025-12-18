@@ -75,9 +75,8 @@ jobs:
       - name: Set new version in pom.xml
         run: |
           if [ -z "${{ env.NEW_VERSION }}" ]; then
-            echo "hiii"
+            echo "Version was not updated"
           else
-            echo "Hello"
+            mvn versions:set -DnewVersion=${{ steps.bump.outputs.NEW_VERSION }}
+            mvn versions:commit
           fi
-          #mvn versions:set -DnewVersion=${{ steps.bump.outputs.NEW_VERSION }}
-          #mvn versions:commit
