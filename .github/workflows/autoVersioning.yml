@@ -53,10 +53,9 @@ jobs:
 
           new_version="${major}.${minor}.${patch}"
           echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
-
-#github.ref_name == 'dev' && 
+ 
       - name: Increment patch version on dev
-        if: contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'feat'))
+        if: github.ref_name == 'dev' && contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'feat'))
         run: |
           IFS='.' read -r major minor patch <<< "${{ env.VERSION }}"
           
@@ -71,5 +70,4 @@ jobs:
           done
 
           new_version="${major}.${minor}.${patch}"
-          echo "$new_version"
           echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
