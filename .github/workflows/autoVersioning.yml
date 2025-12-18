@@ -48,5 +48,6 @@ jobs:
           IFS='-' read -ra PATCH_PARTS <<< "$patch"
           for i in "${PATCH_PARTS[@]}"; do
             echo "$i"
-            #echo  "${PATCH_PARTS[0]}"
+            echo  "${PATCH_PARTS[0]}"
+          done
           echo "new minor $minor"
