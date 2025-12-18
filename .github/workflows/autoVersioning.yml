@@ -82,10 +82,13 @@ jobs:
             mvn versions:commit
           fi
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          
       - name: Commit changes
         run: |
-          if [ -z "${{ env.NEW_VERSION }}" ]; then
-            echo "Nothing to commit"
-          else
-            echo "Placeholder"
-          fi
+            git add .
+            git commit -m "Increment pom version" || echo "No changes to commit"
+            git push --force "https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref }}
