@@ -50,8 +50,6 @@ jobs:
           patch="${PATCH_PARTS[0]}"
           
           for part in "${PATCH_PARTS[@]}"; do
-          echo "${part}"
-          echo "${PATCH_PARTS[0]}"
             if [ "${part}" != "${PATCH_PARTS[0]}" ]; then
               patch="${patch}-${part}"
             fi
@@ -60,3 +58,7 @@ jobs:
           echo "${PATCH_PARTS[0]}"
           echo "$patch"
           echo "new minor $minor"
+
+          new_version="${major}.${minor}.${patch}
+          echo "$new_version"
+          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
