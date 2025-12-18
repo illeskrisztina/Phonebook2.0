@@ -43,10 +43,9 @@ jobs:
           echo "$major"
           echo "$minor"
           echo "$patch"
-          (( minor ++ ))
+          new_minor = 0
           
           IFS='-' read -ra PATCH_PARTS <<< "$patch"
           for i in "${PATCH_PARTS[@]}"; do
             echo  "${PATCH_PARTS[0]}"
-          echo "new minor $minor"
-          echo "new patch $patch"
+          echo "new minor $new_minor"
