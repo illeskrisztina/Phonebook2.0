@@ -47,6 +47,10 @@ jobs:
           
           IFS='-' read -ra PATCH_PARTS <<< "$patch"
           PATCH_PARTS[0]=0
+          patch=""
+          for part in "${PATCH_PARTS[@]}"; do
+            patch="${patch}.$i"
+          done
 
           echo "${PATCH_PARTS[0]}"
           echo "$patch"
