@@ -81,3 +81,11 @@ jobs:
             mvn versions:set -DnewVersion=${{ steps.bump.outputs.NEW_VERSION }}
             mvn versions:commit
           fi
+
+      - name: Commit changes
+        run: |
+          if [ -z "${{ env.NEW_VERSION }}" ]; then
+            echo "Nothing to commit"
+          else
+            
+          fi
