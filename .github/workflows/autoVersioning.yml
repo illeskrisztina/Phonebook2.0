@@ -35,9 +35,8 @@ jobs:
           echo Currnet branch ${{ github.ref_name }}
           echo Commit message ${{ env.COMMIT_MESSAGE }}
 
-#github.ref_name == 'main' && 
       - name: Increment minor version on main
-        if: contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))
+        if: github.ref_name == 'main' && contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))
         run: |
           IFS='.' read -r major minor patch <<< "${{ env.VERSION }}"
           minor=$((minor+1))
