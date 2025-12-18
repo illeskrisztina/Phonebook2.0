@@ -40,9 +40,6 @@ jobs:
         if: contains(env.COMMIT_MESSAGE, 'Merge pull request') && (contains(env.COMMIT_MESSAGE, 'hotfix') || contains(env.COMMIT_MESSAGE, 'bugfix'))
         run: |
           IFS='.' read -r major minor patch <<< "${{ env.VERSION }}"
-          echo "$major"
-          echo "$minor"
-          echo "$patch"
           minor=$((minor+1))
           
           IFS='-' read -ra PATCH_PARTS <<< "$patch"
@@ -55,10 +52,5 @@ jobs:
             fi
           done
 
-          echo "${PATCH_PARTS[0]}"
-          echo "$patch"
-          echo "new minor $minor"
-
           new_version="${major}.${minor}.${patch}"
-          echo "$new_version"
           echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
